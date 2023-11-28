@@ -1,0 +1,35 @@
+.input-form {
+  display: flex;
+  flex-direction: column;
+}
+.input-content {
+  display: grid;
+  row-gap: 5px;
+  column-gap: 10px;
+  grid-template-columns: 0.5fr 3fr;
+  width: 100%;
+  max-width: 60%;
+  margin: 0 auto;
+}
+
+.input-hspace {
+  height: 100%;
+  min-height: 30px;
+}
+.input-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 10px;
+}
+
+.input-required {
+  padding-left: 2px;
+  color: #ff0000;
+}
+
+.input-error {
+  padding-bottom: 10px;
+  font-size: 13px;
+  color: #ff0000;
+}

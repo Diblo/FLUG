@@ -1,0 +1,14 @@
+.scroll-view {
+  height: calc(100% - 1px);
+}
+
+.scroll-view-container {
+  min-height: calc(100% - 1px);
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-view-observer {
+  position: relative;
+  bottom: 150px;
+}

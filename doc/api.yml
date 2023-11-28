@@ -1,0 +1,481 @@
+openapi: '3.0.2'
+
+info:
+  title: FLUG API
+  version: 1.0.0
+
+servers:
+  - url: https://api.server.test/v1
+    description: Production server
+
+tags:
+  - name: List
+    description: Get a list of resources
+  - name: Get
+    description: Get a resource
+  - name: Create
+    description: Create a new resource
+  - name: Update
+    description: Update a resource
+  - name: Delete
+    description: Delete a resource
+
+paths:
+  /users:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/maxParam'
+        - $ref: '#/components/parameters/initialLetterParam'
+        - name: order
+          in: query
+          description: Specifies the field to sort the results.
+          required: false
+          schema:
+            type: string
+            enum: [firstname, lastname, email, createdat, updatedat, loggedinat]
+            default: firstname
+      tags:
+        - List
+      summary: Retrieve list of users
+      description: Returns a list of all users
+      responses:
+        '200':
+          description: User list data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/List'
+                          - properties:
+                              items:
+                                $ref: '#/components/schemas/UserItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    post:
+      tags:
+        - Create
+      summary: Create a new user
+      description: Creates a new user and initiates a password reset
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /users/{uid}:
+    parameters:
+      - $ref: '#/components/parameters/uidParam'
+
+    get:
+      tags:
+        - Get
+      summary: Retrieve a specific user
+      description: Retrieves details of a specific user by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    patch:
+      tags:
+        - Update
+      summary: Update user details
+      description: Updates the details of a specific user by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessUser'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    delete:
+      tags:
+        - Delete
+      summary: Delete a user
+      description: Removes a specific user from the system by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessNoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+  /blogs:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/maxParam'
+        - $ref: '#/components/parameters/initialLetterParam'
+        - name: order
+          in: query
+          description: Specifies the field to sort the results.
+          required: false
+          schema:
+            type: string
+            enum: [title, createdat, updatedat]
+            default: title
+      tags:
+        - List
+      summary: Retrieve list of blog posts
+      description: Returns a list of all blog posts
+      responses:
+        '200':
+          description: Blog list data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/List'
+                          - properties:
+                              items:
+                                $ref: '#/components/schemas/BlogItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    post:
+      tags:
+        - Create
+      summary: Create a new blog post
+      description: Creates a new blog post and initiates a password reset
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessBlog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /blogs/{uid}:
+    parameters:
+      - $ref: '#/components/parameters/uidParam'
+
+    get:
+      tags:
+        - Get
+      summary: Retrieve a specific blog post
+      description: Retrieves details of a specific blog post by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessBlog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    patch:
+      tags:
+        - Update
+      summary: Update blog post details
+      description: Updates the details of a specific blog post by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessBlog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+    delete:
+      tags:
+        - Delete
+      summary: Delete a blog post
+      description: Removes a specific blog post from the system by ID
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessNoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+
+components:
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      description: Specifies the page number for paginated results.
+      required: false
+      schema:
+        type: integer
+        default: 0
+    maxParam:
+      name: max
+      in: query
+      description: Specifies the maximum number of items per page.
+      required: false
+      schema:
+        type: integer
+        default: 100
+    initialLetterParam:
+      name: initial_letter
+      in: query
+      description: Filters items by the initial letter.
+      required: false
+      schema:
+        type: string
+        enum: ['all', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'other']
+        default: all
+    uidParam:
+      name: uid
+      in: path
+      required: true
+      description: UID of the item to retrieve or modify
+      schema:
+        type: integer
+        format: int64
+
+  responses:
+    SuccessUser:
+      description: User data
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Success'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+
+    SuccessBlog:
+      description: Blog data
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Success'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/Blog'
+
+    SuccessNoContent:
+      description: Success response without content
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessNoContent'
+
+    BadRequest:
+      description: The request cannot be fulfilled due to bad syntax
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ResourceNotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/List'
+            - $ref: '#/components/schemas/User'
+            - $ref: '#/components/schemas/Blog'
+        message:
+          type: string
+
+    SuccessNoContent:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    List:
+      type: object
+      properties:
+        items:
+          type: array
+          oneOf:
+            - $ref: '#/components/schemas/UserItem'
+            - $ref: '#/components/schemas/BlogItem'
+        pagination:
+          type: object
+          properties:
+            next:
+              nullable: true
+              $ref: '#/components/schemas/LikObject'
+        results:
+          type: integer
+        totalResults:
+          type: integer
+        page:
+          type: integer
+        totalPages:
+          type: integer
+
+    UserItem:
+      type: object
+      properties:
+        uid:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        loggedInAt:
+          type: string
+          format: date-time
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/LikObject'
+    BlogItem:
+      type: object
+      properties:
+        uid:
+          type: integer
+        title:
+          type: string
+        shortDesc:
+          type: string
+        image:
+          nullable: true
+          $ref: '#/components/schemas/ImageObject'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/LikObject'
+            slug:
+              $ref: '#/components/schemas/LikObject'
+
+    User:
+      type: object
+      properties:
+        uid:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        loggedInAt:
+          type: string
+          format: date-time
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/LikObject'
+            update:
+              $ref: '#/components/schemas/LikObject'
+            delete:
+              $ref: '#/components/schemas/LikObject'
+
+    Blog:
+      type: object
+      properties:
+        uid:
+          type: integer
+          format: uuid
+        title:
+          type: string
+        slug:
+          type: string
+        shortDesc:
+          type: string
+        image:
+          nullable: true
+          $ref: '#/components/schemas/ImageObject'
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/LikObject'
+            update:
+              $ref: '#/components/schemas/LikObject'
+            delete:
+              $ref: '#/components/schemas/LikObject'
+
+    LikObject:
+      type: object
+      properties:
+        href:
+          type: string
+        title:
+          type: string
+        method:
+          type: string
+          enum: [POST, PATCH, DELETE]
+
+    ImageObject:
+      type: object
+      properties:
+        src:
+          type: string
+        alt:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            description:
+              type: string

@@ -1,0 +1,8 @@
+.not-found h1,
+.not-found p {
+  max-width: 50%;
+}
+
+.not-found * {
+  color: #fff;
+}

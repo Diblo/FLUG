@@ -1,0 +1,8 @@
+.error h1,
+.error p {
+  max-width: 50%;
+}
+
+.error * {
+  color: #fff;
+}

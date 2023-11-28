@@ -1,0 +1,34 @@
+#admin-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#admin-container a {
+  box-shadow: 0px 6px 15px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin: 10px;
+  padding: 30px;
+  border: 1px solid #29abe1;
+  border-radius: 15px;
+  text-align: center;
+}
+
+#admin-container a:hover {
+  background-color: #29abe1;
+  color: #fff;
+}
+
+#admin-container a svg {
+  fill: #29abe1;
+  width: 100px;
+  height: 100px;
+}
+
+#admin-container a:hover svg {
+  fill: #fff;
+}

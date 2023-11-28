@@ -1,0 +1,47 @@
+#editor_window_wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #00000096;
+}
+
+#editor_window {
+  box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: fixed;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 2px solid #29abe1;
+  border-radius: 10px;
+  min-width: 40%;
+  max-width: 60%;
+}
+
+#editor_window h1 {
+  padding: 0;
+  margin: 0;
+  font-size: 24px;
+}
+
+#editor_window_content {
+  display: grid;
+  grid-template-columns: .5fr 3fr;
+  gap: 10px;
+  width: 60%;
+  align-items: center;
+  margin: 0 auto;
+}
+
+#editor_window_buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+}
