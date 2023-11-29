@@ -186,19 +186,23 @@
 
 **Success Message:**
 
-| Method | Message |
-|--------|---------|
-| `GET` | Successfully retrieved the resource. |
-| `POST` | The resource has been created successfully. |
-| `PATCH` | The resource has been updated successfully. |
-| `DELETE` | The resource has been deleted successfully. |
+| Method | Status | Message |
+|--------|--------|---------|
+| `GET` | 200 | Successfully retrieved the resource. |
+| `POST` | 201 | The resource has been created successfully. |
+| `PATCH` | 200 | The resource has been updated successfully. |
+| `DELETE` | 204 | The resource has been deleted successfully. |
 
 **Error Message:**
 
-| Method | Message |
+| Status | Message |
 |--------|---------|
-| `GET`, `PATCH`, `DELETE` | The requested resource was not found. |
-| `POST`, `PATCH` | The request cannot be fulfilled due to bad syntax. |
+| 400 | The request cannot be fulfilled due to bad syntax. |
+| 401 | Access is denied. |
+| 403 | The server refuses to approve the request. |
+| 404 | The requested resource was not found. |
+| 500 | The server encountered an unexpected condition. |
+| 503 | The server is currently unable to handle the request. |
 
 **Examples:**
 
@@ -347,7 +351,7 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the user. |
+| Number | `uid` | No | <u>Unique identifier for the user.</u> |
 | String | `firstName` | No | User's first name. |
 | String | `lastName` | Yes | User's last name. |
 | String | `email` | No | User's email address. |
@@ -384,10 +388,10 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the blog. |
+| Number | `uid` | No | <u>Unique identifier for the blog.</u> |
 | String | `title` | No | Title of the blog post. |
 | String | `shortDesc` | No | A brief description of the blog post. |
-| Object | `image` | No | Image object or a null value. |
+| Object | `image` | Yes | Image Referring Object. |
 | String | `createdAt` | No | ISO 8601 representation when the blog was created. |
 | String | `updatedAt` | Yes | ISO 8601 representation when the blog was last updated. |
 | Object | `_links` | No | Contains link objects for self-reference (`self`) and slug (`slug`). |
@@ -420,9 +424,8 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the event. |
+| Number | `uid` | No | <u>Unique identifier for the event.</u> |
 | String | `title` | No | Title of the event. |
-| String | `slug` | No | Slug identifying the event. |
 | String | `shortDesc` | No | A brief description of the event. |
 | String | `startDateTime` | No | ISO 8601 representation the start date and time of the event. |
 | String | `location` | No | Location where the event takes place. |
@@ -460,7 +463,7 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the image. |
+| Number | `uid` | No | <u>Unique identifier for the image.</u> |
 | String | `src` | No | Image name with extension. |
 | String | `alt` | No | Alternate text for the image. |
 | String | `createdAt` | No | ISO 8601 representation when the image was created. |
@@ -500,10 +503,10 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the user. |
+| Number | `uid` | No | <u>Unique identifier for the user.</u> |
 | String | `firstName` | No | User's first name. |
 | String | `lastName` | Yes | User's last name. |
-| String | `email` | No | User's email address. |
+| String | `email` | No | <u>Unique email address for the user.</u> |
 | String | `createdAt` | No | ISO 8601 representation when the user was created. |
 | String | `updatedAt` | Yes | ISO 8601 representation when the user was last updated. |
 | String | `loggedInAt` | Yes | ISO 8601 representation when the user last logged in. |
@@ -532,11 +535,11 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the blog. |
+| Number | `uid` | No | <u>Unique identifier for the blog.</u> |
 | String | `title` | No | Title of the blog post. |
-| String | `slug` | No | Slug identifying the blog. |
+| String | `slug` | No | <u>Unique SLUG to identifier the blog.</u> |
 | String | `shortDesc` | No | A brief description of the blog post. |
-| Object | `image` | No | Image Referring Object or a null value. |
+| Object | `image` | Yes | Image Referring Object. |
 | String | `content` | No | Content of the blog post in HTML format. |
 | String | `createdAt` | No | ISO 8601 representation when the blog was created. |
 | String | `updatedAt` | Yes | ISO 8601 representation when the blog was last updated. |
@@ -567,9 +570,9 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the event. |
+| Number | `uid` | No | <u>Unique identifier for the event.</u> |
 | String | `title` | No | Title of the event. |
-| String | `slug` | No | Slug identifying the event. |
+| String | `slug` | No | <u>Unique SLUG to identifying the event.</u> |
 | String | `shortDesc` | No | A brief description of the event. |
 | String | `startDateTime` | No | ISO 8601 representation the start date and time of the event. |
 | String | `endDateTime` | No | ISO 8601 representation the end date and time of the event. |
@@ -606,7 +609,7 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Number | `uid` | No | Unique identifier for the image. |
+| Number | `uid` | No | <u>Unique identifier for the image.</u> |
 | String | `src` | No | Image name with extension. |
 | String | `alt` | No | Alternate text for the image. |
 | String | `createdAt` | No | ISO 8601 representation when the image was created. |
@@ -634,20 +637,20 @@
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Unknown | <bot validation fields> | | Not currently defined. |
+| Unknown | \<bot validation fields> | | Not currently defined. |
 | Object | `_links` | No | Contains link `login` |
 
 ### Authorization Information Object:
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Unknown | <authorization information fields> | | Not currently defined. |
+| Unknown | \<authorization information fields> | | Not currently defined. |
 
 ### Reset Password Object:
 
 | Data Type | Field | Null | Description |
 |-----------|-------|------|-------------|
-| Unknown | <bot validation fields> | | Not currently defined. |
+| Unknown | \<bot validation fields> | | Not currently defined. |
 | Object | `_links` | No | Contains link `reset` |
 
 ## POST Body Objects
@@ -675,9 +678,9 @@
 | Data Type | Field | Min | Max | Required | Description |
 |-----------|-------|-----|-----|----------|-------------|
 | String | `title` | 5 | 100 | Yes | Title of the blog post. |
-| String | `slug` | 5 | 150 | Yes | <u>Unique slug in blogs.</u> |
+| String | `slug` | 5 | 150 | Yes | <u>Unique SLUG to identifying the blogs.</u> |
 | String | `shortDesc` | 145 | 155 | Yes | Short description of the blog post. |
-| Object | `image` | - | 8MB | No | Image data specified as a data URI scheme, encoded in base64. |
+| Object | `image` | - | 8MB | No | Image Referring Object. |
 | String | `content` | 300 | 65,535 | Yes | Content of the blog post in HTML format. |
 
 **Example:**
@@ -697,7 +700,7 @@
 | Data Type | Field | Min | Max | Required | Description |
 |-----------|-------|-----|-----|----------|-------------|
 | String | `title` | 5 | 100 | Yes | Title of the event. |
-| String | `slug` | 5 | 150 | Yes | <u>Unique slug in events.</u> |
+| String | `slug` | 5 | 150 | Yes | <u>Unique SLUG to identifying the events.</u> |
 | String | `shortDesc` | 145 | 155 | Yes | Short description of the event. |
 | String | `startDateTime` | 24 | 24 | Yes | ISO 8601 representation of the start date and time of the event. |
 | String | `endDateTime` | 24 | 24 | Yes | ISO 8601 representation of the end date and time of the event. Should be later than `startDateTime`. |
@@ -740,14 +743,14 @@
 |-----------|-------|----------|-------------|
 | String | `email` | | |
 | String | `password` | | |
-| Unknown | <bot validation fields> | Not currently defined. |
+| Unknown | \<bot validation fields> | Not currently defined. |
 
 ### Request Password Reset Object:
 
 | Data Type | Field | Required | Description |
 |-----------|-------|----------|-------------|
 | String | `email` | | |
-| Unknown | <bot validation fields> | Not currently defined. |
+| Unknown | \<bot validation fields> | Not currently defined. |
 
 ### Reset Password Object:
 
@@ -781,9 +784,9 @@ Let's say you want to update the firstName and email fields of a user.
 | Data Type | Field | Min | Max | Nullable or Empty | Description |
 |-----------|-------|-----|-----|-------------------|-------------|
 | String | `title` | 5 | 100 | No | Title of the blog. |
-| String | `slug` | 5 | 150 | No | <u>Unique slug identifying the blog.</u> |
+| String | `slug` | 5 | 150 | No | <u>Unique SLUG to identifying the blog.</u> |
 | String | `shortDesc` | 145 | 155 | No | Short description of the blog content. |
-| Object | `image` | - | - | Yes | Unique identifier for the associated image. |
+| Object | `image` | - | 8MB | Yes | Image Referring Object. |
 | String | `content` | 300 | 65,535 | No | Content of the blog in HTML format. |
 
 **Example:**
@@ -802,7 +805,7 @@ If you wish to update the title and shortDesc fields of a blog.
 | Data Type | Field | Min | Max | Null or Empty | Description |
 |-----------|-------|-----|-----|---------------|-------------|
 | String | `title` | 5 | 100 | No | Title of the event. |
-| String | `slug` | 5 | 150 | No | <u>Unique slug identifying the event.</u> |
+| String | `slug` | 5 | 150 | No | <u>Unique SLUG to identifying the event.</u> |
 | String | `shortDesc` | 145 | 155 | No | Short description of the event. |
 | String | `startDateTime` | 24 | 24 | No | ISO 8601 representation of the event's start date and time. |
 | String | `endDateTime` | 24 | 24 | No | ISO 8601 representation of the event's end date and time. Must be later than `startDateTime`. |
