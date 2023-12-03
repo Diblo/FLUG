@@ -5,8 +5,8 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://api.server.test/v1
-    description: Production server
+  - url: http://localhost:2000/
+    description: Mockup-API service
 
 tags:
   - name: List
@@ -82,7 +82,13 @@ paths:
                           href: "/users/2"
                           title: "User Details"
                   pagination:
+                    first: null
+                    prev: null
+                    self:
+                        href: "/users?page=1"
+                        title: "Current page"
                     next: null
+                    last: null
                   results: 2
                   totalResults: 2
                   page: 1
@@ -393,7 +399,13 @@ paths:
                           href: "/blogs/blog-post-2"
                           title: "Read More"
                   pagination:
+                    first: null
+                    prev: null
+                    self:
+                        href: "/blogs?page=1"
+                        title: "Current page"
                     next: null
+                    last: null
                   results: 2
                   totalResults: 2
                   page: 1
@@ -762,7 +774,13 @@ paths:
                           href: "/events/event-2"
                           title: "More"
                   pagination:
+                    first: null
+                    prev: null
+                    self:
+                        href: "/events?page=1"
+                        title: "Current page"
                     next: null
+                    last: null
                   results: 2
                   totalResults: 2
                   page: 1
@@ -1119,7 +1137,13 @@ paths:
                           href: "/images/2"
                           title: "Image Details"
                   pagination:
+                    first: null
+                    prev: null
+                    self:
+                        href: "/images?page=1"
+                        title: "Current page"
                     next: null
+                    last: null
                   results: 2
                   totalResults: 2
                   page: 1
@@ -1341,7 +1365,7 @@ components:
       required: false
       schema:
         type: integer
-        default: 0
+        default: 1
     maxParam:
       name: max
       in: query
@@ -1474,7 +1498,18 @@ components:
         pagination:
           type: object
           properties:
+            first:
+              nullable: true
+              $ref: '#/components/schemas/LinkObject'
+            prev:
+              nullable: true
+              $ref: '#/components/schemas/LinkObject'
+            self:
+              $ref: '#/components/schemas/LinkObject'
             next:
+              nullable: true
+              $ref: '#/components/schemas/LinkObject'
+            last:
               nullable: true
               $ref: '#/components/schemas/LinkObject'
         results:
@@ -1491,7 +1526,13 @@ components:
           - "{Item 2}"
           - "{Item 3}"
         pagination:
+          first: null
+          prev: null
+          self:
+              href: "/endpoint?page=1"
+              title: "Current page"
           next: null
+          last: null
         results: 3
         totalResults: 3
         page: 1

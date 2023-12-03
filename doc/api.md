@@ -110,8 +110,8 @@
 | Image Set | Purpose | Minimum | Maximum | Image Format | Example |
 |-----------|---------|---------|---------|--------------|---------|
 | Original Image | The original uploaded image, functioning as a backup and reference, e.g., for Google Image Bot. | 380x200 pixels | - | - | `/images/<SHA2-224>.ext` |
-| Web Content Image | Images optimized for use on the website. | 380x200 pixels | 1920x1005 pixels | - | `/images/optimized/<SHA2-224>.ext` |
-| Open Graph Image | Images optimized for use on Facebook marked with the "-og" suffix. | 380x200 pixels | 1920x1005 pixels | 1.9:1 (+-0.09) | `/images/optimized/<SHA2-224>-og.ext` |
+| Web Content Image | Images optimized for use on the website. | 380x200 pixels | 1920x1280 pixels | - | `/images/optimized/<SHA2-224>.ext` |
+| Open Graph Image | Images optimized for use on Facebook marked with the "-og" suffix. | 380x200 pixels | 1920x1010 pixels | 1.9:1 (+-0.09) | `/images/optimized/<SHA2-224>-og.ext` |
 | Twitter Cards Image | Images optimized for use on Twitter Cards marked with the "-x" suffix. | 200x200 pixels | 1280x1280 pixels | 1:1 | `/images/optimized/<SHA2-224>-x.ext` |
  
 ### Image Handling
@@ -169,12 +169,16 @@
 
 ## Main Object
 
-| Data Type | Field | No Content | On Error | Description |
-|-----------|-------|------------|----------|-------------|
-| Boolean | `success` | Yes | Yes | Indicates if there was an error. |
-| Object | `data` | No | No | Contains a page or resource object. |
-| Object | `error` | - | Yes | Error object. |
-| String | `message` | Yes | No | Describes the status. |
+The main object serves as the parent container in a response. The table below shows an overview of the fields present in the main object under different response scenarios.
+
+| Data Type | Field | On Content | On No Content | On Error | Description |
+|-----------|-------|------------|---------------|----------|-------------|
+| Boolean | `success` | Yes | Yes | Yes | Indicates whether there was an error. |
+| Object | `data` | Yes | No | No | Contains either a page or resource object. |
+| Object | `error` | No | No | Yes | Error object. |
+| String | `message` | Yes | Yes | No | Describes the status. |
+
+Note: "On Content" refers to situations where the response includes content, "On No Content" refers to when the status code 204 is used, and "On Error" relates to error responses.
 
 **Error Object:**
 
@@ -303,7 +307,7 @@
 | Data Type | Field | Description | Example |
 |-----------|-------|-------------|---------|
 | List | `items` | A list containing user, blog, or event objects [List Item Objects]. | See examples below. |
-| Object | `pagination` | Contains a `next` link. <br> `next` has a null value if there is no next page. | `"pagination": { "next": null }` |
+| Object | `pagination` | Contains link objects: `first`, `prev`, `self`, `next`, `last`. <br> `first`, `prev`, `next`, and `last` are null when they are equal to `self`. | |
 | Number | `results` | Number of results | `"results": 10` |
 | Number | `totalResults` | Total number of results | `"totalResults": 150` |
 | Number | `page` | Current page | `"page": 1` |
@@ -329,7 +333,11 @@
     // Other users...
   ],
   "pagination": {
-    "next":  { "href": "/users/?page=2", "title": "Next page" }
+    "first": null,
+    "prev": null,
+    "self": { "href": "/users/?page=1", "title": "Current page" },
+    "next": { "href": "/users/?page=2", "title": "Next page" },
+    "last": { "href": "/users/?page=15", "title": "Last page" },
   },
   "results": 10,
   "totalResults": 150,
@@ -862,7 +870,10 @@ Structure: `<identifier>: { href: string, title: string, method: (POST|PATCH|DEL
 | `self` | Reference to the resource itself. | `{ "self": { "href": "/users/0", "title": "Mads Hansen" } }` |
 | `update` | Reference to update the resource. Can have a null value. | `{ "update": { "href": "/users/0", "title": "Update", "method": "PATCH" } }` |
 | `delete` | Reference to delete the resource. Can have a null value. | `{ "delete": { "href": "/users/0", "title": "Delete", "method": "DELETE" } }` |
+| `first` | Reference to the first page. Can have a null value. | `{ "first": { "href": "/users/?page=1", "title": "First page"} }` |
+| `prev` | Reference to the prior page. Can have a null value. | `{ "prev": { "href": "/users/?page=1", "title": "Previous page"} }` |
 | `next` | Reference to the next page. Can have a null value. | `{ "next": { "href": "/users/?page=2", "title": "Next page"} }` |
+| `last` | Reference to the last page. Can have a null value. | `{ "last": { "href": "/users/?page=105", "title": "Last page"} }` |
 | `login` | Reference to the login resource. | `{ "login": { "href": "/login", "title": "Login", "method": "POST"} }` |
 | `reset` | Reference to request a password reset resource. | `{ "reset": { "href": "/reset_password", "title": "Reset password", "method": "POST" } }` |
 
