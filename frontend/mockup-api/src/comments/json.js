@@ -1,15 +1,9 @@
-const {
-  BLOGS_PATH,
-  USERS_PATH,
-  EVENTS_PATH,
-  IMAGE_PATH,
-} = require("../config");
-const images = require("./db/images");
+const config = require("./config")
 
 /**
  * @param {boolean} success
  * @param {object} content
- * @param {string} message
+ * @param {string} [message]
  * @returns {object}
  */
 function jMain(success, content, message) {
@@ -19,45 +13,43 @@ function jMain(success, content, message) {
         success: success,
         data: content,
         message: message,
-      };
+      }
     }
 
     return {
       success: success,
       message: message,
-    };
+    }
   }
 
   return {
     success: success,
     error: content,
-  };
+  }
 }
 
 /**
  * Create a list
  *
- * @param {string} resPath - Resource path (e.g., "users", "blogs")
+ * @param {string} curResource - Resource path (e.g., "/users", "/blogs")
  * @param {array} items - List of items
  * @param {number} totalResults - Total number of items
  * @param {number} curPage - Current page number
  * @param {number} totalPages - Total number of pages
  * @returns {object} - List layout
  */
-function jPage(resPath, items, totalResults, curPage, totalPages) {
-  const resURI = "/" + resPath;
-
+function jPage(curResource, items, totalResults, curPage, totalPages) {
   return {
     items: items,
     results: items.length,
     totalResults: totalResults,
     pagination:
       curPage < totalPages
-        ? LinkObject("next", resURI + "?page=" + (curPage + 1), "Næste")
+        ? LinkObject("next", curResource + "?page=" + (curPage + 1), "Næste")
         : { next: null },
     page: curPage,
     totalPages: totalPages,
-  };
+  }
 }
 
 /**
@@ -78,11 +70,11 @@ function jUserItem(entity) {
     _links: {
       ...LinkObject(
         "self",
-        "/" + USERS_PATH + "/" + entity.uid,
+        "/" + config.getUsersEndpoint() + "/" + entity.uid,
         entity.firstName + (entity.lastName ? " " + entity.lastName : "")
       ),
     },
-  };
+  }
 }
 
 /**
@@ -90,22 +82,28 @@ function jUserItem(entity) {
  * @returns {object}
  */
 function jBlogItem(entity) {
-  const image = entity.image ? images.get(entity.image) : null;
-
   return {
     uid: entity.uid,
     title: entity.title,
     shortDesc: entity.shortDesc,
-    image: image ? ImageObject(image.src, image.alt) : null,
+    image: entity.image,
 
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
 
     _links: {
-      ...LinkObject("self", "/" + BLOGS_PATH + "/" + entity.uid, entity.title),
-      ...LinkObject("slug", "/" + BLOGS_PATH + "/" + entity.slug, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
+        entity.title
+      ),
+      ...LinkObject(
+        "slug",
+        "/" + config.getBlogsEndpoint() + "/" + entity.slug,
+        entity.title
+      ),
     },
-  };
+  }
 }
 
 /**
@@ -124,14 +122,18 @@ function jEventItem(entity) {
     updatedAt: entity.updatedAt,
 
     _links: {
-      ...LinkObject("self", "/" + EVENTS_PATH + "/" + entity.uid, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getEventsEndpoint() + "/" + entity.uid,
+        entity.title
+      ),
       ...LinkObject(
         "slug",
-        "/" + EVENTS_PATH + "/" + entity.slug,
+        "/" + config.getEventsEndpoint() + "/" + entity.slug,
         entity.title
       ),
     },
-  };
+  }
 }
 
 /**
@@ -148,9 +150,13 @@ function jImageItem(entity) {
     updatedAt: entity.updatedAt,
 
     _links: {
-      ...LinkObject("self", "/" + IMAGE_PATH + "/" + entity.uid, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getImagesEndpoint() + "/" + entity.uid,
+        entity.alt
+      ),
     },
-  };
+  }
 }
 
 /**
@@ -163,23 +169,23 @@ function jUser(entity) {
     _links: {
       ...LinkObject(
         "self",
-        "/" + USERS_PATH + "/" + entity.uid,
+        "/" + config.getUsersEndpoint() + "/" + entity.uid,
         entity.firstName + (entity.lastName ? " " + entity.lastName : "")
       ),
       ...LinkObject(
         "update",
-        "/" + USERS_PATH + "/" + entity.uid,
+        "/" + config.getUsersEndpoint() + "/" + entity.uid,
         "Gem",
         "PATCH"
       ),
       ...LinkObject(
         "delete",
-        "/" + USERS_PATH + "/" + entity.uid,
+        "/" + config.getUsersEndpoint() + "/" + entity.uid,
         "Slet",
         "DELETE"
       ),
     },
-  };
+  }
 }
 
 /**
@@ -187,27 +193,33 @@ function jUser(entity) {
  * @returns {object}
  */
 function jBlog(entity) {
-  const image = entity.image ? images.get(entity.image) : null;
   return {
     ...entity.asObject(),
-    image: image ? ImageObject(image.src, image.alt) : null,
     _links: {
-      ...LinkObject("self", "/" + BLOGS_PATH + "/" + entity.uid, entity.title),
-      ...LinkObject("slug", "/" + BLOGS_PATH + "/" + entity.slug, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
+        entity.title
+      ),
+      ...LinkObject(
+        "slug",
+        "/" + config.getBlogsEndpoint() + "/" + entity.slug,
+        entity.title
+      ),
       ...LinkObject(
         "update",
-        "/" + BLOGS_PATH + "/" + entity.uid,
+        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
         "Gem",
         "PATCH"
       ),
       ...LinkObject(
         "delete",
-        "/" + BLOGS_PATH + "/" + entity.uid,
+        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
         "Slet",
         "DELETE"
       ),
     },
-  };
+  }
 }
 
 /**
@@ -218,26 +230,30 @@ function jEvent(entity) {
   return {
     ...entity.asObject(),
     _links: {
-      ...LinkObject("self", "/" + EVENTS_PATH + "/" + entity.uid, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getEventsEndpoint() + "/" + entity.uid,
+        entity.title
+      ),
       ...LinkObject(
         "slug",
-        "/" + EVENTS_PATH + "/" + entity.slug,
+        "/" + config.getEventsEndpoint() + "/" + entity.slug,
         entity.title
       ),
       ...LinkObject(
         "update",
-        "/" + EVENTS_PATH + "/" + entity.uid,
+        "/" + config.getEventsEndpoint() + "/" + entity.uid,
         "Gem",
         "PATCH"
       ),
       ...LinkObject(
         "delete",
-        "/" + EVENTS_PATH + "/" + entity.uid,
+        "/" + config.getEventsEndpoint() + "/" + entity.uid,
         "Slet",
         "DELETE"
       ),
     },
-  };
+  }
 }
 
 /**
@@ -248,46 +264,39 @@ function jImage(entity) {
   return {
     ...entity.asObject(),
     _links: {
-      ...LinkObject("self", "/" + IMAGE_PATH + "/" + entity.uid, entity.title),
+      ...LinkObject(
+        "self",
+        "/" + config.getImagesEndpoint() + "/" + entity.uid,
+        entity.alt
+      ),
       ...LinkObject(
         "update",
-        "/" + IMAGE_PATH + "/" + entity.uid,
+        "/" + config.getImagesEndpoint() + "/" + entity.uid,
         "Gem",
         "PATCH"
       ),
       ...LinkObject(
         "delete",
-        "/" + IMAGE_PATH + "/" + entity.uid,
+        "/" + config.getImagesEndpoint() + "/" + entity.uid,
         "Slet",
         "DELETE"
       ),
     },
-  };
+  }
 }
 
 /**
  *
- * @param {string} message - Message
- */
-function jSuccess(message) {
-  return {
-    success: message,
-  };
-}
-
-/**
- *
- * @param {string} uri
+ * @param {number} code
  * @param {string} message - Error message
+ * @param {string} description
  */
 function jError(code, message, description) {
   return {
-    error: {
-      code: code,
-      message: message,
-      description: description,
-    },
-  };
+    code: code,
+    message: message,
+    description: description,
+  }
 }
 
 /**
@@ -300,13 +309,13 @@ function jError(code, message, description) {
  * @returns {object} - Link object
  */
 function LinkObject(identify, href, title, method) {
-  const link = { href: href, title: title };
+  const link = { href: href, title: title }
 
   if (method) {
-    link.method = method;
+    link.method = method
   }
 
-  return { [identify]: link };
+  return { [identify]: link }
 }
 
 /**
@@ -315,10 +324,11 @@ function LinkObject(identify, href, title, method) {
  * @returns {object} - Link object
  */
 function ImageObject(src, alt) {
-  return { src: src, alt: alt };
+  return { src: src, alt: alt }
 }
 
 module.exports = {
+  jMain,
   jPage,
   jUserItem,
   jBlogItem,
@@ -328,6 +338,5 @@ module.exports = {
   jBlog,
   jEvent,
   jImage,
-  jSuccess,
   jError,
-};
+}

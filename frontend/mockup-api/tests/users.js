@@ -1,510 +1,459 @@
-process.env.EXPRESS_PORT = 2300;
+process.env.API_PORT = 2300
 
-const request = require("supertest");
-const app = require("../server");
+const app = require("../server")
 const {
   validateSchema,
-  validatePage,
+  validateArraySchema,
   validateValue,
   validateSize,
-} = require("./libs/tools");
+  Request,
+} = require("./comments/tools")
 const {
   pageSchema,
-  userItemSchema,
   userSchema,
+  userItemSchema,
+  successResponseSchema,
+  errorResponseSchema,
   errorSchema,
-} = require("./libs/schemas");
-const { USERS_PATH, ITEMS_PER_PAGE } = require("../config");
-const { faker } = require("@faker-js/faker");
+} = require("./comments/schemas")
+const config = require("../src/comments/config")
+const { faker } = require("@faker-js/faker")
 
-const PAGE_URI = "/" + USERS_PATH;
-const USERS_URI = "/" + USERS_PATH;
+const ENDPOINT_URL = "/" + config.getUsersEndpoint()
+const ITEMS_PER_PAGE = config.getItemsPerPage()
 
 /** GET */
-function testPage(uri, nextHref, page) {
+function testPage(url, nextHref, page) {
   return (done) => {
-    request(app)
-      .get(uri)
-      .expect("Content-Type", /json/)
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
+    new Request(app, done).get(url).call(200, (response) => {
+      /* msg */
+      validateSchema(response, "", successResponseSchema, 0)
+      validateValue(response, "success", true)
+      validateValue(response, "message", "Successfully retrieved the resource.")
 
-        try {
-          const response = JSON.parse(res.text);
+      /* page */
+      validateSchema(response, "data", pageSchema)
 
-          validatePage(response, pageSchema, userItemSchema);
+      validateSize(response, "data.items", ITEMS_PER_PAGE)
+      validateValue(response, "data.results", ITEMS_PER_PAGE)
+      validateValue(response, "data.totalResults", 300)
 
-          validateSize(response, "items", ITEMS_PER_PAGE);
-          validateValue(response, "results", ITEMS_PER_PAGE);
-          validateValue(response, "totalResults", 300);
+      if (nextHref) {
+        validateValue(response, "data.pagination.next.href", nextHref)
+        validateValue(response, "data.pagination.next.title", "Næste")
+      } else {
+        validateValue(response, "data.pagination.next", null)
+      }
+      validateValue(response, "data.page", page)
+      validateValue(response, "data.totalPages", 3)
 
-          if (nextHref) {
-            validateValue(response, "pagination.next.href", nextHref);
-            validateValue(response, "pagination.next.title", "Næste");
-          }
-          validateValue(response, "page", page);
-          validateValue(response, "totalPages", 3);
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
+      /* items */
+      validateArraySchema(response, "data.item", userItemSchema)
+    })
+  }
 }
 
-function testUnit(uri, id, uid) {
+function testResource(url, uid) {
   return (done) => {
-    request(app)
-      .get(uri + "/" + id)
-      .expect("Content-Type", /json/)
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
+    new Request(app, done).get(url).call(200, (response) => {
+      /* msg */
+      validateSchema(response, "", successResponseSchema, 0)
+      validateValue(response, "success", true)
+      validateValue(response, "message", "Successfully retrieved the resource.")
 
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, userSchema);
+      /* resource */
+      validateSchema(response, "data", userSchema)
 
-          validateValue(response, "uid", uid);
+      validateValue(response, "data.uid", uid)
 
-          validateValue(response, "_links.self.href", USERS_URI + "/" + uid);
-          validateValue(
-            response,
-            "_links.self.title",
-            response.firstName +
-              (response.lastName ? " " + response.lastName : "")
-          );
+      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
+      validateValue(
+        response,
+        "data._links.self.title",
+        response.data.firstName +
+          (response.data.lastName ? " " + response.data.lastName : "")
+      )
 
-          validateValue(response, "_links.update.href", USERS_URI + "/" + uid);
-          validateValue(response, "_links.update.title", "Gem");
-          validateValue(response, "_links.update.method", "PATCH");
+      validateValue(
+        response,
+        "data._links.update.href",
+        ENDPOINT_URL + "/" + uid
+      )
+      validateValue(response, "data._links.update.title", "Gem")
+      validateValue(response, "data._links.update.method", "PATCH")
 
-          validateValue(response, "_links.delete.href", USERS_URI + "/" + uid);
-          validateValue(response, "_links.delete.title", "Slet");
-          validateValue(response, "_links.delete.method", "DELETE");
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
-}
-
-function testError(uri) {
-  return (done) => {
-    request(app)
-      .get(uri)
-      .expect("Content-Type", /json/)
-      .expect(404)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
-
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, errorSchema);
-
-          validateValue(response, "uri", uri);
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
+      validateValue(
+        response,
+        "data._links.delete.href",
+        ENDPOINT_URL + "/" + uid
+      )
+      validateValue(response, "data._links.delete.title", "Slet")
+      validateValue(response, "data._links.delete.method", "DELETE")
+    })
+  }
 }
 
 /** POST */
-function testPost(uri) {
-  const firstName = faker.person.firstName();
-  const lastName = faker.person.lastName();
-  const email = firstName + "_" + lastName + "@gmail.com";
+function testPost(url, data) {
+  return (done) => {
+    new Request(app, done).post(url, data).call(201, (response) => {
+      /* msg */
+      validateSchema(response, "", successResponseSchema, 0)
+      validateValue(response, "success", true)
+      validateValue(
+        response,
+        "message",
+        "The resource has been created successfully."
+      )
+
+      /* resource */
+      validateSchema(response, "data", userSchema)
+
+      validateValue(response, "data.firstName", data.firstName)
+      validateValue(response, "data.lastName", data.lastName)
+      validateValue(response, "data.email", data.email)
+
+      validateValue(
+        response,
+        "data._links.self.href",
+        ENDPOINT_URL + "/" + response.data.uid
+      )
+      validateValue(
+        response,
+        "data._links.self.title",
+        data.firstName + (data.lastName ? " " + data.lastName : "")
+      )
+
+      validateValue(
+        response,
+        "data._links.update.href",
+        ENDPOINT_URL + "/" + response.data.uid
+      )
+      validateValue(response, "data._links.update.title", "Gem")
+      validateValue(response, "data._links.update.method", "PATCH")
+
+      validateValue(
+        response,
+        "data._links.delete.href",
+        ENDPOINT_URL + "/" + response.data.uid
+      )
+      validateValue(response, "data._links.delete.title", "Slet")
+      validateValue(response, "data._links.delete.method", "DELETE")
+    })
+  }
+}
+
+/** PATCH */
+function testPatch(url, uid, data) {
+  return (done) => {
+    new Request(app, done).patch(url, data).call(200, (response) => {
+      /* msg */
+      validateSchema(response, "", successResponseSchema, 0)
+      validateValue(response, "success", true)
+      validateValue(
+        response,
+        "message",
+        "The resource has been updated successfully."
+      )
+
+      /* resource */
+      validateSchema(response, "data", userSchema)
+
+      if (data.firstName) {
+        validateValue(response, "data.firstName", data.firstName)
+      }
+      if (data.lastName) {
+        validateValue(response, "data.lastName", data.lastName)
+      }
+      if (data.email) {
+        validateValue(response, "data.email", data.email)
+      }
+
+      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
+      if (data.firstName) {
+        validateValue(
+          response,
+          "data._links.self.title",
+          data.firstName +
+            (response.data.lastName ? " " + response.data.lastName : "")
+        )
+      }
+      if (data.lastName) {
+        validateValue(
+          response,
+          "data._links.self.title",
+          response.data.firstName + (data.lastName ? " " + data.lastName : "")
+        )
+      }
+
+      validateValue(
+        response,
+        "data._links.update.href",
+        ENDPOINT_URL + "/" + uid
+      )
+      validateValue(response, "data._links.update.title", "Gem")
+      validateValue(response, "data._links.update.method", "PATCH")
+
+      validateValue(
+        response,
+        "data._links.delete.href",
+        ENDPOINT_URL + "/" + uid
+      )
+      validateValue(response, "data._links.delete.title", "Slet")
+      validateValue(response, "data._links.delete.method", "DELETE")
+    })
+  }
+}
+
+/** Error */
+function testErrorResponse(method, url, status, message, data = null) {
+  return (done) => {
+    let request = new Request(app, done)
+    if (method === "POST") {
+      request = request.post(url, data)
+    } else if (method === "PATCH") {
+      request = request.patch(url, data)
+    } else if (method === "DELETE") {
+      request = request.delete(url)
+    } else {
+      request = request.get(url)
+    }
+
+    request.call(status, (response) => {
+      /* msg */
+      validateSchema(response, "", errorResponseSchema, 0)
+      validateValue(response, "success", false)
+
+      /* Error object */
+      validateSchema(response, "error", errorSchema)
+      validateValue(response, "error.code", status)
+      validateValue(response, "error.message", message)
+    })
+  }
+}
+
+/** TESTS */
+describe("GET " + ENDPOINT_URL, () => {
+  it(
+    "response with page 1 and 100 users",
+    testPage(ENDPOINT_URL, ENDPOINT_URL + "?page=2", 1)
+  )
+
+  it(
+    "response with page 3 and 100 users",
+    testPage(ENDPOINT_URL + "?page=3", null, 3)
+  )
+
+  it(
+    "response in case of page not found",
+    testErrorResponse(
+      "GET",
+      ENDPOINT_URL + "?page=4",
+      404,
+      "The requested resource was not found."
+    )
+  )
+})
+
+describe("GET " + ENDPOINT_URL + "/:uid", () => {
+  it("response with a user", testResource(ENDPOINT_URL + "/0", 0))
+  it(
+    "response in case of user not found",
+    testErrorResponse(
+      "GET",
+      ENDPOINT_URL + "/500",
+      404,
+      "The requested resource was not found."
+    )
+  )
+})
+
+describe("POST " + ENDPOINT_URL, () => {
+  const firstName = faker.person.firstName()
+  const lastName = faker.person.lastName()
+  const email = firstName + "_" + lastName + "@gmail.com"
 
   const data = {
     firstName: firstName,
     lastName: lastName,
     email: email,
-  };
+  }
 
-  return (done) => {
-    request(app)
-      .post(uri)
-      .send(JSON.stringify(data))
-      .set("Content-Type", "application/json")
-      .expect(201)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
-
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, userSchema);
-
-          validateValue(response, "firstName", data.firstName);
-          validateValue(response, "lastName", data.lastName);
-          validateValue(response, "email", data.email);
-
-          validateValue(
-            response,
-            "_links.self.href",
-            USERS_URI + "/" + response.uid
-          );
-          validateValue(
-            response,
-            "_links.self.title",
-            response.firstName +
-              (response.lastName ? " " + response.lastName : "")
-          );
-
-          validateValue(
-            response,
-            "_links.update.href",
-            USERS_URI + "/" + response.uid
-          );
-          validateValue(response, "_links.update.title", "Gem");
-          validateValue(response, "_links.update.method", "PATCH");
-
-          validateValue(
-            response,
-            "_links.delete.href",
-            USERS_URI + "/" + response.uid
-          );
-          validateValue(response, "_links.delete.title", "Slet");
-          validateValue(response, "_links.delete.method", "DELETE");
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
-}
-
-function testPostError(uri, data) {
-  return (done) => {
-    request(app)
-      .post(uri)
-      .send(JSON.stringify(data))
-      .set("Content-Type", "application/json")
-      .expect(400)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
-
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, errorSchema);
-
-          validateValue(response, "uri", uri);
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
-}
-
-/** PATCH */
-function testPatch(uri, uid, data) {
-  return (done) => {
-    request(app)
-      .patch(uri + "/" + uid)
-      .send(JSON.stringify(data))
-      .set("Content-Type", "application/json")
-      .expect(200)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
-
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, userSchema);
-
-          if (data.firstName) {
-            validateValue(response, "firstName", data.firstName);
-          }
-          if (data.lastName) {
-            validateValue(response, "lastName", data.lastName);
-          }
-          if (data.email) {
-            validateValue(response, "email", data.email);
-          }
-          validateValue(
-            response,
-            "_links.self.href",
-            USERS_URI + "/" + response.uid
-          );
-          if (data.firstName && data.lastName) {
-            validateValue(
-              response,
-              "_links.self.title",
-              response.firstName +
-                (response.lastName ? " " + response.lastName : "")
-            );
-          }
-
-          validateValue(
-            response,
-            "_links.update.href",
-            USERS_URI + "/" + response.uid
-          );
-          validateValue(response, "_links.update.title", "Gem");
-          validateValue(response, "_links.update.method", "PATCH");
-
-          validateValue(
-            response,
-            "_links.delete.href",
-            USERS_URI + "/" + response.uid
-          );
-          validateValue(response, "_links.delete.title", "Slet");
-          validateValue(response, "_links.delete.method", "DELETE");
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
-}
-
-function testPatchError(uri, uid, data, status) {
-  return (done) => {
-    request(app)
-      .patch(uri + "/" + uid)
-      .send(JSON.stringify(data))
-      .set("Content-Type", "application/json")
-      .expect(status ? status : 400)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) {
-          try {
-            return done(
-              new Error(
-                `${err.message}.\nServer Response: ${
-                  JSON.parse(res.text).error
-                }.`
-              )
-            );
-          } catch {}
-          return done(err);
-        }
-
-        try {
-          const response = JSON.parse(res.text);
-          validateSchema(response, errorSchema);
-
-          validateValue(response, "uri", uri + "/" + uid);
-        } catch (error) {
-          return done(error);
-        }
-
-        done();
-      });
-  };
-}
-
-/** TESTS */
-describe("GET " + PAGE_URI, () => {
-  it(
-    "response with page 1 and 100 users",
-    testPage(PAGE_URI, PAGE_URI + "?page=2", 1)
-  );
-
-  it(
-    "response with page 2 and 100 users",
-    testPage(PAGE_URI + "?page=2", PAGE_URI + "?page=3", 2)
-  );
-
-  it(
-    "response with page 3 and 100 users",
-    testPage(PAGE_URI + "?page=3", null, 3)
-  );
-  it("response in case of page not found", testError(PAGE_URI + "?page=4"));
-});
-
-describe("GET " + PAGE_URI + "/:uid", () => {
-  it("response with a user", testUnit(PAGE_URI, 0, 0));
-  it("response in case of user not found", testError(PAGE_URI + "/" + 500));
-});
-
-describe("POST " + PAGE_URI, () => {
-  it("response with a user", testPost(PAGE_URI));
+  it("response with a user", testPost(ENDPOINT_URL, data))
   it(
     "response in case of missing values",
-    testPostError(PAGE_URI, {
-      firstName: "",
-      lastName: "",
-      email: "",
-      content: "", // Does not exist
-    })
-  );
-  it("response in case of missing data objects", testPostError(PAGE_URI, {}));
-});
+    testErrorResponse(
+      "POST",
+      ENDPOINT_URL,
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        firstName: "",
+        lastName: "",
+        email: "",
+      }
+    )
+  )
+  it(
+    "response in case of missing data objects",
+    testErrorResponse(
+      "POST",
+      ENDPOINT_URL,
+      400,
+      "The request cannot be fulfilled due to bad syntax."
+    )
+  )
+})
 
-describe("PATCH " + PAGE_URI + "/:uid", () => {
+describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
   it(
     "able to update firstName",
-    testPatch(PAGE_URI, 63, {
+    testPatch(ENDPOINT_URL + "/63", 63, {
       firstName: faker.person.firstName(),
     })
-  );
+  )
   it(
     "response with a error when firstName missing value",
-    testPatchError(PAGE_URI, 63, {
-      firstName: "",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        firstName: "",
+      }
+    )
+  )
   it(
     "response with a error when firstName value is too short",
-    testPatchError(PAGE_URI, 63, {
-      firstName: "a",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        firstName: "a",
+      }
+    )
+  )
   it(
     "response with a error when firstName value is too long",
-    testPatchError(PAGE_URI, 63, {
-      firstName:
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        firstName:
+          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
+      }
+    )
+  )
 
   it(
     "able to update lastName value",
-    testPatch(PAGE_URI, 63, {
+    testPatch(ENDPOINT_URL + "/63", 63, {
       lastName: faker.person.lastName(),
     })
-  );
+  )
   it(
     "able to set lastName to empty",
-    testPatch(PAGE_URI, 63, {
+    testPatch(ENDPOINT_URL + "/63", 63, {
       lastName: "",
     })
-  );
+  )
   it(
     "response with a error when lastName value is too short",
-    testPatchError(PAGE_URI, 63, {
-      lastName: "a",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        lastName: "a",
+      }
+    )
+  )
   it(
     "response with a error when lastName value is too long",
-    testPatchError(PAGE_URI, 63, {
-      lastName:
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        lastName:
+          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
+      }
+    )
+  )
 
   it(
     "able to update email value",
-    testPatch(PAGE_URI, 63, {
+    testPatch(ENDPOINT_URL + "/63", 63, {
       email: "test2@foo.bar",
     })
-  );
+  )
   it(
     "response with a error when email missing value",
-    testPatchError(PAGE_URI, 63, {
-      email: "",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        email: "",
+      }
+    )
+  )
   it(
     "response with a error when email is not valid",
-    testPatchError(PAGE_URI, 63, {
-      email: "test.foo.bar",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        email: "test.foo.bar",
+      }
+    )
+  )
   it(
     "response with a error when email is too long",
-    testPatchError(PAGE_URI, 63, {
-      email:
-        "abcdefghijklmnopqrstuvwxyz_abcdefghijklmnopqrstuvwxyz_abcdefghij@abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd.bar",
-    })
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax.",
+      {
+        email:
+          "abcdefghijklmnopqrstuvwxyz_abcdefghijklmnopqrstuvwxyz_abcdefghij@abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd.bar",
+      }
+    )
+  )
 
   it(
     "response with a error when empty or missing body",
-    testPatchError(PAGE_URI, 63, {})
-  );
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/63",
+      400,
+      "The request cannot be fulfilled due to bad syntax."
+    )
+  )
 
   it(
     "response in case of not found",
-    testPatchError(
-      PAGE_URI,
-      600,
+    testErrorResponse(
+      "PATCH",
+      ENDPOINT_URL + "/600",
+      404,
+      "The requested resource was not found.",
       {
         firstName: "test",
         lastName: "test",
         email: "test@foo.bar",
-      },
-      404
+      }
     )
-  );
-});
+  )
+})

@@ -1,17 +1,23 @@
-const { BLOGS_PATH } = require("../../config");
-const Db = require("./db");
-const BlogEntity = require("./entities/blogEntity");
+const config = require("../comments/config")
+const Db = require("../comments/db")
+const BlogEntity = require("./entities/blogEntity")
 
 class Blogs extends Db {
   constructor() {
-    super(BLOGS_PATH, BlogEntity);
+    super(config.getBlogsEndpoint(), BlogEntity)
   }
 
-  getIdBySlug(slug) {
-    return this.db.getIdBySlug(this.table, slug);
+  getIdBySlug(value) {
+    const data = this.db.getsByValue(this.table, "slug", value)
+
+    if (data.length !== 1) {
+      return null
+    }
+
+    return data[0].uid
   }
 }
 
-const blogs = new Blogs();
+const blogs = new Blogs()
 
-module.exports = blogs;
+module.exports = blogs

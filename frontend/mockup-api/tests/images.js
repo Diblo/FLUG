@@ -6,22 +6,20 @@ const {
   validateArraySchema,
   validateValue,
   validateSize,
-  generateLoremWithinRange,
   getImageAsDataUri,
   Request,
 } = require("./comments/tools")
 const {
   pageSchema,
-  blogSchema,
-  blogItemSchema,
+  imageItemSchema,
+  imageSchema,
   successResponseSchema,
   errorResponseSchema,
   errorSchema,
 } = require("./comments/schemas")
 const config = require("../src/comments/config")
-const { faker } = require("@faker-js/faker")
 
-const ENDPOINT_URL = "/" + config.getBlogsEndpoint()
+const ENDPOINT_URL = "/" + config.getImagesEndpoint()
 const ITEMS_PER_PAGE = config.getItemsPerPage()
 
 /** GET */
@@ -50,7 +48,7 @@ function testPage(url, nextHref, page) {
       validateValue(response, "data.totalPages", 3)
 
       /* items */
-      validateArraySchema(response, "data.item", blogItemSchema)
+      validateArraySchema(response, "data.item", imageItemSchema)
     })
   }
 }
@@ -64,19 +62,12 @@ function testResource(url, uid) {
       validateValue(response, "message", "Successfully retrieved the resource.")
 
       /* resource */
-      validateSchema(response, "data", blogSchema)
+      validateSchema(response, "data", imageSchema)
 
       validateValue(response, "data.uid", uid)
 
       validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      validateValue(response, "data._links.self.title", response.data.title)
-
-      validateValue(
-        response,
-        "data._links.slug.href",
-        ENDPOINT_URL + "/" + response.data.slug
-      )
-      validateValue(response, "data._links.slug.title", response.data.title)
+      validateValue(response, "data._links.self.title", response.data.alt)
 
       validateValue(
         response,
@@ -111,19 +102,16 @@ function testPost(url, data) {
       )
 
       /* resource */
-      validateSchema(response, "data", blogSchema)
+      validateSchema(response, "data", imageSchema)
 
-      validateValue(response, "data.title", data.title)
-      validateValue(response, "data.slug", data.slug)
-      validateValue(response, "data.shortDesc", data.shortDesc)
-      validateValue(response, "data.content", data.content)
+      validateValue(response, "data.alt", data.alt)
 
       validateValue(
         response,
         "data._links.self.href",
         ENDPOINT_URL + "/" + response.data.uid
       )
-      validateValue(response, "data._links.self.title", data.title)
+      validateValue(response, "data._links.self.title", data.alt)
 
       validateValue(
         response,
@@ -146,10 +134,6 @@ function testPost(url, data) {
 
 /** PATCH */
 function testPatch(url, uid, data) {
-  if (data.shortDesc) {
-    console.log(data.shortDesc.length)
-  }
-
   return (done) => {
     new Request(app, done).patch(url, data).call(200, (response) => {
       /* msg */
@@ -162,25 +146,12 @@ function testPatch(url, uid, data) {
       )
 
       /* resource */
-      validateSchema(response, "data", blogSchema)
+      validateSchema(response, "data", imageSchema)
 
-      if (data.title) {
-        validateValue(response, "data.title", data.title)
-      }
-      if (data.slug) {
-        validateValue(response, "data.slug", data.slug)
-      }
-      if (data.shortDesc) {
-        validateValue(response, "data.shortDesc", data.shortDesc)
-      }
-      if (data.content) {
-        validateValue(response, "data.content", data.content)
-      }
+      validateValue(response, "data.alt", data.alt)
 
       validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      if (data.title) {
-        validateValue(response, "data._links.self.title", data.title)
-      }
+      validateValue(response, "data._links.self.title", data.alt)
 
       validateValue(
         response,
@@ -231,11 +202,12 @@ function testErrorResponse(method, url, status, message, data = null) {
 /** TESTS */
 describe("GET " + ENDPOINT_URL, () => {
   it(
-    "response with page 1 and 100 blogs",
+    "response with page 1 and 100 images",
     testPage(ENDPOINT_URL, ENDPOINT_URL + "?page=2", 1)
   )
+
   it(
-    "response with page 3 and 100 blogs",
+    "response with page 3 and 100 images",
     testPage(ENDPOINT_URL + "?page=3", null, 3)
   )
 
@@ -251,9 +223,9 @@ describe("GET " + ENDPOINT_URL, () => {
 })
 
 describe("GET " + ENDPOINT_URL + "/:uid", () => {
-  it("response with a blog", testResource(ENDPOINT_URL + "/0", 0))
+  it("response with a image", testResource(ENDPOINT_URL + "/0", 0))
   it(
-    "response in case of blog not found",
+    "response in case of image not found",
     testErrorResponse(
       "GET",
       ENDPOINT_URL + "/500",
@@ -263,39 +235,13 @@ describe("GET " + ENDPOINT_URL + "/:uid", () => {
   )
 })
 
-describe("GET " + ENDPOINT_URL + "/:slug", () => {
-  it(
-    "response with a blog",
-    testResource(ENDPOINT_URL + "/custom-blog-title", 30)
-  )
-  it(
-    "response in case of blog not found",
-    testErrorResponse(
-      "GET",
-      ENDPOINT_URL + "/custom-blog-title2",
-      404,
-      "The requested resource was not found."
-    )
-  )
-})
-
 describe("POST " + ENDPOINT_URL, () => {
-  const title = generateLoremWithinRange(5, 100)
   const data = {
-    title: title,
-    slug: title
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w-]+/g, ""),
-    shortDesc: generateLoremWithinRange(140, 155),
-    image: {
-      src: getImageAsDataUri("./images/example1.jpg"),
-      alt: "abcdefghijklmno",
-    },
-    content: faker.lorem.paragraphs({ min: 2, max: 8 }),
+    src: getImageAsDataUri("./images/example1.jpg"),
+    alt: "abcdefghijklmno",
   }
 
-  it("response with a blog", testPost(ENDPOINT_URL, data))
+  it("response with a image", testPost(ENDPOINT_URL, data))
   it(
     "response in case of missing values",
     testErrorResponse(
@@ -304,10 +250,8 @@ describe("POST " + ENDPOINT_URL, () => {
       400,
       "The request cannot be fulfilled due to bad syntax.",
       {
-        title: "",
-        slug: "",
-        shortDesc: "",
-        content: "",
+        src: "",
+        alt: "",
       }
     )
   )
@@ -324,178 +268,45 @@ describe("POST " + ENDPOINT_URL, () => {
 
 describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
   it(
-    "able to update title",
+    "able to update alt",
     testPatch(ENDPOINT_URL + "/63", 63, {
-      title: "abcdefghijklmnopqrstu",
+      alt: "abcdefghijklmno",
     })
   )
   it(
-    "response with a error when title missing value",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { title: "" }
-    )
-  )
-  it(
-    "response with a error when title value is too short",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { title: "abcd" }
-    )
-  )
-  it(
-    "response with a error when title value is too long",
+    "response with a error when alt missing value",
     testErrorResponse(
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
       {
-        title:
-          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvw",
+        alt: "",
       }
     )
   )
-
   it(
-    "able to update slug",
-    testPatch(ENDPOINT_URL + "/63", 63, {
-      slug: "abcdefghijklmnopqrstu",
-    })
-  )
-  it(
-    "response with a error when slug missing value",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { slug: "" }
-    )
-  )
-  it(
-    "response with a error when slug value is too short",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { slug: "abcd" }
-    )
-  )
-  it(
-    "response with a error when slug value is too long",
+    "response with a error when alt value is too short",
     testErrorResponse(
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
       {
-        slug: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstu",
+        alt: "abcdefghijklmn",
       }
     )
   )
-
   it(
-    "able to update shortDesc",
-    testPatch(ENDPOINT_URL + "/63", 63, {
-      shortDesc:
-        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmno",
-    })
-  )
-  it(
-    "response with a error when shortDesc missing value",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { shortDesc: "" }
-    )
-  )
-  it(
-    "response with a error when shortDesc value is too short",
+    "response with a error when alt value is too long",
     testErrorResponse(
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
       {
-        shortDesc:
-          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefgh",
+        alt: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy",
       }
-    )
-  )
-  it(
-    "response with a error when shortDesc value is too long",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      {
-        shortDesc:
-          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
-      }
-    )
-  )
-
-  it(
-    "able to update image",
-    testPatch(ENDPOINT_URL + "/63", 63, {
-      image: {
-        src: getImageAsDataUri("./images/example1.jpg"),
-        alt: "abcdefghijklmno",
-      },
-    })
-  )
-  it(
-    "able to unset image",
-    testPatch(ENDPOINT_URL + "/63", 63, {
-      image: null,
-    })
-  )
-  it(
-    "response with a error when shortDesc missing value",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { image: {} }
-    )
-  )
-
-  it(
-    "able to update content",
-    testPatch(ENDPOINT_URL + "/63", 63, {
-      content: "abcdefghijklmnopqrstuvwxyz",
-    })
-  )
-  it(
-    "response with a error when content missing value",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { content: "" }
-    )
-  )
-  it(
-    "response with a error when content value is too short",
-    testErrorResponse(
-      "PATCH",
-      ENDPOINT_URL + "/63",
-      400,
-      "The request cannot be fulfilled due to bad syntax.",
-      { content: "abcdefghijklmnopqrs" }
     )
   )
 
@@ -517,10 +328,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       404,
       "The requested resource was not found.",
       {
-        title: "Test",
-        slug: "test",
-        shortDesc: "Test",
-        content: "Test",
+        alt: "Test",
       }
     )
   )

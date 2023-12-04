@@ -1,4 +1,4 @@
-const abstractEntity = require("./abstractEntity");
+const abstractEntity = require("../../comments/abstractEntity")
 
 /**
  * Represents a user entity.
@@ -10,8 +10,8 @@ class UserEntity extends abstractEntity {
    * @param {object} data - Entity data.
    */
   constructor(data) {
-    super(data, ["firstName", "lastName", "email", "loggedInAt"]);
+    super(data, ["firstName", "lastName", "email", "loggedInAt"])
   }
 }
 
-module.exports = UserEntity;
+module.exports = UserEntity

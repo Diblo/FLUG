@@ -1,17 +1,31 @@
-const EXPRESS_PORT = process.env.EXPRESS_PORT || 2000;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@flug.dk";
-const ITEMS_PER_PAGE = process.env.ITEMS_PER_PAGE || 100;
-const USERS_PATH = process.env.USERS_PATH || "users";
-const BLOGS_PATH = process.env.BLOGS_PATH || "blogs";
-const EVENTS_PATH = process.env.EVENTS_PATH || "events";
-const IMAGE_PATH = process.env.IMAGE_PATH || "images";
+const API_PORT = 2000
+const ITEMS_PER_PAGE = 100
+const USERS_ENDPOINT = "users"
+const BLOGS_ENDPOINT = "blogs"
+const EVENTS_ENDPOINT = "events"
+const IMAGES_ENDPOINT = "images"
+
+const IMAGES_PATH = "../web/public/images"
+const MAX_IMAGE_SIZE_BYTES = 8000000
+const MIN_IMAGE_WIDTH = 380
+const MIN_IMAGE_HEIGHT = 200
+const IMAGE_SETS = [
+  "./src/imageSets/WebImage",
+  "./src/imageSets/OpenGrapImage",
+  "./src/imageSets/XImage",
+  "./src/imageSets/OriginalImage",
+]
 
 module.exports = {
-  EXPRESS_PORT,
-  ADMIN_EMAIL,
+  API_PORT,
   ITEMS_PER_PAGE,
-  USERS_PATH,
-  BLOGS_PATH,
-  EVENTS_PATH,
-  IMAGE_PATH,
-};
+  USERS_ENDPOINT,
+  BLOGS_ENDPOINT,
+  EVENTS_ENDPOINT,
+  IMAGES_ENDPOINT,
+  IMAGES_PATH,
+  MAX_IMAGE_SIZE_BYTES,
+  MIN_IMAGE_WIDTH,
+  MIN_IMAGE_HEIGHT,
+  IMAGE_SETS,
+}

@@ -147,6 +147,19 @@
 - Permitted formats are JPEG and PNG.
 - Images that do not meet the minimum size are rejected.
 
+## Email
+
+The validation for email addresses follows specific criteria:
+
+- The local part (before the @ symbol) can contain only alphanumeric characters, dots (.), underscores (_), percent signs (%), plus signs (+), or hyphens (-).
+- The domain part (after the @ symbol) can contain only alphanumeric characters, dots (.), or hyphens (-).
+
+Example:
+
+```re
+^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$
+```
+
 ## Status Code
 
 **2xx (Success):** Indicate that the request was received, understood, and accepted.

@@ -1,13 +1,13 @@
-const { USERS_PATH } = require("../../config");
-const Db = require("./db");
-const UserEntity = require("./entities/userEntity");
+const config = require("../comments/config")
+const Db = require("../comments/db")
+const UserEntity = require("./entities/userEntity")
 
 class Users extends Db {
   constructor() {
-    super(USERS_PATH, UserEntity);
+    super(config.getUsersEndpoint(), UserEntity)
   }
 }
 
-const users = new Users();
+const users = new Users()
 
-module.exports = users;
+module.exports = users

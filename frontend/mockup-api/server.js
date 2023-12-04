@@ -2,124 +2,178 @@
  * REST API mockup
  */
 // Import necessary libraries
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const { EXPRESS_PORT } = require("./config");
-const routes = require("./src/routes");
+const express = require("express")
+const cors = require("cors")
+const morgan = require("morgan")
+const config = require("./src/comments/config")
+const routes = require("./src/routes")
 const {
+  jMain,
   jPage,
   jUser,
   jBlog,
   jEvent,
   jImage,
-  jSuccess,
   jError,
-} = require("./src/json");
-const { ResourceNotFound, PageNotFound, InputError } = require("./src/Error");
-
-// Initialize the database
-require("./init_databse")();
+} = require("./src/comments/json")
+const {
+  BadRequest,
+  Unauthorized,
+  Forbidden,
+  NotFound,
+  ServerError,
+} = require("./src/comments/errors")
 
 // Create an Express app
-const app = express();
+const app = express()
 
-// Use middleware for monitor file changes and print logging
-app.use(morgan("dev"));
-app.use(cors());
+// Use Morgan to log HTTP requests
+app.use(morgan("dev"))
 
-// Use middleware to extend the request and response object
-app.use(express.json());
+// Fix issues typically arise when making AJAX requests
+// on one domain to another domain.
+app.use(cors())
+
+// Parse JSON in the request body
+app.use(
+  express.json({
+    limit: "9mb",
+  })
+)
+
+// Extend the request and response object
 app.use((req, res, next) => {
-  const slugRegex = /^(?!-)[a-z0-9-]+(?<!-)$/;
+  const slugRegex = /^(?!-)[a-z0-9-]+(?<!-)$/
 
   req.getUid = function () {
-    const parsedUid = parseInt(req.params.uid || req.params.id);
+    const parsedUid = parseInt(req.params.uid || req.params.id)
 
     if (isNaN(parsedUid) || parsedUid < 0) {
-      return null;
+      return null
     }
 
-    return parsedUid;
-  };
+    return parsedUid
+  }
 
   req.getSlug = function () {
     if (!req.params.id || !slugRegex.test(req.params.id)) {
-      return null;
+      return null
     }
 
-    return req.params.id;
-  };
+    return req.params.id
+  }
 
   req.getJson = function (schema) {
-    const data = req.body;
-
-    const { error } = schema.validate(data);
-    if (error) {
-      throw new InputError(error.details[0].message);
+    const contentType = req.get("Content-Type")
+    if (contentType !== "application/json") {
+      throw new BadRequest("Invalid Content-Type. Must be application/json.")
     }
 
-    return data;
-  };
+    const { error } = schema.validate(req.body)
+    if (error) {
+      throw new BadRequest(error.details[0].message)
+    }
 
-  function handleArgs(entityOrStatus, entity) {
-    return {
-      status: typeof entityOrStatus === "number" ? entityOrStatus : 200,
-      entity: typeof entityOrStatus === "number" ? entity : entityOrStatus,
-    };
+    return req.body
   }
 
-  res.jPage = function (resPath, items, totalResults, curPage, totalPages) {
-    return this.status(200).json(
-      jPage(resPath, items, totalResults, curPage, totalPages)
-    );
-  };
+  req.getPage = function () {
+    const currentPage = req.query.page ? parseInt(req.query.page) : 1
 
-  res.jUser = function (entityOrStatus, entity) {
-    const args = handleArgs(entityOrStatus, entity);
-    return this.status(args.status).json(jUser(args.entity));
-  };
-  res.jBlog = function (entityOrStatus, entity) {
-    const args = handleArgs(entityOrStatus, entity);
-    return this.status(args.status).json(jBlog(args.entity));
-  };
-  res.jEvent = function (entityOrStatus, entity) {
-    const args = handleArgs(entityOrStatus, entity);
-    return this.status(args.status).json(jEvent(args.entity));
-  };
-  res.jImage = function (entityOrStatus, entity) {
-    const args = handleArgs(entityOrStatus, entity);
-    return this.status(args.status).json(jImage(args.entity));
-  };
+    if (currentPage <= 0) {
+      return null
+    }
 
-  res.jSuccess = function (message) {
-    return this.status(200).json(jSuccess(message));
-  };
-  res.jError = function (status, jCode, error) {
-    return this.status(status).json(jError(req.originalUrl, jCode, error));
-  };
+    return currentPage
+  }
 
-  next();
-});
+  function handleMsg(method) {
+    if (method == "POST") return "The resource has been created successfully."
+    if (method == "PATCH") return "The resource has been updated successfully."
+    return "Successfully retrieved the resource."
+  }
+
+  res.jPage = function (items, totalResults, curPage, totalPages) {
+    return this.json(
+      jMain(
+        true,
+        jPage(req.originalUrl, items, totalResults, curPage, totalPages),
+        "Successfully retrieved the resource."
+      )
+    )
+  }
+
+  res.jUser = function (entity) {
+    return this.json(jMain(true, jUser(entity), handleMsg(req.method)))
+  }
+  res.jBlog = function (entity) {
+    return this.json(jMain(true, jBlog(entity), handleMsg(req.method)))
+  }
+  res.jEvent = function (entity) {
+    return this.json(jMain(true, jEvent(entity), handleMsg(req.method)))
+  }
+  res.jImage = function (entity) {
+    return this.json(jMain(true, jImage(entity), handleMsg(req.method)))
+  }
+
+  res.jSuccess = function () {
+    return this.json(
+      jMain(true, null, "The resource has been deleted successfully.")
+    )
+  }
+  res.jError = function (err) {
+    return this.status(err.code).json(
+      jMain(false, jError(err.code, err.message, err.description))
+    )
+  }
+
+  next()
+})
+
+// Do not allow leading slash
+app.use((req, res, next) => {
+  if (req.path.slice(-1) === "/" && req.path.length > 1) {
+    throw new NotFound(
+      `Leading slashes are not allowed. URL: '${req.originalUrl}'`
+    )
+  } else {
+    next()
+  }
+})
 
 // Add routes
-app.use("/", routes);
+app.use("/", routes)
 
-// error-handling middleware
+// Catch non-route match
+app.use((req, res) => {
+  throw new NotFound(`URL '${req.originalUrl}' does not exist.`)
+})
+
+// Catch error
 app.use((err, req, res, next) => {
+  let error
+
   switch (true) {
-    case err instanceof ResourceNotFound:
-    case err instanceof InputError:
-      res.jError(err.code, err.jCode, err.message, err.description);
-      break;
+    case err instanceof BadRequest:
+    case err instanceof Unauthorized:
+    case err instanceof Forbidden:
+    case err instanceof NotFound:
+    case err instanceof ServerError:
+      error = err
+      break
     default:
-      res.jError(500, 0, "Something went wrong!", "An unknown error has occurred");
+      console.error(err)
+      error = new ServerError(err.message)
   }
-});
+
+  res
+    .status(error.code)
+    .json(jMain(false, jError(error.code, error.message, error.description)))
+})
 
 // Start the server
-app.listen(EXPRESS_PORT, () => {
-  console.log(`Server is running on port ${EXPRESS_PORT}`);
-});
+app.listen(config.getApiPort(), () => {
+  console.log(`Server is running on port ${config.getApiPort()}`)
+})
 
-module.exports = app;
+module.exports = app

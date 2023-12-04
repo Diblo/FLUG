@@ -3,13 +3,13 @@
  * @extends Database
  * @abstract
  */
- class AbstractEntity {
+class AbstractEntity {
   constructor(data, fields) {
-    this.fields = ["uid", "createdAt", "updatedAt", ...fields];
+    this.fields = ["uid", "createdAt", "updatedAt", ...fields]
 
     // Initialize entity properties from data.
     for (const key of this.fields) {
-      this[key] = data.hasOwnProperty(key) ? data[key] : null;
+      this[key] = data.hasOwnProperty(key) ? data[key] : null
     }
   }
 
@@ -18,12 +18,12 @@
    * @returns {object} - Entity data.
    */
   asObject() {
-    const data = {};
+    const data = {}
     for (const field of this.fields) {
-      data[field] = this[field];
+      data[field] = this[field]
     }
-    return data;
+    return data
   }
 }
 
-module.exports = AbstractEntity;
+module.exports = AbstractEntity
