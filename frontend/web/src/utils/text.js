@@ -51,8 +51,9 @@ const langDA = {
   errorGreaterThanDateTime: "Skal være en dato eller tid efter {0}", // 0 = Field label. E.g E-mail, Title etc.
   errorInvalidEmail: "E-mailen er ugyldig",
   errorInvalidSLUG:
-    "SLUG'en kan kun indeholde bogstaverne a-z, tal fra 0-9 og bindestreg (-), og den må ikke begynde eller slutte med en bindestreg (-).",
-  errorInvalidFile: "Filtype understøttes ikke",
+    "SLUG'en kan kun indeholde bogstaverne a-z, tal fra 0-9 og bindestreg (-), og den må ikke begynde eller slutte med en bindestreg (-)",
+    errorInvalidFile: "Filtype understøttes ikke",
+    errorInvalidDateFormat: "Datoformatet er ugyldigt",
 };
 
 /**
