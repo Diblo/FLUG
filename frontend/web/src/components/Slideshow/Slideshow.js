@@ -1,14 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
+/**
+ * Copyright (c) 2024 Fyns Linux User Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * File: Slideshow.js
+ */
+import React, { useState, useEffect, useRef } from "react"
 
-import "../styles/components/Slideshow.css";
+import "./Slideshow.css"
 
 /**
  * Slideshow Section Component
  *
  * This component represents a section within a slideshow.
  *
- * @component
  * @param {Object} props
  * @param {React.ReactNode} props.children - The content or components to be displayed within the section.
  * @param {string} [props.bgImage] - The background image for the section (optional).
@@ -16,67 +32,60 @@ import "../styles/components/Slideshow.css";
  * @returns {React.ReactNode}
  */
 export const SlideshowSection = ({ children, bgImage, sectionClass }) => {
-  return children; // Return the children as is
-};
-
-SlideshowSection.propTypes = {
-  children: PropTypes.node.isRequired,
-  bgImage: PropTypes.string,
-  sectionClass: PropTypes.string,
-};
+  return children // Return the children as is
+}
 
 /**
  * Slideshow Component
  *
  * This component represents a slideshow with multiple sections.
  *
- * @component
  * @param {Object} props
  * @param {React.ReactElement<SlideshowSection>[]} props.children - An array of `SlideshowSection` components representing the slideshow sections.
  * @returns {JSX.Element}
  */
 export default function Slideshow({ children }) {
   // Determine the number of child sections
-  const sectionCount = React.Children.count(children);
+  const sectionCount = React.Children.count(children)
 
   // State to track the currently active section
-  const [activeSection, setActiveSection] = useState(0);
+  const [activeSection, setActiveSection] = useState(0)
 
   // Use useRef to store the interval ID for the automatic slideshow section
-  const intervalId = useRef();
+  const intervalId = useRef()
   // Use useRef to store the automatic slideshow currently active section
-  const autoSection = useRef();
+  const autoSection = useRef()
 
   // Function to handle section boundary
   function handleSectionBoundary(sectionNumber) {
     // Handle cases where the section number exceeds the section count or is not a valid number
     if (sectionNumber >= sectionCount) {
-      return 0;
+      return 0
     } else if (sectionNumber < 0) {
-      return sectionCount - 1;
+      return sectionCount - 1
     }
-    return sectionNumber;
+    return sectionNumber
   }
 
   // Function to change the active section
   function changeSection(sectionNumber) {
     // Handle cases where the section number is not valid
     if (sectionNumber >= sectionCount || sectionNumber < 0) {
-      return false;
+      return false
     }
 
     // Get section
-    const element = document.getElementById(`section-${sectionNumber}`);
+    const element = document.getElementById(`section-${sectionNumber}`)
     if (!element) {
-      return false;
+      return false
     }
 
     // Update the active section in the state
-    setActiveSection(sectionNumber);
+    setActiveSection(sectionNumber)
 
     // Scroll smoothly to the selected section
-    element.scrollIntoView({ behavior: "smooth", block: "start" });
-    return true;
+    element.scrollIntoView({ behavior: "smooth", block: "start" })
+    return true
   }
 
   // Start the automatic slideshow
@@ -86,80 +95,80 @@ export default function Slideshow({ children }) {
     intervalId.current = setInterval(() => {
       // Increment the current auto section and handle boundary cases
       // @ts-ignore
-      autoSection.current = handleSectionBoundary(autoSection.current + 1);
+      autoSection.current = handleSectionBoundary(autoSection.current + 1)
       // Change to the next section based on the auto section
-      changeSection(autoSection.current);
-    }, 10000);
+      changeSection(autoSection.current)
+    }, 10000)
 
     // Initialize the current auto section with the current active section
     // @ts-ignore
-    autoSection.current = activeSection;
+    autoSection.current = activeSection
 
     // Clear the interval when the component is unmounted to prevent memory leaks
     return () => {
-      clearInterval(intervalId.current);
-    };
-  }, []);
+      clearInterval(intervalId.current)
+    }
+  }, [])
 
   // Handle pagination click events
   useEffect(() => {
     const handlePaginationClick = (event) => {
-      event.preventDefault();
-      clearInterval(intervalId.current);
+      event.preventDefault()
+      clearInterval(intervalId.current)
       // Extract the section number from the href attribute and change the section
       changeSection(
         parseInt(event.target.getAttribute("href").substring(9), 10)
-      );
-    };
+      )
+    }
 
     // Attach a single event listener to the parent container for event delegation
-    const paginationContainer = document.getElementById("slideshow-pagination");
-    paginationContainer.addEventListener("click", handlePaginationClick);
+    const paginationContainer = document.getElementById("slideshow-pagination")
+    paginationContainer.addEventListener("click", handlePaginationClick)
 
     return () => {
       // Remove the event listener and clear the interval when the component unmounts
-      paginationContainer.removeEventListener("click", handlePaginationClick);
-    };
-  }, []);
+      paginationContainer.removeEventListener("click", handlePaginationClick)
+    }
+  }, [])
 
   // Handle mouse wheel navigation
   useEffect(() => {
     const handleWheel = (event) => {
-      clearInterval(intervalId.current);
+      clearInterval(intervalId.current)
       // Change the section based on the direction of the wheel scroll
       changeSection(
         handleSectionBoundary(activeSection + (event.deltaY > 0 ? 1 : -1))
-      );
-    };
+      )
+    }
 
-    document.addEventListener("wheel", handleWheel);
+    document.addEventListener("wheel", handleWheel)
 
     return () => {
       // Remove the event listener and clear the interval when the component unmounts
-      document.removeEventListener("wheel", handleWheel);
-    };
-  }, [activeSection]);
+      document.removeEventListener("wheel", handleWheel)
+    }
+  }, [activeSection])
 
   // Handle URL hash
   useEffect(() => {
     // Change the section based on the initial URL hash
     if (changeSection(parseInt(window.location.hash.slice(9), 10))) {
-      clearInterval(intervalId.current);
+      clearInterval(intervalId.current)
     }
 
     const handleHashChange = () => {
-      clearInterval(intervalId.current);
+      clearInterval(intervalId.current)
       // Change the section when the URL hash changes
-      changeSection(parseInt(window.location.hash.slice(9), 10));
-    };
+      changeSection(parseInt(window.location.hash.slice(9), 10))
+    }
 
-    window.addEventListener("hashchange", handleHashChange);
+    window.addEventListener("hashchange", handleHashChange)
 
     return () => {
       // Remove the event listener when the component unmounts
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, []);
+      window.removeEventListener("hashchange", handleHashChange)
+    }
+  }, [])
 
   return (
     <div id="slideshow">
@@ -170,7 +179,7 @@ export default function Slideshow({ children }) {
             id={`section-${index}`}
             className={`slideshow-section ${
               // @ts-ignore
-              child.props.bgImage ? "background-image" : ""
+              child.props.bgImage ? "slideshow-bg-image" : ""
             } ${
               // @ts-ignore
               child.props.sectionClass ? child.props.sectionClass : ""
@@ -202,9 +211,5 @@ export default function Slideshow({ children }) {
         </nav>
       </div>
     </div>
-  );
+  )
 }
-
-Slideshow.propTypes = {
-  children: PropTypes.node.isRequired,
-};
