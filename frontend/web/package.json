@@ -45,6 +45,12 @@
     ]
   },
   "devDependencies": {
-    "@types/react-native": "^0.72.3"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react-native": "^0.72.3",
+    "parcel": "^2.11.0",
+    "process": "^0.11.10"
+  },
+  "alias": {
+    "react-native": "react-native-web"
   }
 }

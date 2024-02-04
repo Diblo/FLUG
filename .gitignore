@@ -14,6 +14,10 @@ build/
 # vscode
 .vscode/
 
+# parcel
+.parcel-cache/
+dist/
+
 # misc
 .DS_Store
 .env.local
