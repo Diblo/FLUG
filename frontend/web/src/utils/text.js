@@ -3,7 +3,7 @@ const langDA = {
   delete: "Slet",
   change: "Skift",
 
-  backendHeadTitle: "Admin",
+  admin: "Admin",
 
   frontend: "Forsiden",
 
@@ -60,6 +60,7 @@ const langDA = {
  * @param {string} id
  * @param {boolean} [plural = false]
  * @param {string|number|Array} [args=[]]
+ * @returns {string}
  */
 export default function getText(id, plural = false, args = []) {
   let string = langDA[id];
