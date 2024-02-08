@@ -4,6 +4,7 @@ const langDA = {
   change: "Skift",
 
   admin: "Admin",
+  adminHeader: "Administration",
 
   frontend: "Forsiden",
 
