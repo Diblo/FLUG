@@ -1,0 +1,53 @@
+/**
+ * Copyright (c) 2024 Fyns Linux User Group
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * File: Content.css
+ */
+#content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-alignment {
+  padding: 0 30px;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.content-alignment p:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+#content-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 20px 0;
+}
+
+#content-title h1 {
+  margin: 0;
+}
+
+#content-title.sticky {
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
