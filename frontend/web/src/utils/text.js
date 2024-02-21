@@ -1,5 +1,7 @@
 const langDA = {
   add: "Tilføj",
+  edit: "Redigere",
+  save: "Gem",
   delete: "Slet",
   change: "Skift",
 
@@ -25,6 +27,10 @@ const langDA = {
   createEventHeader: "Opret et nyt arrangement",
   editEventHeader: "Rediger arrangement",
   noEvents: "Ingen arrangementer",
+
+  firstNamePlaceholder: "Skriv et fornavn",
+  lastNamePlaceholder: "Skriv et efternavn",
+  emailPlaceholder: "Skriv en e-mail-adresse",
 
   name: "Navn",
   firstName: "Fornavn",
@@ -53,9 +59,10 @@ const langDA = {
   errorInvalidEmail: "E-mailen er ugyldig",
   errorInvalidSLUG:
     "SLUG'en kan kun indeholde bogstaverne a-z, tal fra 0-9 og bindestreg (-), og den må ikke begynde eller slutte med en bindestreg (-)",
-    errorInvalidFile: "Filtype understøttes ikke",
-    errorInvalidDateFormat: "Datoformatet er ugyldigt",
-};
+  errorInvalidFile: "Filtype understøttes ikke",
+  errorInvalidDateFormat: "Datoformatet er ugyldigt",
+  missingUID: "missing a unique identifier",
+}
 
 /**
  * @param {string} id
@@ -64,17 +71,17 @@ const langDA = {
  * @returns {string}
  */
 export default function getText(id, plural = false, args = []) {
-  let string = langDA[id];
+  let string = langDA[id]
 
   if (string) {
     if (Array.isArray(args)) {
       args.forEach((arg, index) => {
-        string = string.replace(`{${index}}`, arg);
-      });
+        string = string.replace(`{${index}}`, arg)
+      })
     } else {
-      string = string.replace("{0}", args);
+      string = string.replace("{0}", args)
     }
   }
 
-  return string;
+  return string
 }
