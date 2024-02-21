@@ -1,4 +1,4 @@
-const abstractEntity = require("../../comments/abstractEntity")
+const abstractEntity = require("../../comments/abstractEntity");
 
 /**
  * Represents a event entity.
@@ -18,8 +18,8 @@ class EventEntity extends abstractEntity {
       "endDateTime",
       "location",
       "content",
-    ])
+    ]);
   }
 }
 
-module.exports = EventEntity
+module.exports = EventEntity;

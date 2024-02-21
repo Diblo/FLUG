@@ -139,7 +139,7 @@ export default function AdminEventEditorScreen() {
     (link, changes) => {
       handleRequest(link.href, link.method, changes);
     },
-    []
+    [],
   );
 
   const onDeletePressed = useCallback(
@@ -149,7 +149,7 @@ export default function AdminEventEditorScreen() {
     (link) => {
       handleRequest(link.href, link.method);
     },
-    []
+    [],
   );
 
   useEffect(() => {

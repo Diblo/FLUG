@@ -14,7 +14,7 @@ export default function Header() {
     <header id="header">
       <div className="container">
         <a href="/" className="title">
-        {config.siteTitle}
+          {config.siteTitle}
         </a>
         <nav>
           <a href="/arrangementer">{getText("events")}</a>

@@ -88,7 +88,7 @@ export default function Content({
         (entries) => {
           setIsIntersecting(entries[0].isIntersecting);
         },
-        { threshold: 1 }
+        { threshold: 1 },
       );
 
       if (observerElement.current) {
@@ -122,7 +122,7 @@ export default function Content({
             window
               .getComputedStyle(contentRef.current)
               .getPropertyValue("padding-right"),
-            10
+            10,
           ) || 0;
       }
 

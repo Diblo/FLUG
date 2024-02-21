@@ -1,4 +1,4 @@
-const abstractEntity = require("../../comments/abstractEntity")
+const abstractEntity = require("../../comments/abstractEntity");
 
 /**
  * Represents a blog entity.
@@ -10,8 +10,8 @@ class BlogEntity extends abstractEntity {
    * @param {object} data - Entity data.
    */
   constructor(data) {
-    super(data, ["title", "slug", "shortDesc", "image", "content"])
+    super(data, ["title", "slug", "shortDesc", "image", "content"]);
   }
 }
 
-module.exports = BlogEntity
+module.exports = BlogEntity;

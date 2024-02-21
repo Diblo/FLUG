@@ -1,4 +1,4 @@
-const AbstractImageSet = require("../comments/images/AbstractImageSet")
+const AbstractImageSet = require("../comments/images/AbstractImageSet");
 
 class WebImage extends AbstractImageSet {
   /**
@@ -8,11 +8,11 @@ class WebImage extends AbstractImageSet {
    */
   async save() {
     const filepath = this.getImagePath(
-      `optimized/${this.getHash()}.${this.getExt()}`
-    )
+      `optimized/${this.getHash()}.${this.getExt()}`,
+    );
 
-    return this.getImageProcessor().fit(1920, 1280).optimize().save(filepath)
+    return this.getImageProcessor().fit(1920, 1280).optimize().save(filepath);
   }
 }
 
-module.exports = WebImage
+module.exports = WebImage;

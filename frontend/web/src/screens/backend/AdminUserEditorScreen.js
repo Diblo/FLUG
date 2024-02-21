@@ -112,7 +112,7 @@ export default function AdminUserEditorScreen() {
     (link, changes) => {
       handleRequest(link.href, link.method, changes);
     },
-    []
+    [],
   );
 
   const onDeletePressed = useCallback(
@@ -122,7 +122,7 @@ export default function AdminUserEditorScreen() {
     (link) => {
       handleRequest(link.href, link.method);
     },
-    []
+    [],
   );
 
   useEffect(() => {

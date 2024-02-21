@@ -49,7 +49,7 @@ export default function AdminUsersScreen() {
         ...prevUsers,
         ...response.items.filter((newUser) => {
           return !prevUsers.some(
-            (existingUser) => existingUser.uid === newUser.uid
+            (existingUser) => existingUser.uid === newUser.uid,
           );
         }),
       ]);

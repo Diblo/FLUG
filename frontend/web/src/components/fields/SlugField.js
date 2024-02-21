@@ -26,7 +26,7 @@ export default class SlugField extends AbstractField {
         value
           .toLowerCase()
           .replace(/\s+/g, "-")
-          .replace(/[^\w-]+/g, "")
+          .replace(/[^\w-]+/g, ""),
       );
     } else {
       super.setValue(value);

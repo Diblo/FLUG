@@ -1,29 +1,29 @@
-const { ValueTypes } = require("./tools")
+const { ValueTypes } = require("./tools");
 
 /* Link Objects */
-const linkNextSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
+const linkNextSchema = { href: ValueTypes.URI, title: ValueTypes.STR };
 
-const linkSelfSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
+const linkSelfSchema = { href: ValueTypes.URI, title: ValueTypes.STR };
 
-const linkSlugSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
+const linkSlugSchema = { href: ValueTypes.URI, title: ValueTypes.STR };
 
 const linkUpdateSchema = {
   href: ValueTypes.URI,
   title: ValueTypes.STR,
   method: ValueTypes.METHOD,
-}
+};
 
 const linkDeleteSchema = {
   href: ValueTypes.URI,
   title: ValueTypes.STR,
   method: ValueTypes.METHOD,
-}
+};
 
 /* Image Object  */
 const imageObjectSchema = {
   src: ValueTypes.FILE,
   alt: ValueTypes.STR,
-}
+};
 
 /* Page */
 const pageSchema = {
@@ -33,7 +33,7 @@ const pageSchema = {
   pagination: { next: [linkNextSchema, ValueTypes.NULL] },
   page: ValueTypes.INT,
   totalPages: ValueTypes.INT,
-}
+};
 
 /* User */
 const userSchema = {
@@ -49,7 +49,7 @@ const userSchema = {
     update: linkUpdateSchema,
     delete: linkDeleteSchema,
   },
-}
+};
 
 const userItemSchema = {
   uid: ValueTypes.INT,
@@ -62,7 +62,7 @@ const userItemSchema = {
   _links: {
     self: linkSelfSchema,
   },
-}
+};
 
 /* Blog */
 const blogSchema = {
@@ -80,7 +80,7 @@ const blogSchema = {
     update: linkUpdateSchema,
     delete: linkDeleteSchema,
   },
-}
+};
 
 const blogItemSchema = {
   uid: ValueTypes.INT,
@@ -93,7 +93,7 @@ const blogItemSchema = {
     self: linkSelfSchema,
     slug: linkSlugSchema,
   },
-}
+};
 
 /* Event */
 const eventSchema = {
@@ -113,7 +113,7 @@ const eventSchema = {
     update: linkUpdateSchema,
     delete: linkDeleteSchema,
   },
-}
+};
 
 const eventItemSchema = {
   uid: ValueTypes.INT,
@@ -127,7 +127,7 @@ const eventItemSchema = {
     self: linkSelfSchema,
     slug: linkSlugSchema,
   },
-}
+};
 
 /* Image */
 const imageSchema = {
@@ -141,7 +141,7 @@ const imageSchema = {
     update: linkUpdateSchema,
     delete: linkDeleteSchema,
   },
-}
+};
 
 const imageItemSchema = {
   uid: ValueTypes.INT,
@@ -152,31 +152,31 @@ const imageItemSchema = {
   _links: {
     self: linkSelfSchema,
   },
-}
+};
 
 /* Error */
 const errorSchema = {
   code: ValueTypes.INTEGER,
   message: ValueTypes.STR,
   description: ValueTypes.STR,
-}
+};
 
 /* Msg */
 const successResponseSchema = {
   success: ValueTypes.BOOLEAN,
   data: ValueTypes.OBJECT,
   message: ValueTypes.STRING,
-}
+};
 
 const successNoContentResponseSchema = {
   success: ValueTypes.BOOLEAN,
   message: ValueTypes.STRING,
-}
+};
 
 const errorResponseSchema = {
   success: ValueTypes.BOOLEAN,
   error: errorSchema,
-}
+};
 
 module.exports = {
   successResponseSchema,
@@ -192,4 +192,4 @@ module.exports = {
   eventItemSchema,
   imageSchema,
   imageItemSchema,
-}
+};

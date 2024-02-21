@@ -1,13 +1,13 @@
-const config = require("../comments/config")
-const Db = require("../comments/db")
-const ImageEntity = require("./entities/imageEntity")
+const config = require("../comments/config");
+const Db = require("../comments/db");
+const ImageEntity = require("./entities/imageEntity");
 
 class Images extends Db {
   constructor() {
-    super(config.getImagesEndpoint(), ImageEntity)
+    super(config.getImagesEndpoint(), ImageEntity);
   }
 }
 
-const images = new Images()
+const images = new Images();
 
-module.exports = images
+module.exports = images;

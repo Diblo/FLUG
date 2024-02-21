@@ -1,10 +1,10 @@
-const { database } = require("../../libs/memory_database")
+const { database } = require("../../libs/memory_database");
 
 class Db {
   constructor(table, entityType) {
-    this.table = table
-    this.entityType = entityType
-    this.db = database
+    this.table = table;
+    this.entityType = entityType;
+    this.db = database;
   }
 
   /**
@@ -14,9 +14,9 @@ class Db {
    * @returns {entity} - The created entity.
    */
   add(data) {
-    const entity = new this.entityType(data)
-    entity.createdAt = new Date().toISOString()
-    return this.get(this.db.add(this.table, entity.asObject()))
+    const entity = new this.entityType(data);
+    entity.createdAt = new Date().toISOString();
+    return this.get(this.db.add(this.table, entity.asObject()));
   }
 
   /**
@@ -26,8 +26,8 @@ class Db {
    * @returns {entity|null} - Retrieved data.
    */
   get(uid) {
-    const data = this.db.get(this.table, uid)
-    return data === null ? null : new this.entityType(data)
+    const data = this.db.get(this.table, uid);
+    return data === null ? null : new this.entityType(data);
   }
 
   /**
@@ -38,11 +38,11 @@ class Db {
    * @returns {Array[entity]} - An array of data within the specified range.
    */
   gets(begin, max) {
-    const entities = []
+    const entities = [];
     for (const data of this.db.gets(this.table, begin, max)) {
-      entities.push(new this.entityType(data))
+      entities.push(new this.entityType(data));
     }
-    return entities
+    return entities;
   }
 
   /**
@@ -53,13 +53,13 @@ class Db {
    * @returns {entity} - The created entity.
    */
   update(uid, data) {
-    data.updatedAt = new Date().toISOString()
-    this.db.update(this.table, uid, data)
-    return this.get(uid)
+    data.updatedAt = new Date().toISOString();
+    this.db.update(this.table, uid, data);
+    return this.get(uid);
   }
 
   exists(uid) {
-    return this.db.exists(this.table, uid)
+    return this.db.exists(this.table, uid);
   }
 
   /**
@@ -68,7 +68,7 @@ class Db {
    * @param {number} data - Data ID
    */
   delete(uid) {
-    this.db.delete(this.table, uid)
+    this.db.delete(this.table, uid);
   }
 
   /**
@@ -77,8 +77,8 @@ class Db {
    * @returns {number} - Count of entities.
    */
   countRows() {
-    return this.db.countRows(this.table)
+    return this.db.countRows(this.table);
   }
 }
 
-module.exports = Db
+module.exports = Db;

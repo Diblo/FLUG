@@ -64,7 +64,7 @@ export default class FileField extends AbstractField {
       if (!regex.test(mime) && !regex.test(`.${ext}`)) {
         //this.setMessage(getText("errorInvalidFile"));
         // NOTE: Implement popup message
-        console.error("The popup message is not implemented")
+        console.error("The popup message is not implemented");
         return;
       }
 

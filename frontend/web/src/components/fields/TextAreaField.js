@@ -19,7 +19,7 @@ import getText from "../../utils/text";
  * @typedef {Object} TextAreaInputAttributes
  * @property {number} [rows]
  * @property {import("react").CSSProperties} [style]
- * 
+ *
  * @typedef {import("./AbstractField").InputAttributes & TextAreaInputAttributes} InputAttributes
  */
 

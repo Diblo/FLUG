@@ -50,7 +50,7 @@ export default function AdminBlogsScreen() {
         ...prevBlogs,
         ...response.items.filter((newBlog) => {
           return !prevBlogs.some(
-            (existingBlog) => existingBlog.uid === newBlog.uid
+            (existingBlog) => existingBlog.uid === newBlog.uid,
           );
         }),
       ]);

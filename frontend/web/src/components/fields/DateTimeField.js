@@ -81,8 +81,8 @@ export default class DateTimeField extends AbstractField {
           getText(
             "errorGreaterThanDateTime",
             false,
-            this.greaterThanRef.getLabel()
-          )
+            this.greaterThanRef.getLabel(),
+          ),
         );
       }
     }
