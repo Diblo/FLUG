@@ -41,7 +41,7 @@ export function fetchData(uri, callBack, method = "GET", data) {
       .then((json) => {
         if (json.message) {
           throw new Error(
-            method + " " + config.api.url + uri + " returns " + json.message
+            method + " " + config.api.url + uri + " returns " + json.message,
           );
         }
 

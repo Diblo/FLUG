@@ -69,7 +69,7 @@ export class DateTime {
    */
   addMinutes(minutes) {
     return new DateTime(
-      this.parsedDateTime.getTime() + minutes * this.minuteInMilliseconds
+      this.parsedDateTime.getTime() + minutes * this.minuteInMilliseconds,
     );
   }
 
@@ -79,7 +79,7 @@ export class DateTime {
    */
   addHours(hours) {
     return new DateTime(
-      this.parsedDateTime.getTime() + hours * this.hourInMilliseconds
+      this.parsedDateTime.getTime() + hours * this.hourInMilliseconds,
     );
   }
 
@@ -89,7 +89,7 @@ export class DateTime {
    */
   addDays(days) {
     return new DateTime(
-      this.parsedDateTime.getTime() + days * this.dayInMilliseconds
+      this.parsedDateTime.getTime() + days * this.dayInMilliseconds,
     );
   }
 

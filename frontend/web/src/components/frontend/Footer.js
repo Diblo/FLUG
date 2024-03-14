@@ -34,7 +34,11 @@ function Footer() {
           <h2>Find os</h2>
           <ul>
             <li>
-              <a href="https://www.facebook.com/groups/flug.dk" target="_blank" rel="noreferrer">
+              <a
+                href="https://www.facebook.com/groups/flug.dk"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <img
                   height="30"
                   src="/images/fb_icon.png"

@@ -1,4 +1,4 @@
-const AbstractImageSet = require("../comments/images/AbstractImageSet")
+const AbstractImageSet = require("../comments/images/AbstractImageSet");
 
 class OpenGrapImage extends AbstractImageSet {
   /**
@@ -8,15 +8,15 @@ class OpenGrapImage extends AbstractImageSet {
    */
   async save() {
     const filepath = this.getImagePath(
-      `optimized/${this.getHash()}-og.${this.getExt()}`
-    )
+      `optimized/${this.getHash()}-og.${this.getExt()}`,
+    );
 
     return this.getImageProcessor()
       .setAspectRatio(1.9)
       .fit(1920, 1010)
       .optimize()
-      .save(filepath)
+      .save(filepath);
   }
 }
 
-module.exports = OpenGrapImage
+module.exports = OpenGrapImage;

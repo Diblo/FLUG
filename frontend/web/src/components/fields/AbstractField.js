@@ -283,7 +283,7 @@ export default class AbstractField extends Component {
       this.updateIfEmptyRef.onUpdateFromField(
         this,
         true,
-        this.updateIfEmptyArgs
+        this.updateIfEmptyArgs,
       );
     }
   }

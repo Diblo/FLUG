@@ -1,4 +1,4 @@
-const AbstractImageSet = require("../comments/images/AbstractImageSet")
+const AbstractImageSet = require("../comments/images/AbstractImageSet");
 
 class XImage extends AbstractImageSet {
   /**
@@ -8,15 +8,15 @@ class XImage extends AbstractImageSet {
    */
   async save() {
     const filepath = this.getImagePath(
-      `optimized/${this.getHash()}-x.${this.getExt()}`
-    )
+      `optimized/${this.getHash()}-x.${this.getExt()}`,
+    );
 
     return this.getImageProcessor()
       .setAspectRatio(1)
       .fit(1280, 1280)
       .optimize()
-      .save(filepath)
+      .save(filepath);
   }
 }
 
-module.exports = XImage
+module.exports = XImage;

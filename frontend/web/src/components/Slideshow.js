@@ -108,7 +108,7 @@ export default function Slideshow({ children }) {
       clearInterval(intervalId.current);
       // Extract the section number from the href attribute and change the section
       changeSection(
-        parseInt(event.target.getAttribute("href").substring(9), 10)
+        parseInt(event.target.getAttribute("href").substring(9), 10),
       );
     };
 
@@ -128,7 +128,7 @@ export default function Slideshow({ children }) {
       clearInterval(intervalId.current);
       // Change the section based on the direction of the wheel scroll
       changeSection(
-        handleSectionBoundary(activeSection + (event.deltaY > 0 ? 1 : -1))
+        handleSectionBoundary(activeSection + (event.deltaY > 0 ? 1 : -1)),
       );
     };
 

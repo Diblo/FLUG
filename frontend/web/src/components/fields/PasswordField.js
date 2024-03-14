@@ -33,7 +33,9 @@ export default class PasswordField extends AbstractField {
       (this.min > 0 && this.getLength() > this.max)
     ) {
       if (this.min < this.max) {
-        this.setError(getText("errorLengthBetween", false, [this.min, this.max]));
+        this.setError(
+          getText("errorLengthBetween", false, [this.min, this.max]),
+        );
       } else {
         this.setError(getText("errorLengthMinimum", false, this.min));
       }

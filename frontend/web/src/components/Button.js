@@ -19,7 +19,7 @@ import "../styles/components/Button.css";
 export default function Button({
   children,
   onPress,
-  buttonStyle="default",
+  buttonStyle = "default",
   disabled,
   className,
 }) {
