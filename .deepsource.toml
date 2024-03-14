@@ -1,16 +1,25 @@
 version = 1
 
+test_patterns = []
+
 exclude_patterns = [
   "mockup-api/**",
-  "org/**"
+  "org/**",
+  "web/.parcel-cache/**",
+  "web/dist/**",
+  "web/node_modules/**",
 ]
 
 [[analyzers]]
 name = "javascript"
+enabled = true
 
   [analyzers.meta]
-  plugins = ["react"]
-  environment = ["nodejs"]
+    cyclomatic_complexity_threshold = "medium"
+    environment = ["nodejs"]
+    module_system = "es-modules"
+    plugins = ["react"]
+    style_guide = "standard"
 
 [[transformers]]
 name = "prettier"
