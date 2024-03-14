@@ -32,7 +32,7 @@ export default function ScrollableView({
         (entries) => {
           setIsIntersecting(entries[0].isIntersecting);
         },
-        { threshold: 1 }
+        { threshold: 1 },
       );
 
       if (observerElement.current) {

@@ -1,6 +1,6 @@
-const sharp = require("sharp")
-const ImageDataUriHandler = require("./ImageDataUriHandler")
-const util = require("util")
+const sharp = require("sharp");
+const ImageDataUriHandler = require("./ImageDataUriHandler");
+const util = require("util");
 
 /**
  * A class that extends ImageProcessor to handle image operations using Sharp library.
@@ -14,12 +14,12 @@ class ImageProcessor {
    * @param {{optimize: false, fitDimensions: [number, number], aspectRatio: number }} [options]
    */
   constructor(imageDataUriHandler, options) {
-    this.imageDataUriHandler = imageDataUriHandler
+    this.imageDataUriHandler = imageDataUriHandler;
 
-    const { optimize, fitDimensions, aspectRatio } = options || {}
-    this.shouldOptimize = optimize || false
-    this.fitDimensions = fitDimensions || []
-    this.aspectRatio = aspectRatio > 0 ? aspectRatio : null
+    const { optimize, fitDimensions, aspectRatio } = options || {};
+    this.shouldOptimize = optimize || false;
+    this.fitDimensions = fitDimensions || [];
+    this.aspectRatio = aspectRatio > 0 ? aspectRatio : null;
   }
 
   /**
@@ -31,7 +31,7 @@ class ImageProcessor {
       optimize: true,
       fitDimensions: this.fitDimensions,
       aspectRatio: this.aspectRatio,
-    })
+    });
   }
 
   /**
@@ -45,7 +45,7 @@ class ImageProcessor {
       optimize: this.shouldOptimize,
       fitDimensions: [maxWidth, maxHeight],
       aspectRatio: this.aspectRatio,
-    })
+    });
   }
 
   /**
@@ -58,7 +58,7 @@ class ImageProcessor {
       optimize: this.shouldOptimize,
       fitDimensions: this.fitDimensions,
       aspectRatio: aspectRatio,
-    })
+    });
   }
 
   /**
@@ -67,25 +67,25 @@ class ImageProcessor {
    */
   _apply(sharpObject) {
     if (this.aspectRatio) {
-      const width = this.imageDataUriHandler.getWidth()
-      const height = this.imageDataUriHandler.getHeight()
+      const width = this.imageDataUriHandler.getWidth();
+      const height = this.imageDataUriHandler.getHeight();
 
       const newDimensions = calculateNewDimensions(
         width,
         height,
-        this.aspectRatio
-      )
+        this.aspectRatio,
+      );
       const offset = [
         Math.floor((width - newDimensions[0]) / 2),
         Math.floor((height - newDimensions[1]) / 2),
-      ]
+      ];
 
       sharpObject = sharpObject.extract({
         left: offset[0],
         top: offset[1],
         width: newDimensions[0],
         height: newDimensions[1],
-      })
+      });
     }
 
     if (this.fitDimensions.length > 0) {
@@ -94,7 +94,7 @@ class ImageProcessor {
         height: this.fitDimensions[1],
         fit: sharp.fit.inside,
         withoutEnlargement: true,
-      })
+      });
     }
 
     if (this.shouldOptimize) {
@@ -106,18 +106,18 @@ class ImageProcessor {
           optimiseScans: true,
           quantisationTable: 3,
           force: true,
-        })
+        });
       } else {
         sharpObject = sharpObject.png({
           quality: 70,
           compressionLevel: 6,
           adaptiveFiltering: true,
           force: true,
-        })
+        });
       }
     }
 
-    return sharpObject
+    return sharpObject;
   }
 
   /**
@@ -127,7 +127,7 @@ class ImageProcessor {
   getBuffer() {
     // TODO: Get sharp to work.....!!
     //return this._apply(sharp(this.imageDataUriHandler.getBuffer())).toBuffer();
-    return this.imageDataUriHandler.getBuffer()
+    return this.imageDataUriHandler.getBuffer();
   }
 
   /**
@@ -140,7 +140,7 @@ class ImageProcessor {
     //return this._apply(sharp(this.imageDataUriHandler.getBuffer())).toFile(
     //  filepath
     //);
-    this.imageDataUriHandler.save(filepath)
+    this.imageDataUriHandler.save(filepath);
   }
 }
 
@@ -153,10 +153,10 @@ class ImageProcessor {
  */
 function calculateNewDimensions(originalWidth, originalHeight, aspectRatio) {
   if (originalWidth / originalHeight > aspectRatio) {
-    return [Math.floor(originalHeight * aspectRatio), originalHeight]
+    return [Math.floor(originalHeight * aspectRatio), originalHeight];
   }
 
-  return [originalWidth, Math.floor(originalWidth / aspectRatio)]
+  return [originalWidth, Math.floor(originalWidth / aspectRatio)];
 }
 
-module.exports = ImageProcessor
+module.exports = ImageProcessor;

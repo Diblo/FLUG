@@ -50,7 +50,7 @@ export default function AdminEventsScreen() {
         ...prevEvents,
         ...response.items.filter((newEvent) => {
           return !prevEvents.some(
-            (existingEvent) => existingEvent.uid === newEvent.uid
+            (existingEvent) => existingEvent.uid === newEvent.uid,
           );
         }),
       ]);

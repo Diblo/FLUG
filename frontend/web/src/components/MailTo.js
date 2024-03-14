@@ -20,7 +20,7 @@ function openMsg(text) {
  */
 export default function MailTo({ children }) {
   return (
-    <a onClick={() => openMsg(btoa(children))} style={{ cursor: 'pointer' }}>
+    <a onClick={() => openMsg(btoa(children))} style={{ cursor: "pointer" }}>
       {children.replace(/@/g, "(at)")}
     </a>
   );

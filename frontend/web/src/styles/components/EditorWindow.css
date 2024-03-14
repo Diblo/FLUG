@@ -33,7 +33,7 @@
 
 #editor_window_content {
   display: grid;
-  grid-template-columns: .5fr 3fr;
+  grid-template-columns: 0.5fr 3fr;
   gap: 10px;
   width: 60%;
   align-items: center;

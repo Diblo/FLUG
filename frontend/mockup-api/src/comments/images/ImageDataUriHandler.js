@@ -1,7 +1,7 @@
-const { dataUriToBuffer } = require("data-uri-to-buffer")
-const sizeOf = require("image-size")
-const fs = require("fs")
-var mime = require("mime-types")
+const { dataUriToBuffer } = require("data-uri-to-buffer");
+const sizeOf = require("image-size");
+const fs = require("fs");
+var mime = require("mime-types");
 
 /**
  * Handles image data and operations.
@@ -13,18 +13,18 @@ class ImageDataUriHandler {
    * @throws {TypeError} - If image details cannot be determined
    */
   constructor(data) {
-    this.buffer = Buffer.from(dataUriToBuffer(data).buffer)
+    this.buffer = Buffer.from(dataUriToBuffer(data).buffer);
 
-    const { type, width, height } = sizeOf(this.buffer)
+    const { type, width, height } = sizeOf(this.buffer);
     if (!type || !width || !height) {
-      throw new TypeError("Unable to determine the image details")
+      throw new TypeError("Unable to determine the image details");
     }
 
-    this.ext = type
-    this.mime = mime.lookup(type)
-    this.width = width
-    this.height = height
-    this.bytes = this.buffer.length
+    this.ext = type;
+    this.mime = mime.lookup(type);
+    this.width = width;
+    this.height = height;
+    this.bytes = this.buffer.length;
   }
 
   /**
@@ -32,7 +32,7 @@ class ImageDataUriHandler {
    * @returns {string} - Image extension
    */
   getExt() {
-    return this.ext
+    return this.ext;
   }
 
   /**
@@ -40,7 +40,7 @@ class ImageDataUriHandler {
    * @returns {string} - Image extension
    */
   getMime() {
-    return this.mime
+    return this.mime;
   }
 
   /**
@@ -48,7 +48,7 @@ class ImageDataUriHandler {
    * @returns {number} - Image width
    */
   getWidth() {
-    return this.width
+    return this.width;
   }
 
   /**
@@ -56,7 +56,7 @@ class ImageDataUriHandler {
    * @returns {number} - Image height
    */
   getHeight() {
-    return this.height
+    return this.height;
   }
 
   /**
@@ -64,11 +64,11 @@ class ImageDataUriHandler {
    * @returns {number} - Image size in bytes
    */
   getBytes() {
-    return this.bytes
+    return this.bytes;
   }
 
   getBuffer() {
-    return this.buffer
+    return this.buffer;
   }
 
   /**
@@ -76,8 +76,8 @@ class ImageDataUriHandler {
    * @param {string} filepath - Filepath to save the image
    */
   save(filepath) {
-    fs.writeFileSync(filepath, this.buffer)
+    fs.writeFileSync(filepath, this.buffer);
   }
 }
 
-module.exports = ImageDataUriHandler
+module.exports = ImageDataUriHandler;

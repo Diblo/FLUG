@@ -36,7 +36,11 @@ export default class EmailField extends AbstractField {
     }
 
     const value = this.getValue();
-    if (value && typeof value === "string" && !value.toLowerCase().match(this.emailPattern)) {
+    if (
+      value &&
+      typeof value === "string" &&
+      !value.toLowerCase().match(this.emailPattern)
+    ) {
       this.setError(getText("errorInvalidEmail"));
     }
 

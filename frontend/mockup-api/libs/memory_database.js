@@ -1,5 +1,5 @@
-const fs = require("fs")
-const path = require("path")
+const fs = require("fs");
+const path = require("path");
 
 const DATABASE_DATA = {};
 
@@ -40,7 +40,7 @@ const _table = {
 function isParamType(param, paramName, types) {
   const allowedTypes = Array.isArray(types) ? types : [types];
 
-  const isValidType = allowedTypes.some(type => {
+  const isValidType = allowedTypes.some((type) => {
     if (!_table.hasOwnProperty(type)) {
       throw new Error("Unknown or unsupported data type: " + type);
     }
@@ -49,7 +49,9 @@ function isParamType(param, paramName, types) {
   });
 
   if (!isValidType) {
-    throw new Error(`Invalid input for ${paramName}. Expected ${allowedTypes.join(' or ')}.`);
+    throw new Error(
+      `Invalid input for ${paramName}. Expected ${allowedTypes.join(" or ")}.`,
+    );
   }
 }
 
@@ -69,13 +71,13 @@ function createTable(table) {
  * @param {string} filename - The name of the file to export the data to. It should be relative to this file.
  */
 function exportData(filename) {
-  const filePath = path.join(__dirname, filename)
+  const filePath = path.join(__dirname, filename);
 
   try {
-    fs.writeFileSync(filePath, JSON.stringify(DATABASE_DATA), "utf-8")
-    console.log(`Database data exported successfully to '${filePath}'`)
+    fs.writeFileSync(filePath, JSON.stringify(DATABASE_DATA), "utf-8");
+    console.log(`Database data exported successfully to '${filePath}'`);
   } catch (err) {
-    console.error("Error exporting database data:", err)
+    console.error("Error exporting database data:", err);
   }
 }
 
@@ -87,19 +89,19 @@ function exportData(filename) {
  */
 class Database {
   constructor() {
-    const filePath = path.join(__dirname, "../data/database.json")
+    const filePath = path.join(__dirname, "../data/database.json");
     if (!fs.existsSync(filePath)) {
-      throw new Error(`File does not exist at path: ${filePath}`)
+      throw new Error(`File does not exist at path: ${filePath}`);
     }
 
     try {
-      const data = JSON.parse(fs.readFileSync(filePath, "utf8"))
+      const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
       for (const table in data) {
-        DATABASE_DATA[table] = data[table]
+        DATABASE_DATA[table] = data[table];
       }
     } catch (err) {
-      throw new Error("Error parsing database file: " + err.message)
+      throw new Error("Error parsing database file: " + err.message);
     }
   }
 
@@ -153,7 +155,7 @@ class Database {
     isParamType(max, "max", Types.INTEGER);
 
     const keys = Object.keys(DATABASE_DATA[table]).filter(
-      (key) => key !== "increment"
+      (key) => key !== "increment",
     );
     const startIndex = begin;
     const endIndex = Math.min(startIndex + max, keys.length); // Ensure we don't go out of bounds.
@@ -184,14 +186,14 @@ class Database {
     isParamType(value, "value", [Types.STRING, Types.NUMBER]);
 
     const keys = Object.keys(DATABASE_DATA[table]).filter(
-      (key) => key !== "increment"
+      (key) => key !== "increment",
     );
 
     /**
      * Array to store data matching the specified criteria.
      * @type {Array}
      */
-    const data = []
+    const data = [];
 
     for (const uid of keys) {
       if (DATABASE_DATA[table][uid][column] === value) {

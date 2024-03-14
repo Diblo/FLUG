@@ -72,10 +72,16 @@ export default function App() {
         />
         <Route path="/admin/users/:uid" element={<AdminUserEditorScreen />} />
         <Route path="/admin/blogs" element={<AdminBlogsScreen />} />
-        <Route path="/admin/blogs/new_blog" element={<AdminBlogEditorScreen />} />
+        <Route
+          path="/admin/blogs/new_blog"
+          element={<AdminBlogEditorScreen />}
+        />
         <Route path="/admin/blogs/:uid" element={<AdminBlogEditorScreen />} />
         <Route path="/admin/events" element={<AdminEventsScreen />} />
-        <Route path="/admin/events/new_event" element={<AdminEventEditorScreen />} />
+        <Route
+          path="/admin/events/new_event"
+          element={<AdminEventEditorScreen />}
+        />
         <Route path="/admin/events/:uid" element={<AdminEventEditorScreen />} />
 
         <Route path="/admin/error" element={<ErrorScreen />} />

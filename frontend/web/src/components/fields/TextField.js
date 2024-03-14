@@ -33,7 +33,7 @@ export default class TextField extends AbstractField {
         this.setError(getText("errorLengthMustBe", false, this.min));
       } else if (this.min < this.max) {
         this.setError(
-          getText("errorLengthBetween", false, [this.min, this.max])
+          getText("errorLengthBetween", false, [this.min, this.max]),
         );
       } else if (this.min > 0) {
         this.setError(getText("errorLengthMinimum", false, this.min));

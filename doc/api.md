@@ -2,118 +2,124 @@
 
 ## Terminology
 
-| Term | Description |
-|------|-------------|
-| SLUG | SLUG refers to the end of a URL after `/`, identifying the specific post. |
-| Absolute URL | Includes the absolute path and query components. |
-| Complete URL | Includes scheme, host, port, path, and query components. |
+| Term         | Description                                                               |
+| ------------ | ------------------------------------------------------------------------- |
+| SLUG         | SLUG refers to the end of a URL after `/`, identifying the specific post. |
+| Absolute URL | Includes the absolute path and query components.                          |
+| Complete URL | Includes scheme, host, port, path, and query components.                  |
 
 ## Expected Behavior
+
 - **Supported Methods**
-    - Supports `GET`, `POST`, `PATCH`, and `DELETE` methods.
+  - Supports `GET`, `POST`, `PATCH`, and `DELETE` methods.
 - **Response Handling**
-    - `GET` endpoints deliver requested resources.
-    - `GET` and `PATCH` endpoints return updated or newly created resources.
-    - `DELETE` endpoints confirm successful deletion.
+  - `GET` endpoints deliver requested resources.
+  - `GET` and `PATCH` endpoints return updated or newly created resources.
+  - `DELETE` endpoints confirm successful deletion.
 - **Error Handling**
-    - All endpoints provide error messages on failure.
+  - All endpoints provide error messages on failure.
 - **Individual Field Update**
-    - `PATCH` endpoints enable updating individual fields.
+  - `PATCH` endpoints enable updating individual fields.
 - **Access Authorization**
-    - Requires proper authorization tokens for access.
+  - Requires proper authorization tokens for access.
 - **Authorization Exceptions**
-    - Certain endpoints (`GET /login`, `GET /reset_password`, `GET /images/*`) are accessible without authorization.
+  - Certain endpoints (`GET /login`, `GET /reset_password`, `GET /images/*`) are accessible without authorization.
 - **Bot Protection**
-    - Certain endpoints (`POST /login`, `POST /reset_password`) are accessible with bot protection measures.
+  - Certain endpoints (`POST /login`, `POST /reset_password`) are accessible with bot protection measures.
 - **One-Time Token Requirement**
-    - Access to `PATCH /reset_password` requires a one-time token.
+  - Access to `PATCH /reset_password` requires a one-time token.
 - **New User Requirements**
-    - Existing users create new users who must reset their password initially.
+  - Existing users create new users who must reset their password initially.
 - **Resource Deletion**
-    - Deleting a resource also removes related references (Foreign Keys).
+  - Deleting a resource also removes related references (Foreign Keys).
 - **Image Deletion Constraint**
-    - Prevents deletion of images with existing references (Foreign Keys).
+  - Prevents deletion of images with existing references (Foreign Keys).
 - **Logging**
-    - Logs activities to syslog.
+  - Logs activities to syslog.
 - **Logging Activities**
-    - Logging of IP address and User-Agent when attempts to log in and attempts to reset the password.
-    - Logging of IP address, User-Agent and User ID when a user logs in, reset the password, creates, updates, or deletes.
+  - Logging of IP address and User-Agent when attempts to log in and attempts to reset the password.
+  - Logging of IP address, User-Agent and User ID when a user logs in, reset the password, creates, updates, or deletes.
 
 ## Endpoints
 
 ### Users
+
 - **GET `/users`**
-    - Provides a list of users.
+  - Provides a list of users.
 - **POST `/users`**
-    - Creates a new user and initiates a password reset by sending an email.
+  - Creates a new user and initiates a password reset by sending an email.
 - **GET `/users/[uid]`**
-    - Retrieves a specific user.
+  - Retrieves a specific user.
 - **PATCH `/users/[uid]`**
-    - Modifies the details of a user.
+  - Modifies the details of a user.
 - **DELETE `/users/[uid]`**
-    - Removes a user from the system.
+  - Removes a user from the system.
 
 ### Blogs
+
 - **GET `/blogs`**
-    - Fetches a collection of blogs.
+  - Fetches a collection of blogs.
 - **POST `/blogs`**
-    - Adds a new blog post.
+  - Adds a new blog post.
 - **GET `/blogs/[id]`**
-    - Retrieves a specific blog post using its unique identifier or slug.
+  - Retrieves a specific blog post using its unique identifier or slug.
 - **PATCH `/blogs/[uid]`**
-    - Updates the content of a blog post.
+  - Updates the content of a blog post.
 - **DELETE `/blogs/[uid]`**
-    - Deletes a specific blog post.
+  - Deletes a specific blog post.
 
 ### Events
+
 - **GET `/events`**
-    - Fetches a collection of events.
+  - Fetches a collection of events.
 - **POST `/events`**
-    - Creates a new event.
+  - Creates a new event.
 - **GET `/events/[id]`**
-    - Retrieves details about a specific event using its unique identifier or slug.
+  - Retrieves details about a specific event using its unique identifier or slug.
 - **PATCH `/events/[uid]`**
-    - Updates the details of an event.
+  - Updates the details of an event.
 - **DELETE `/events/[uid]`**
-    - Deletes a specific event.
+  - Deletes a specific event.
 
 ### Images
+
 - **GET `/images`**
-    - Fetches a collection of images.
+  - Fetches a collection of images.
 - **POST `/images`**
-    - Uploads a new image.
+  - Uploads a new image.
 - **GET `/images/[uid]`**
-    - Retrieves a specific image.
+  - Retrieves a specific image.
 - **PATCH `/images/[uid]`**
-    - Updates the details of an image.
+  - Updates the details of an image.
 - **DELETE `/images/[uid]`**
-    - Removes a specific image.
+  - Removes a specific image.
 
 ### Other Functionalities
+
 - **GET `/location/[address]`**
-    - Provides location results based on the provided address.
+  - Provides location results based on the provided address.
 - **GET `/login`**
-    - Offers login validation options, such as captcha.
+  - Offers login validation options, such as captcha.
 - **POST `/login`**
-    - Authenticates the user and returns authorization information.
+  - Authenticates the user and returns authorization information.
 - **GET `/reset_password`**
-    - Provides password reset validation options, e.g., captcha.
+  - Provides password reset validation options, e.g., captcha.
 - **POST `/reset_password`**
-    - Initiates a password reset and responds with a success message.
+  - Initiates a password reset and responds with a success message.
 - **POST `/reset_password/[token]`**
-    - Resets the user's password based on the provided token.
+  - Resets the user's password based on the provided token.
 
 ## Images
 
 ### Image Sets
 
-| Image Set | Purpose | Minimum | Maximum | Image Format | Example |
-|-----------|---------|---------|---------|--------------|---------|
-| Original Image | The original uploaded image, functioning as a backup and reference, e.g., for Google Image Bot. | 380x200 pixels | - | - | `/images/<SHA2-224>.ext` |
-| Web Content Image | Images optimized for use on the website. | 380x200 pixels | 1920x1280 pixels | - | `/images/optimized/<SHA2-224>.ext` |
-| Open Graph Image | Images optimized for use on Facebook marked with the "-og" suffix. | 380x200 pixels | 1920x1010 pixels | 1.9:1 (+-0.09) | `/images/optimized/<SHA2-224>-og.ext` |
-| Twitter Cards Image | Images optimized for use on Twitter Cards marked with the "-x" suffix. | 200x200 pixels | 1280x1280 pixels | 1:1 | `/images/optimized/<SHA2-224>-x.ext` |
- 
+| Image Set           | Purpose                                                                                         | Minimum        | Maximum          | Image Format   | Example                               |
+| ------------------- | ----------------------------------------------------------------------------------------------- | -------------- | ---------------- | -------------- | ------------------------------------- |
+| Original Image      | The original uploaded image, functioning as a backup and reference, e.g., for Google Image Bot. | 380x200 pixels | -                | -              | `/images/<SHA2-224>.ext`              |
+| Web Content Image   | Images optimized for use on the website.                                                        | 380x200 pixels | 1920x1280 pixels | -              | `/images/optimized/<SHA2-224>.ext`    |
+| Open Graph Image    | Images optimized for use on Facebook marked with the "-og" suffix.                              | 380x200 pixels | 1920x1010 pixels | 1.9:1 (+-0.09) | `/images/optimized/<SHA2-224>-og.ext` |
+| Twitter Cards Image | Images optimized for use on Twitter Cards marked with the "-x" suffix.                          | 200x200 pixels | 1280x1280 pixels | 1:1            | `/images/optimized/<SHA2-224>-x.ext`  |
+
 ### Image Handling
 
 **Naming:**
@@ -132,14 +138,16 @@
 **Optimization and Processing:**
 
 - **Optimization:**
-    - Optimized images should be without metadata and undergo TinyPNG optimization.
-    - Optimized images should have a DPI of 95.
 
-- **Adjustment of Image Format:** 
-    - Adjustment occurs by cropping with a focus on the center of the image to achieve the desired format.
+  - Optimized images should be without metadata and undergo TinyPNG optimization.
+  - Optimized images should have a DPI of 95.
+
+- **Adjustment of Image Format:**
+
+  - Adjustment occurs by cropping with a focus on the center of the image to achieve the desired format.
 
 - **Enlargement:**
-    - Images should not be enlarged to achieve a size.
+  - Images should not be enlarged to achieve a size.
 
 ### Upload
 
@@ -151,7 +159,7 @@
 
 The validation for email addresses follows specific criteria:
 
-- The local part (before the @ symbol) can contain only alphanumeric characters, dots (.), underscores (_), percent signs (%), plus signs (+), or hyphens (-).
+- The local part (before the @ symbol) can contain only alphanumeric characters, dots (.), underscores (\_), percent signs (%), plus signs (+), or hyphens (-).
 - The domain part (after the @ symbol) can contain only alphanumeric characters, dots (.), or hyphens (-).
 
 Example:
@@ -164,66 +172,67 @@ Example:
 
 **2xx (Success):** Indicate that the request was received, understood, and accepted.
 
-  - **200 OK:** The request was successfully processed and returning the content.
-  - **201 Created:** Indicates successful creation of a new resource and returning the content.
-  - **204 No Content:** The server successfully processed the request but is not returning any content.
+- **200 OK:** The request was successfully processed and returning the content.
+- **201 Created:** Indicates successful creation of a new resource and returning the content.
+- **204 No Content:** The server successfully processed the request but is not returning any content.
 
 **4xx (Client Errors):** Occur when the client's request contains incorrect syntax or cannot be fulfilled.
 
-  - **400 Bad Request:** The request cannot be fulfilled due to bad syntax or other client-side errors.
-  - **401 Unauthorized:** The client needs to authenticate itself to get the requested response.
-  - **403 Forbidden:** The client is authenticate but does not have permission to access the requested resource.
-  - **404 Not Found:** The requested resource does not exist on the server.
+- **400 Bad Request:** The request cannot be fulfilled due to bad syntax or other client-side errors.
+- **401 Unauthorized:** The client needs to authenticate itself to get the requested response.
+- **403 Forbidden:** The client is authenticate but does not have permission to access the requested resource.
+- **404 Not Found:** The requested resource does not exist on the server.
 
 **5xx (Server Errors):** Indicate that the server failed to fulfill a valid request due to an error on its end.
 
-  - **500 Internal Server Error:** A generic error message indicating that something has gone wrong on the server.
-  - **503 Service Unavailable:** The server is not ready to handle the request due to temporary overloading or maintenance.
+- **500 Internal Server Error:** A generic error message indicating that something has gone wrong on the server.
+- **503 Service Unavailable:** The server is not ready to handle the request due to temporary overloading or maintenance.
 
 ## Main Object
 
 The main object serves as the parent container in a response. The table below shows an overview of the fields present in the main object under different response scenarios.
 
-| Data Type | Field | On Content | On No Content | On Error | Description |
-|-----------|-------|------------|---------------|----------|-------------|
-| Boolean | `success` | Yes | Yes | Yes | Indicates whether there was an error. |
-| Object | `data` | Yes | No | No | Contains either a page or resource object. |
-| Object | `error` | No | No | Yes | Error object. |
-| String | `message` | Yes | Yes | No | Describes the status. |
+| Data Type | Field     | On Content | On No Content | On Error | Description                                |
+| --------- | --------- | ---------- | ------------- | -------- | ------------------------------------------ |
+| Boolean   | `success` | Yes        | Yes           | Yes      | Indicates whether there was an error.      |
+| Object    | `data`    | Yes        | No            | No       | Contains either a page or resource object. |
+| Object    | `error`   | No         | No            | Yes      | Error object.                              |
+| String    | `message` | Yes        | Yes           | No       | Describes the status.                      |
 
 Note: "On Content" refers to situations where the response includes content, "On No Content" refers to when the status code 204 is used, and "On Error" relates to error responses.
 
 **Error Object:**
 
-| Data Type | Field | Description |
-|-----------|-------|-------------|
-| String | `code` | Status code. |
-| String | `message` | Status as text. |
-| String | `description` | Error description. |
+| Data Type | Field         | Description        |
+| --------- | ------------- | ------------------ |
+| String    | `code`        | Status code.       |
+| String    | `message`     | Status as text.    |
+| String    | `description` | Error description. |
 
 **Success Message:**
 
-| Method | Status | Message |
-|--------|--------|---------|
-| `GET` | 200 | Successfully retrieved the resource. |
-| `POST` | 201 | The resource has been created successfully. |
-| `PATCH` | 200 | The resource has been updated successfully. |
-| `DELETE` | 204 | The resource has been deleted successfully. |
+| Method   | Status | Message                                     |
+| -------- | ------ | ------------------------------------------- |
+| `GET`    | 200    | Successfully retrieved the resource.        |
+| `POST`   | 201    | The resource has been created successfully. |
+| `PATCH`  | 200    | The resource has been updated successfully. |
+| `DELETE` | 204    | The resource has been deleted successfully. |
 
 **Error Message:**
 
-| Status | Message |
-|--------|---------|
-| 400 | The request cannot be fulfilled due to bad syntax. |
-| 401 | Access is denied. |
-| 403 | The server refuses to approve the request. |
-| 404 | The requested resource was not found. |
-| 500 | The server encountered an unexpected condition. |
-| 503 | The server is currently unable to handle the request. |
+| Status | Message                                               |
+| ------ | ----------------------------------------------------- |
+| 400    | The request cannot be fulfilled due to bad syntax.    |
+| 401    | Access is denied.                                     |
+| 403    | The server refuses to approve the request.            |
+| 404    | The requested resource was not found.                 |
+| 500    | The server encountered an unexpected condition.       |
+| 503    | The server is currently unable to handle the request. |
 
 **Examples:**
 
 `GET`: Successfully retrieved the resource.
+
 ```json
 {
   "success": true,
@@ -244,6 +253,7 @@ Note: "On Content" refers to situations where the response includes content, "On
 ```
 
 `POST`: The resource has been created successfully.
+
 ```json
 {
   "success": true,
@@ -264,6 +274,7 @@ Note: "On Content" refers to situations where the response includes content, "On
 ```
 
 `PATCH`: The resource has been updated successfully.
+
 ```json
 {
   "success": true,
@@ -284,6 +295,7 @@ Note: "On Content" refers to situations where the response includes content, "On
 ```
 
 `DELETE`: The resource has been deleted successfully.
+
 ```json
 {
   "success": true,
@@ -292,6 +304,7 @@ Note: "On Content" refers to situations where the response includes content, "On
 ```
 
 `GET`, `PATCH`, `DELETE`: The requested resource was not found.
+
 ```json
 {
   "success": false,
@@ -304,6 +317,7 @@ Note: "On Content" refers to situations where the response includes content, "On
 ```
 
 `POST`, `PATCH`: The request cannot be fulfilled due to bad syntax.
+
 ```json
 {
   "success": false,
@@ -317,14 +331,14 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ## List Objects
 
-| Data Type | Field | Description | Example |
-|-----------|-------|-------------|---------|
-| List | `items` | A list containing user, blog, or event objects [List Item Objects]. | See examples below. |
-| Object | `pagination` | Contains link objects: `first`, `prev`, `self`, `next`, `last`. <br> `first`, `prev`, `next`, and `last` are null when they are equal to `self`. | |
-| Number | `results` | Number of results | `"results": 10` |
-| Number | `totalResults` | Total number of results | `"totalResults": 150` |
-| Number | `page` | Current page | `"page": 1` |
-| Number | `totalPages` | Total number of pages | `"totalPages": 15` |
+| Data Type | Field          | Description                                                                                                                                      | Example               |
+| --------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
+| List      | `items`        | A list containing user, blog, or event objects [List Item Objects].                                                                              | See examples below.   |
+| Object    | `pagination`   | Contains link objects: `first`, `prev`, `self`, `next`, `last`. <br> `first`, `prev`, `next`, and `last` are null when they are equal to `self`. |                       |
+| Number    | `results`      | Number of results                                                                                                                                | `"results": 10`       |
+| Number    | `totalResults` | Total number of results                                                                                                                          | `"totalResults": 150` |
+| Number    | `page`         | Current page                                                                                                                                     | `"page": 1`           |
+| Number    | `totalPages`   | Total number of pages                                                                                                                            | `"totalPages": 15`    |
 
 **Example:**
 
@@ -342,7 +356,7 @@ Note: "On Content" refers to situations where the response includes content, "On
       "_links": {
         "self": { "href": "/users/0", "title": "John Doe" }
       }
-    },
+    }
     // Other users...
   ],
   "pagination": {
@@ -350,7 +364,7 @@ Note: "On Content" refers to situations where the response includes content, "On
     "prev": null,
     "self": { "href": "/users/?page=1", "title": "Current page" },
     "next": { "href": "/users/?page=2", "title": "Next page" },
-    "last": { "href": "/users/?page=15", "title": "Last page" },
+    "last": { "href": "/users/?page=15", "title": "Last page" }
   },
   "results": 10,
   "totalResults": 150,
@@ -361,25 +375,25 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 **Query Parameters:**
 
-| Data Type | Parameter | Description | Example |
-|-----------|-----------|-------------|---------|
-| Number | `page` | Specifies the page number for paginated results. | `page=2` |
-| Number | `max` | Specifies the maximum number of items per page. | `max=20` |
+| Data Type | Parameter | Description                                      | Example  |
+| --------- | --------- | ------------------------------------------------ | -------- |
+| Number    | `page`    | Specifies the page number for paginated results. | `page=2` |
+| Number    | `max`     | Specifies the maximum number of items per page.  | `max=20` |
 
 ### List Item Objects
 
 #### User Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the user.</u> |
-| String | `firstName` | No | User's first name. |
-| String | `lastName` | Yes | User's last name. |
-| String | `email` | No | User's email address. |
-| String | `createdAt` | No | ISO 8601 representation when the user was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the user was last updated. |
-| String | `loggedInAt` | Yes | ISO 8601 representation when the user last logged in. |
-| Object | `_links` | No | Contains a link object for self-reference (`self`). |
+| Data Type | Field        | Null | Description                                             |
+| --------- | ------------ | ---- | ------------------------------------------------------- |
+| Number    | `uid`        | No   | <u>Unique identifier for the user.</u>                  |
+| String    | `firstName`  | No   | User's first name.                                      |
+| String    | `lastName`   | Yes  | User's last name.                                       |
+| String    | `email`      | No   | User's email address.                                   |
+| String    | `createdAt`  | No   | ISO 8601 representation when the user was created.      |
+| String    | `updatedAt`  | Yes  | ISO 8601 representation when the user was last updated. |
+| String    | `loggedInAt` | Yes  | ISO 8601 representation when the user last logged in.   |
+| Object    | `_links`     | No   | Contains a link object for self-reference (`self`).     |
 
 **Example:**
 
@@ -400,22 +414,22 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 **Query Parameters:**
 
-| Data Type | Parameter | Fields | Description | Example |
-|-----------|-----------|--------|-------------|---------|
-| String | `initial_letter` | `firstname` | Filters the users by the initial letter of their first name.| `initial_letter=a` (Includes only items starting with 'a') |
-| String | `order` | `firstname`, `lastname`, `email`, `createdat`, `updatedat`, `loggedinat` | Specifies the field to sort the user results. | `order=firstname` (Sorts by the `firstname` field) |
+| Data Type | Parameter        | Fields                                                                   | Description                                                  | Example                                                    |
+| --------- | ---------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------- |
+| String    | `initial_letter` | `firstname`                                                              | Filters the users by the initial letter of their first name. | `initial_letter=a` (Includes only items starting with 'a') |
+| String    | `order`          | `firstname`, `lastname`, `email`, `createdat`, `updatedat`, `loggedinat` | Specifies the field to sort the user results.                | `order=firstname` (Sorts by the `firstname` field)         |
 
 #### Blog Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the blog.</u> |
-| String | `title` | No | Title of the blog post. |
-| String | `shortDesc` | No | A brief description of the blog post. |
-| Object | `image` | Yes | Image Referring Object. |
-| String | `createdAt` | No | ISO 8601 representation when the blog was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the blog was last updated. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`) and slug (`slug`). |
+| Data Type | Field       | Null | Description                                                          |
+| --------- | ----------- | ---- | -------------------------------------------------------------------- |
+| Number    | `uid`       | No   | <u>Unique identifier for the blog.</u>                               |
+| String    | `title`     | No   | Title of the blog post.                                              |
+| String    | `shortDesc` | No   | A brief description of the blog post.                                |
+| Object    | `image`     | Yes  | Image Referring Object.                                              |
+| String    | `createdAt` | No   | ISO 8601 representation when the blog was created.                   |
+| String    | `updatedAt` | Yes  | ISO 8601 representation when the blog was last updated.              |
+| Object    | `_links`    | No   | Contains link objects for self-reference (`self`) and slug (`slug`). |
 
 **Example:**
 
@@ -436,23 +450,23 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 **Query Parameters:**
 
-| Data Type | Parameter | Fields | Description | Example |
-|-----------|-----------|--------|-------------|---------|
-| String | `initial_letter` | `title` | Filters the blog by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
-| String | `order` | `title`, `createdat`, `updatedat` | Specifies the field to sort the blog results. | `order=title` (Sorts by the `title` field) |
+| Data Type | Parameter        | Fields                            | Description                                          | Example                                                    |
+| --------- | ---------------- | --------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| String    | `initial_letter` | `title`                           | Filters the blog by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
+| String    | `order`          | `title`, `createdat`, `updatedat` | Specifies the field to sort the blog results.        | `order=title` (Sorts by the `title` field)                 |
 
 #### Event Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the event.</u> |
-| String | `title` | No | Title of the event. |
-| String | `shortDesc` | No | A brief description of the event. |
-| String | `startDateTime` | No | ISO 8601 representation the start date and time of the event. |
-| String | `location` | No | Location where the event takes place. |
-| String | `createdAt` | No | ISO 8601 representation when the event was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the event was last updated. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`) and slug (`slug`). |
+| Data Type | Field           | Null | Description                                                          |
+| --------- | --------------- | ---- | -------------------------------------------------------------------- |
+| Number    | `uid`           | No   | <u>Unique identifier for the event.</u>                              |
+| String    | `title`         | No   | Title of the event.                                                  |
+| String    | `shortDesc`     | No   | A brief description of the event.                                    |
+| String    | `startDateTime` | No   | ISO 8601 representation the start date and time of the event.        |
+| String    | `location`      | No   | Location where the event takes place.                                |
+| String    | `createdAt`     | No   | ISO 8601 representation when the event was created.                  |
+| String    | `updatedAt`     | Yes  | ISO 8601 representation when the event was last updated.             |
+| Object    | `_links`        | No   | Contains link objects for self-reference (`self`) and slug (`slug`). |
 
 **Example:**
 
@@ -475,21 +489,21 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 **Query Parameters:**
 
-| Data Type | Parameter | Fields | Description | Example |
-|-----------|-----------|--------|-------------|---------|
-| String | `initial_letter` | `title` | Filters the event by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
-| String | `order` | `title`, `startdatetime`, `createdat`, `updatedat` | Specifies the field to sort the event results. | `order=title` (Sorts by the `title` field) |
+| Data Type | Parameter        | Fields                                             | Description                                           | Example                                                    |
+| --------- | ---------------- | -------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| String    | `initial_letter` | `title`                                            | Filters the event by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
+| String    | `order`          | `title`, `startdatetime`, `createdat`, `updatedat` | Specifies the field to sort the event results.        | `order=title` (Sorts by the `title` field)                 |
 
 #### Image Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the image.</u> |
-| String | `src` | No | Image name with extension. |
-| String | `alt` | No | Alternate text for the image. |
-| String | `createdAt` | No | ISO 8601 representation when the image was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the image was last updated. |
-| Object | `_links` | No | Contains a link object for self-reference (`self`). |
+| Data Type | Field       | Null | Description                                              |
+| --------- | ----------- | ---- | -------------------------------------------------------- |
+| Number    | `uid`       | No   | <u>Unique identifier for the image.</u>                  |
+| String    | `src`       | No   | Image name with extension.                               |
+| String    | `alt`       | No   | Alternate text for the image.                            |
+| String    | `createdAt` | No   | ISO 8601 representation when the image was created.      |
+| String    | `updatedAt` | Yes  | ISO 8601 representation when the image was last updated. |
+| Object    | `_links`    | No   | Contains a link object for self-reference (`self`).      |
 
 **Example:**
 
@@ -508,30 +522,30 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 **Query Parameters:**
 
-| Data Type | Parameter | Fields | Description | Example |
-|-----------|-----------|--------|-------------|---------|
-| String | `order` | `src`, `createdat`, `updatedat` | Specifies the field to sort the image results. | `order=src` (Sorts by the `src` field) |
+| Data Type | Parameter | Fields                          | Description                                    | Example                                |
+| --------- | --------- | ------------------------------- | ---------------------------------------------- | -------------------------------------- |
+| String    | `order`   | `src`, `createdat`, `updatedat` | Specifies the field to sort the image results. | `order=src` (Sorts by the `src` field) |
 
 #### Location Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Unknown | \<location result fields> | | Not currently defined. |
+| Data Type | Field                     | Null | Description            |
+| --------- | ------------------------- | ---- | ---------------------- |
+| Unknown   | \<location result fields> |      | Not currently defined. |
 
 ## Resource Objects
 
 ### User Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the user.</u> |
-| String | `firstName` | No | User's first name. |
-| String | `lastName` | Yes | User's last name. |
-| String | `email` | No | <u>Unique email address for the user.</u> |
-| String | `createdAt` | No | ISO 8601 representation when the user was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the user was last updated. |
-| String | `loggedInAt` | Yes | ISO 8601 representation when the user last logged in. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`), update (`update`), and delete (`delete`). |
+| Data Type | Field        | Null | Description                                                                                  |
+| --------- | ------------ | ---- | -------------------------------------------------------------------------------------------- |
+| Number    | `uid`        | No   | <u>Unique identifier for the user.</u>                                                       |
+| String    | `firstName`  | No   | User's first name.                                                                           |
+| String    | `lastName`   | Yes  | User's last name.                                                                            |
+| String    | `email`      | No   | <u>Unique email address for the user.</u>                                                    |
+| String    | `createdAt`  | No   | ISO 8601 representation when the user was created.                                           |
+| String    | `updatedAt`  | Yes  | ISO 8601 representation when the user was last updated.                                      |
+| String    | `loggedInAt` | Yes  | ISO 8601 representation when the user last logged in.                                        |
+| Object    | `_links`     | No   | Contains link objects for self-reference (`self`), update (`update`), and delete (`delete`). |
 
 **Example:**
 
@@ -554,17 +568,17 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ### Blog Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the blog.</u> |
-| String | `title` | No | Title of the blog post. |
-| String | `slug` | No | <u>Unique SLUG to identifier the blog.</u> |
-| String | `shortDesc` | No | A brief description of the blog post. |
-| Object | `image` | Yes | Image Referring Object. |
-| String | `content` | No | Content of the blog post in HTML format. |
-| String | `createdAt` | No | ISO 8601 representation when the blog was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the blog was last updated. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`), slug (`slug`), update (`update`), and delete (`delete`). |
+| Data Type | Field       | Null | Description                                                                                                 |
+| --------- | ----------- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| Number    | `uid`       | No   | <u>Unique identifier for the blog.</u>                                                                      |
+| String    | `title`     | No   | Title of the blog post.                                                                                     |
+| String    | `slug`      | No   | <u>Unique SLUG to identifier the blog.</u>                                                                  |
+| String    | `shortDesc` | No   | A brief description of the blog post.                                                                       |
+| Object    | `image`     | Yes  | Image Referring Object.                                                                                     |
+| String    | `content`   | No   | Content of the blog post in HTML format.                                                                    |
+| String    | `createdAt` | No   | ISO 8601 representation when the blog was created.                                                          |
+| String    | `updatedAt` | Yes  | ISO 8601 representation when the blog was last updated.                                                     |
+| Object    | `_links`    | No   | Contains link objects for self-reference (`self`), slug (`slug`), update (`update`), and delete (`delete`). |
 
 **Example:**
 
@@ -589,19 +603,19 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ### Event Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the event.</u> |
-| String | `title` | No | Title of the event. |
-| String | `slug` | No | <u>Unique SLUG to identifying the event.</u> |
-| String | `shortDesc` | No | A brief description of the event. |
-| String | `startDateTime` | No | ISO 8601 representation the start date and time of the event. |
-| String | `endDateTime` | No | ISO 8601 representation the end date and time of the event. |
-| String | `location` | No | Location where the event takes place. |
-| String | `content` | No | Details of the event in HTML format. |
-| String | `createdAt` | No | ISO 8601 representation when the event was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the event was last updated. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`), slug (`slug`), update (`update`), and delete (`delete`). |
+| Data Type | Field           | Null | Description                                                                                                 |
+| --------- | --------------- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| Number    | `uid`           | No   | <u>Unique identifier for the event.</u>                                                                     |
+| String    | `title`         | No   | Title of the event.                                                                                         |
+| String    | `slug`          | No   | <u>Unique SLUG to identifying the event.</u>                                                                |
+| String    | `shortDesc`     | No   | A brief description of the event.                                                                           |
+| String    | `startDateTime` | No   | ISO 8601 representation the start date and time of the event.                                               |
+| String    | `endDateTime`   | No   | ISO 8601 representation the end date and time of the event.                                                 |
+| String    | `location`      | No   | Location where the event takes place.                                                                       |
+| String    | `content`       | No   | Details of the event in HTML format.                                                                        |
+| String    | `createdAt`     | No   | ISO 8601 representation when the event was created.                                                         |
+| String    | `updatedAt`     | Yes  | ISO 8601 representation when the event was last updated.                                                    |
+| Object    | `_links`        | No   | Contains link objects for self-reference (`self`), slug (`slug`), update (`update`), and delete (`delete`). |
 
 **Example:**
 
@@ -620,22 +634,30 @@ Note: "On Content" refers to situations where the response includes content, "On
   "_links": {
     "self": { "href": "/events/0", "title": "Tech Conference" },
     "slug": { "href": "/events/tech-conference", "title": "Tech Conference" },
-    "update": { "href": "/events/0", "title": "Update Event", "method": "PATCH" },
-    "delete": { "href": "/events/0", "title": "Delete Event", "method": "DELETE" }
+    "update": {
+      "href": "/events/0",
+      "title": "Update Event",
+      "method": "PATCH"
+    },
+    "delete": {
+      "href": "/events/0",
+      "title": "Delete Event",
+      "method": "DELETE"
+    }
   }
 }
 ```
 
 ### Image Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Number | `uid` | No | <u>Unique identifier for the image.</u> |
-| String | `src` | No | Image name with extension. |
-| String | `alt` | No | Alternate text for the image. |
-| String | `createdAt` | No | ISO 8601 representation when the image was created. |
-| String | `updatedAt` | Yes | ISO 8601 representation when the image was last updated. |
-| Object | `_links` | No | Contains link objects for self-reference (`self`), update (`update`), and delete (`delete`). |
+| Data Type | Field       | Null | Description                                                                                  |
+| --------- | ----------- | ---- | -------------------------------------------------------------------------------------------- |
+| Number    | `uid`       | No   | <u>Unique identifier for the image.</u>                                                      |
+| String    | `src`       | No   | Image name with extension.                                                                   |
+| String    | `alt`       | No   | Alternate text for the image.                                                                |
+| String    | `createdAt` | No   | ISO 8601 representation when the image was created.                                          |
+| String    | `updatedAt` | Yes  | ISO 8601 representation when the image was last updated.                                     |
+| Object    | `_links`    | No   | Contains link objects for self-reference (`self`), update (`update`), and delete (`delete`). |
 
 **Example:**
 
@@ -648,41 +670,49 @@ Note: "On Content" refers to situations where the response includes content, "On
   "updatedAt": "2023-11-02T11:05:00Z",
   "_links": {
     "self": { "href": "/images/0", "title": "Example 1" },
-    "update": { "href": "/images/0", "title": "Update Image", "method": "PATCH" },
-    "delete": { "href": "/images/0", "title": "Delete Image", "method": "DELETE" }
+    "update": {
+      "href": "/images/0",
+      "title": "Update Image",
+      "method": "PATCH"
+    },
+    "delete": {
+      "href": "/images/0",
+      "title": "Delete Image",
+      "method": "DELETE"
+    }
   }
 }
 ```
 
 ### Login Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Unknown | \<bot validation fields> | | Not currently defined. |
-| Object | `_links` | No | Contains link `login` |
+| Data Type | Field                    | Null | Description            |
+| --------- | ------------------------ | ---- | ---------------------- |
+| Unknown   | \<bot validation fields> |      | Not currently defined. |
+| Object    | `_links`                 | No   | Contains link `login`  |
 
 ### Authorization Information Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Unknown | \<authorization information fields> | | Not currently defined. |
+| Data Type | Field                               | Null | Description            |
+| --------- | ----------------------------------- | ---- | ---------------------- |
+| Unknown   | \<authorization information fields> |      | Not currently defined. |
 
 ### Reset Password Object:
 
-| Data Type | Field | Null | Description |
-|-----------|-------|------|-------------|
-| Unknown | \<bot validation fields> | | Not currently defined. |
-| Object | `_links` | No | Contains link `reset` |
+| Data Type | Field                    | Null | Description            |
+| --------- | ------------------------ | ---- | ---------------------- |
+| Unknown   | \<bot validation fields> |      | Not currently defined. |
+| Object    | `_links`                 | No   | Contains link `reset`  |
 
 ## POST Body Objects
 
 ### User Object:
 
-| Data Type | Field | Min | Max | Required | Description |
-|-----------|-------|-----|-----|----------|-------------|
-| String | `firstName` | 2 | 50 | Yes | First name of the user. |
-| String | `lastName` | 2 | 50 | No | Last name of the user. |
-| String | `email` | 5 | 100 | Yes | <u>Unique email address.</u> |
+| Data Type | Field       | Min | Max | Required | Description                  |
+| --------- | ----------- | --- | --- | -------- | ---------------------------- |
+| String    | `firstName` | 2   | 50  | Yes      | First name of the user.      |
+| String    | `lastName`  | 2   | 50  | No       | Last name of the user.       |
+| String    | `email`     | 5   | 100 | Yes      | <u>Unique email address.</u> |
 
 **Example:**
 
@@ -696,13 +726,13 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ### Blog Object:
 
-| Data Type | Field | Min | Max | Required | Description |
-|-----------|-------|-----|-----|----------|-------------|
-| String | `title` | 5 | 100 | Yes | Title of the blog post. |
-| String | `slug` | 5 | 150 | Yes | <u>Unique SLUG to identifying the blogs.</u> |
-| String | `shortDesc` | 145 | 155 | Yes | Short description of the blog post. |
-| Object | `image` | - | 8MB | No | Image Referring Object. |
-| String | `content` | 300 | 65,535 | Yes | Content of the blog post in HTML format. |
+| Data Type | Field       | Min | Max    | Required | Description                                  |
+| --------- | ----------- | --- | ------ | -------- | -------------------------------------------- |
+| String    | `title`     | 5   | 100    | Yes      | Title of the blog post.                      |
+| String    | `slug`      | 5   | 150    | Yes      | <u>Unique SLUG to identifying the blogs.</u> |
+| String    | `shortDesc` | 145 | 155    | Yes      | Short description of the blog post.          |
+| Object    | `image`     | -   | 8MB    | No       | Image Referring Object.                      |
+| String    | `content`   | 300 | 65,535 | Yes      | Content of the blog post in HTML format.     |
 
 **Example:**
 
@@ -711,22 +741,25 @@ Note: "On Content" refers to situations where the response includes content, "On
   "title": "Example Blog Title",
   "slug": "example-blog-title",
   "shortDesc": "This is a short description of the blog post.",
-  "image": { "src": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...", "alt": "Blog Image Alt Text" },
+  "image": {
+    "src": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+    "alt": "Blog Image Alt Text"
+  },
   "content": "<p>This is the content of the blog post in HTML format.</p>"
 }
 ```
 
 ### Event Object:
 
-| Data Type | Field | Min | Max | Required | Description |
-|-----------|-------|-----|-----|----------|-------------|
-| String | `title` | 5 | 100 | Yes | Title of the event. |
-| String | `slug` | 5 | 150 | Yes | <u>Unique SLUG to identifying the events.</u> |
-| String | `shortDesc` | 145 | 155 | Yes | Short description of the event. |
-| String | `startDateTime` | 24 | 24 | Yes | ISO 8601 representation of the start date and time of the event. |
-| String | `endDateTime` | 24 | 24 | Yes | ISO 8601 representation of the end date and time of the event. Should be later than `startDateTime`. |
-| String | `location` | 15 | 255 | Yes | Location of the event. |
-| String | `content` | 300 | 65,535 | Yes | Content describing the event in HTML format. |
+| Data Type | Field           | Min | Max    | Required | Description                                                                                          |
+| --------- | --------------- | --- | ------ | -------- | ---------------------------------------------------------------------------------------------------- |
+| String    | `title`         | 5   | 100    | Yes      | Title of the event.                                                                                  |
+| String    | `slug`          | 5   | 150    | Yes      | <u>Unique SLUG to identifying the events.</u>                                                        |
+| String    | `shortDesc`     | 145 | 155    | Yes      | Short description of the event.                                                                      |
+| String    | `startDateTime` | 24  | 24     | Yes      | ISO 8601 representation of the start date and time of the event.                                     |
+| String    | `endDateTime`   | 24  | 24     | Yes      | ISO 8601 representation of the end date and time of the event. Should be later than `startDateTime`. |
+| String    | `location`      | 15  | 255    | Yes      | Location of the event.                                                                               |
+| String    | `content`       | 300 | 65,535 | Yes      | Content describing the event in HTML format.                                                         |
 
 **Example:**
 
@@ -744,10 +777,10 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ### Image Object:
 
-| Data Type | Field | Min | Max | Required | Description |
-|-----------|-------|-----|-----|----------|-------------|
-| String | `src` | - | 8MB | Yes | Image data specified as a data URI scheme, encoded in base64. |
-| String | `alt` | 15 | 50 | Yes | Alternative text for the image. |
+| Data Type | Field | Min | Max | Required | Description                                                   |
+| --------- | ----- | --- | --- | -------- | ------------------------------------------------------------- |
+| String    | `src` | -   | 8MB | Yes      | Image data specified as a data URI scheme, encoded in base64. |
+| String    | `alt` | 15  | 50  | Yes      | Alternative text for the image.                               |
 
 **Example:**
 
@@ -760,34 +793,34 @@ Note: "On Content" refers to situations where the response includes content, "On
 
 ### Authorization Object:
 
-| Data Type | Field | Required | Description |
-|-----------|-------|----------|-------------|
-| String | `email` | | |
-| String | `password` | | |
-| Unknown | \<bot validation fields> | Not currently defined. |
+| Data Type | Field                    | Required               | Description |
+| --------- | ------------------------ | ---------------------- | ----------- |
+| String    | `email`                  |                        |             |
+| String    | `password`               |                        |             |
+| Unknown   | \<bot validation fields> | Not currently defined. |
 
 ### Request Password Reset Object:
 
-| Data Type | Field | Required | Description |
-|-----------|-------|----------|-------------|
-| String | `email` | | |
-| Unknown | \<bot validation fields> | Not currently defined. |
+| Data Type | Field                    | Required               | Description |
+| --------- | ------------------------ | ---------------------- | ----------- |
+| String    | `email`                  |                        |             |
+| Unknown   | \<bot validation fields> | Not currently defined. |
 
 ### Reset Password Object:
 
-| Data Type | Field | Required | Description |
-|-----------|-------|----------|-------------|
-| String | `password` | | |
+| Data Type | Field      | Required | Description |
+| --------- | ---------- | -------- | ----------- |
+| String    | `password` |          |             |
 
 ## PATCH Body Objects
 
 ### User Object:
 
-| Data Type | Field | Min | Max | Nullable or Empty | Description |
-|-----------|-------|-----|-----|-------------------|-------------|
-| String | `firstName` | 2 | 50 | No | First name of the user. |
-| String | `lastName` | 2 | 50 | Yes | Last name of the user. |
-| String | `email` | - | 100 | No | <u>Unique email address associated with the user.</u> |
+| Data Type | Field       | Min | Max | Nullable or Empty | Description                                           |
+| --------- | ----------- | --- | --- | ----------------- | ----------------------------------------------------- |
+| String    | `firstName` | 2   | 50  | No                | First name of the user.                               |
+| String    | `lastName`  | 2   | 50  | Yes               | Last name of the user.                                |
+| String    | `email`     | -   | 100 | No                | <u>Unique email address associated with the user.</u> |
 
 **Example:**
 
@@ -802,13 +835,13 @@ Let's say you want to update the firstName and email fields of a user.
 
 ### Blog Object:
 
-| Data Type | Field | Min | Max | Nullable or Empty | Description |
-|-----------|-------|-----|-----|-------------------|-------------|
-| String | `title` | 5 | 100 | No | Title of the blog. |
-| String | `slug` | 5 | 150 | No | <u>Unique SLUG to identifying the blog.</u> |
-| String | `shortDesc` | 145 | 155 | No | Short description of the blog content. |
-| Object | `image` | - | 8MB | Yes | Image Referring Object. |
-| String | `content` | 300 | 65,535 | No | Content of the blog in HTML format. |
+| Data Type | Field       | Min | Max    | Nullable or Empty | Description                                 |
+| --------- | ----------- | --- | ------ | ----------------- | ------------------------------------------- |
+| String    | `title`     | 5   | 100    | No                | Title of the blog.                          |
+| String    | `slug`      | 5   | 150    | No                | <u>Unique SLUG to identifying the blog.</u> |
+| String    | `shortDesc` | 145 | 155    | No                | Short description of the blog content.      |
+| Object    | `image`     | -   | 8MB    | Yes               | Image Referring Object.                     |
+| String    | `content`   | 300 | 65,535 | No                | Content of the blog in HTML format.         |
 
 **Example:**
 
@@ -823,15 +856,15 @@ If you wish to update the title and shortDesc fields of a blog.
 
 ### Event Object:
 
-| Data Type | Field | Min | Max | Null or Empty | Description |
-|-----------|-------|-----|-----|---------------|-------------|
-| String | `title` | 5 | 100 | No | Title of the event. |
-| String | `slug` | 5 | 150 | No | <u>Unique SLUG to identifying the event.</u> |
-| String | `shortDesc` | 145 | 155 | No | Short description of the event. |
-| String | `startDateTime` | 24 | 24 | No | ISO 8601 representation of the event's start date and time. |
-| String | `endDateTime` | 24 | 24 | No | ISO 8601 representation of the event's end date and time. Must be later than `startDateTime`. |
-| String | `location` | 15 | 255 | No | Location where the event will take place. |
-| String | `content` | 300 | 65,535 | No | Content describing the event in HTML format. |
+| Data Type | Field           | Min | Max    | Null or Empty | Description                                                                                   |
+| --------- | --------------- | --- | ------ | ------------- | --------------------------------------------------------------------------------------------- |
+| String    | `title`         | 5   | 100    | No            | Title of the event.                                                                           |
+| String    | `slug`          | 5   | 150    | No            | <u>Unique SLUG to identifying the event.</u>                                                  |
+| String    | `shortDesc`     | 145 | 155    | No            | Short description of the event.                                                               |
+| String    | `startDateTime` | 24  | 24     | No            | ISO 8601 representation of the event's start date and time.                                   |
+| String    | `endDateTime`   | 24  | 24     | No            | ISO 8601 representation of the event's end date and time. Must be later than `startDateTime`. |
+| String    | `location`      | 15  | 255    | No            | Location where the event will take place.                                                     |
+| String    | `content`       | 300 | 65,535 | No            | Content describing the event in HTML format.                                                  |
 
 **Example:**
 
@@ -847,9 +880,9 @@ For modifying the title, startDateTime, and endDateTime fields of an event.
 
 ### Image Object:
 
-| Data Type | Field | Min | Max | Null or Empty | Description |
-|-----------|-------|-----|-----|---------------|-------------|
-| String | `alt` | 15 | 50 | No | Alternative text description for the image. |
+| Data Type | Field | Min | Max | Null or Empty | Description                                 |
+| --------- | ----- | --- | --- | ------------- | ------------------------------------------- |
+| String    | `alt` | 15  | 50  | No            | Alternative text description for the image. |
 
 **Example:**
 
@@ -869,32 +902,32 @@ The Link object is used to references an resource.
 
 Structure: `<identifier>: { href: string, title: string, method: (POST|PATCH|DELETE) }`
 
-| Data Type | Field | Description |
-|-----------|-------|-------------|
-| Object | `<identifier>` | Specifies an identification for the link. E.g., `self`, `update`, etc. [Predefined Identification] <br> Contains fields `href`, `title`, `method` |
-| String | `href` | Absolute URL pointing to the referenced resource. |
-| String | `title` | Descriptive title for the link. |
-| String | `method` | (Optional) Specifies the HTTP method (`POST`, `PATCH`, `DELETE`) to be used when interacting with the link. |
+| Data Type | Field          | Description                                                                                                                                       |
+| --------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Object    | `<identifier>` | Specifies an identification for the link. E.g., `self`, `update`, etc. [Predefined Identification] <br> Contains fields `href`, `title`, `method` |
+| String    | `href`         | Absolute URL pointing to the referenced resource.                                                                                                 |
+| String    | `title`        | Descriptive title for the link.                                                                                                                   |
+| String    | `method`       | (Optional) Specifies the HTTP method (`POST`, `PATCH`, `DELETE`) to be used when interacting with the link.                                       |
 
 **Predefined Identification:**
 
-| Identification | Description | Example |
-|----------------|-------------|---------|
-| `self` | Reference to the resource itself. | `{ "self": { "href": "/users/0", "title": "Mads Hansen" } }` |
-| `update` | Reference to update the resource. Can have a null value. | `{ "update": { "href": "/users/0", "title": "Update", "method": "PATCH" } }` |
-| `delete` | Reference to delete the resource. Can have a null value. | `{ "delete": { "href": "/users/0", "title": "Delete", "method": "DELETE" } }` |
-| `first` | Reference to the first page. Can have a null value. | `{ "first": { "href": "/users/?page=1", "title": "First page"} }` |
-| `prev` | Reference to the prior page. Can have a null value. | `{ "prev": { "href": "/users/?page=1", "title": "Previous page"} }` |
-| `next` | Reference to the next page. Can have a null value. | `{ "next": { "href": "/users/?page=2", "title": "Next page"} }` |
-| `last` | Reference to the last page. Can have a null value. | `{ "last": { "href": "/users/?page=105", "title": "Last page"} }` |
-| `login` | Reference to the login resource. | `{ "login": { "href": "/login", "title": "Login", "method": "POST"} }` |
-| `reset` | Reference to request a password reset resource. | `{ "reset": { "href": "/reset_password", "title": "Reset password", "method": "POST" } }` |
+| Identification | Description                                              | Example                                                                                   |
+| -------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `self`         | Reference to the resource itself.                        | `{ "self": { "href": "/users/0", "title": "Mads Hansen" } }`                              |
+| `update`       | Reference to update the resource. Can have a null value. | `{ "update": { "href": "/users/0", "title": "Update", "method": "PATCH" } }`              |
+| `delete`       | Reference to delete the resource. Can have a null value. | `{ "delete": { "href": "/users/0", "title": "Delete", "method": "DELETE" } }`             |
+| `first`        | Reference to the first page. Can have a null value.      | `{ "first": { "href": "/users/?page=1", "title": "First page"} }`                         |
+| `prev`         | Reference to the prior page. Can have a null value.      | `{ "prev": { "href": "/users/?page=1", "title": "Previous page"} }`                       |
+| `next`         | Reference to the next page. Can have a null value.       | `{ "next": { "href": "/users/?page=2", "title": "Next page"} }`                           |
+| `last`         | Reference to the last page. Can have a null value.       | `{ "last": { "href": "/users/?page=105", "title": "Last page"} }`                         |
+| `login`        | Reference to the login resource.                         | `{ "login": { "href": "/login", "title": "Login", "method": "POST"} }`                    |
+| `reset`        | Reference to request a password reset resource.          | `{ "reset": { "href": "/reset_password", "title": "Reset password", "method": "POST" } }` |
 
 **Example:**
 
 ```json
 {
-  "login": { 
+  "login": {
     "href": "/login",
     "title": "Login",
     "method": "POST"
@@ -904,10 +937,10 @@ Structure: `<identifier>: { href: string, title: string, method: (POST|PATCH|DEL
 
 ### Image Object
 
-| Data Type | Field | Description |
-|-----------|-------|-------------|
-| String | `src` | Image file name with its extension or specified as a data URI scheme, encoded in base64. |
-| String | `alt` | Alternative text description for the image. |
+| Data Type | Field | Description                                                                              |
+| --------- | ----- | ---------------------------------------------------------------------------------------- |
+| String    | `src` | Image file name with its extension or specified as a data URI scheme, encoded in base64. |
+| String    | `alt` | Alternative text description for the image.                                              |
 
 **Example:**
 

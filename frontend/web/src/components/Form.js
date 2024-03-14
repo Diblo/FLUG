@@ -132,7 +132,7 @@ export default function Form({ fields, data, buttons }) {
         }
       }
     },
-    []
+    [],
   );
 
   const onButtonPressed = useCallback(
@@ -170,7 +170,7 @@ export default function Form({ fields, data, buttons }) {
         onPress(link, changes);
       }
     },
-    []
+    [],
   );
 
   return (
@@ -202,7 +202,7 @@ export default function Form({ fields, data, buttons }) {
             >
               {link.title}
             </Button>
-          )
+          ),
         )}
       </div>
     </form>
