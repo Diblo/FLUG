@@ -38,15 +38,20 @@ function jMain(success, content, message) {
  * @param {number} totalPages - Total number of pages
  * @returns {object} - List layout
  */
-function jPage(curResource, items, totalResults, curPage, totalPages) {
+function jPage(items, totalResults, curPage, totalPages) {
+  const firstPage = 1
+
   return {
     items: items,
     results: items.length,
     totalResults: totalResults,
-    pagination:
-      curPage < totalPages
-        ? LinkObject("next", curResource + "?page=" + (curPage + 1), "Næste")
-        : { next: null },
+    pagination: {
+      first: firstPage,
+      prev: Math.max(curPage - 1, firstPage),
+      current: curPage,
+      next: Math.min(curPage + 1, totalPages),
+      last: totalPages,
+    },
     page: curPage,
     totalPages: totalPages,
   }
@@ -66,14 +71,6 @@ function jUserItem(entity) {
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
     loggedInAt: entity.loggedInAt,
-
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getUsersEndpoint() + "/" + entity.uid,
-        entity.firstName + (entity.lastName ? " " + entity.lastName : "")
-      ),
-    },
   }
 }
 
@@ -90,19 +87,6 @@ function jBlogItem(entity) {
 
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
-
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
-        entity.title
-      ),
-      ...LinkObject(
-        "slug",
-        "/" + config.getBlogsEndpoint() + "/" + entity.slug,
-        entity.title
-      ),
-    },
   }
 }
 
@@ -120,19 +104,6 @@ function jEventItem(entity) {
 
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
-
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getEventsEndpoint() + "/" + entity.uid,
-        entity.title
-      ),
-      ...LinkObject(
-        "slug",
-        "/" + config.getEventsEndpoint() + "/" + entity.slug,
-        entity.title
-      ),
-    },
   }
 }
 
@@ -148,14 +119,6 @@ function jImageItem(entity) {
 
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
-
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getImagesEndpoint() + "/" + entity.uid,
-        entity.alt
-      ),
-    },
   }
 }
 
@@ -166,25 +129,6 @@ function jImageItem(entity) {
 function jUser(entity) {
   return {
     ...entity.asObject(),
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getUsersEndpoint() + "/" + entity.uid,
-        entity.firstName + (entity.lastName ? " " + entity.lastName : "")
-      ),
-      ...LinkObject(
-        "update",
-        "/" + config.getUsersEndpoint() + "/" + entity.uid,
-        "Gem",
-        "PATCH"
-      ),
-      ...LinkObject(
-        "delete",
-        "/" + config.getUsersEndpoint() + "/" + entity.uid,
-        "Slet",
-        "DELETE"
-      ),
-    },
   }
 }
 
@@ -195,30 +139,6 @@ function jUser(entity) {
 function jBlog(entity) {
   return {
     ...entity.asObject(),
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
-        entity.title
-      ),
-      ...LinkObject(
-        "slug",
-        "/" + config.getBlogsEndpoint() + "/" + entity.slug,
-        entity.title
-      ),
-      ...LinkObject(
-        "update",
-        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
-        "Gem",
-        "PATCH"
-      ),
-      ...LinkObject(
-        "delete",
-        "/" + config.getBlogsEndpoint() + "/" + entity.uid,
-        "Slet",
-        "DELETE"
-      ),
-    },
   }
 }
 
@@ -229,30 +149,6 @@ function jBlog(entity) {
 function jEvent(entity) {
   return {
     ...entity.asObject(),
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getEventsEndpoint() + "/" + entity.uid,
-        entity.title
-      ),
-      ...LinkObject(
-        "slug",
-        "/" + config.getEventsEndpoint() + "/" + entity.slug,
-        entity.title
-      ),
-      ...LinkObject(
-        "update",
-        "/" + config.getEventsEndpoint() + "/" + entity.uid,
-        "Gem",
-        "PATCH"
-      ),
-      ...LinkObject(
-        "delete",
-        "/" + config.getEventsEndpoint() + "/" + entity.uid,
-        "Slet",
-        "DELETE"
-      ),
-    },
   }
 }
 
@@ -263,25 +159,6 @@ function jEvent(entity) {
 function jImage(entity) {
   return {
     ...entity.asObject(),
-    _links: {
-      ...LinkObject(
-        "self",
-        "/" + config.getImagesEndpoint() + "/" + entity.uid,
-        entity.alt
-      ),
-      ...LinkObject(
-        "update",
-        "/" + config.getImagesEndpoint() + "/" + entity.uid,
-        "Gem",
-        "PATCH"
-      ),
-      ...LinkObject(
-        "delete",
-        "/" + config.getImagesEndpoint() + "/" + entity.uid,
-        "Slet",
-        "DELETE"
-      ),
-    },
   }
 }
 
@@ -297,25 +174,6 @@ function jError(code, message, description) {
     message: message,
     description: description,
   }
-}
-
-/**
- * Create a link object
- *
- * @param {string} identify - Identifier for the link object.
- * @param {string} href - Link URL
- * @param {string} title - Link title
- * @param {string} [method] - HTTP method (optional)
- * @returns {object} - Link object
- */
-function LinkObject(identify, href, title, method) {
-  const link = { href: href, title: title }
-
-  if (method) {
-    link.method = method
-  }
-
-  return { [identify]: link }
 }
 
 /**

@@ -97,7 +97,7 @@ app.use((req, res, next) => {
     return this.json(
       jMain(
         true,
-        jPage(req.originalUrl, items, totalResults, curPage, totalPages),
+        jPage(items, totalResults, curPage, totalPages),
         "Successfully retrieved the resource."
       )
     )

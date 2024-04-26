@@ -1,24 +1,5 @@
 const { ValueTypes } = require("./tools")
 
-/* Link Objects */
-const linkNextSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
-
-const linkSelfSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
-
-const linkSlugSchema = { href: ValueTypes.URI, title: ValueTypes.STR }
-
-const linkUpdateSchema = {
-  href: ValueTypes.URI,
-  title: ValueTypes.STR,
-  method: ValueTypes.METHOD,
-}
-
-const linkDeleteSchema = {
-  href: ValueTypes.URI,
-  title: ValueTypes.STR,
-  method: ValueTypes.METHOD,
-}
-
 /* Image Object  */
 const imageObjectSchema = {
   src: ValueTypes.FILE,
@@ -30,7 +11,13 @@ const pageSchema = {
   items: ValueTypes.ARRAY,
   results: ValueTypes.INT,
   totalResults: ValueTypes.INT,
-  pagination: { next: [linkNextSchema, ValueTypes.NULL] },
+  pagination: {
+    first: ValueTypes.INT,
+    prev: ValueTypes.INT,
+    current: ValueTypes.INT,
+    next: ValueTypes.INT,
+    last: ValueTypes.INT,
+  },
   page: ValueTypes.INT,
   totalPages: ValueTypes.INT,
 }
@@ -44,11 +31,6 @@ const userSchema = {
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
   loggedInAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    update: linkUpdateSchema,
-    delete: linkDeleteSchema,
-  },
 }
 
 const userItemSchema = {
@@ -59,9 +41,6 @@ const userItemSchema = {
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
   loggedInAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-  },
 }
 
 /* Blog */
@@ -74,12 +53,6 @@ const blogSchema = {
   content: ValueTypes.STR,
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    slug: linkSlugSchema,
-    update: linkUpdateSchema,
-    delete: linkDeleteSchema,
-  },
 }
 
 const blogItemSchema = {
@@ -89,10 +62,6 @@ const blogItemSchema = {
   image: [imageObjectSchema, ValueTypes.NULL],
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    slug: linkSlugSchema,
-  },
 }
 
 /* Event */
@@ -107,12 +76,6 @@ const eventSchema = {
   content: ValueTypes.STR,
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    slug: linkSlugSchema,
-    update: linkUpdateSchema,
-    delete: linkDeleteSchema,
-  },
 }
 
 const eventItemSchema = {
@@ -123,10 +86,6 @@ const eventItemSchema = {
   location: ValueTypes.STR,
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    slug: linkSlugSchema,
-  },
 }
 
 /* Image */
@@ -136,11 +95,6 @@ const imageSchema = {
   alt: ValueTypes.STR,
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-    update: linkUpdateSchema,
-    delete: linkDeleteSchema,
-  },
 }
 
 const imageItemSchema = {
@@ -149,9 +103,6 @@ const imageItemSchema = {
   alt: ValueTypes.STR,
   createdAt: ValueTypes.DATE,
   updatedAt: [ValueTypes.DATE, ValueTypes.NULL],
-  _links: {
-    self: linkSelfSchema,
-  },
 }
 
 /* Error */

@@ -1,0 +1,32 @@
+/**
+ * ActivityIndicator.css
+ *
+ * @file Styles for the ActivityIndicator component.
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
+ */
+
+.activity-indicator {
+  position: relative;
+  z-index: 2;
+  height: 8px;
+  margin-bottom: -8px;
+  background: #29abe1;
+}
+
+.activity-indicator .indicator {
+  width: 100%;
+  height: 100%;
+  animation: moveIndicator 2s linear infinite;
+  background: linear-gradient(90deg, #29abe1 0%, #ff0000 50%, #29abe1 100%);
+}
+
+@keyframes moveIndicator {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

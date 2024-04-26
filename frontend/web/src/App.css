@@ -1,23 +1,28 @@
+/**
+ * App.css
+ *
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/} More information about the GNU Affero General Public License v3.0
+ * @author Fyns Linux User Group
+ */
 @font-face {
-  src: url(../../public/fonts/ubuntu_latin.woff2) format("woff2");
+  src: url(./assets/fonts/ubuntu_latin.woff2) format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA;
   font-family: "Ubuntu";
   font-style: normal;
   font-weight: 300;
 }
 
-html,
 body {
-  width: 100%;
-  height: 100%;
+  overflow: clip;
   margin: 0;
-}
-
-body {
-  overflow: hidden;
   padding: 0;
   background-color: #fff;
   font-family: Ubuntu, Arial, "libra sans", sans-serif;
+}
+
+#root {
 }
 
 a {
@@ -25,6 +30,13 @@ a {
   font-weight: bold;
   color: #29abe1;
   text-decoration: none;
+}
+
+a svg {
+  fill: currentColor;
+  height: 1em;
+  vertical-align: middle;
+  transition: fill 0.2s ease 0s;
 }
 
 a:hover {
@@ -58,50 +70,7 @@ p {
   color: #303030;
 }
 
-#root {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
 .indented-text {
   display: inline-block;
   margin-left: 20px;
-}
-
-.background-image {
-  box-sizing: border-box;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: cover;
-}
-
-.clickable {
-  cursor: pointer;
-}
-
-.clickable:hover {
-  background-color: #29abe1;
-  color: #fff;
-}
-
-.highlight {
-  background: #29abe1 !important;
-  color: #fff !important;
-}
-
-label {
-  text-wrap: nowrap;
-}
-
-input,
-textarea {
-  border: 1px solid #767676;
-  border-radius: 2px;
-  padding: 5px 7px;
-}
-
-input:focus-visible,
-textarea:focus-visible {
-  outline-color: #29abe1;
 }

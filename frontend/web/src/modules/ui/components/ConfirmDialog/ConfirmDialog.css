@@ -1,0 +1,42 @@
+/**
+ * ConfirmDialog.css
+ *
+ * @file Styles for the ConfirmDialog component.
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
+ */
+
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding-top: calc(90px + 10vh);
+  background-color: #00000040;
+}
+
+.confirm-dialog-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  row-gap: 10px;
+  min-width: 200px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.confirm-dialog-text {
+  text-align: center;
+}
+
+.confirm-dialog-button-bar {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+
+.confirm-dialog-button {
+  flex: 1;
+}

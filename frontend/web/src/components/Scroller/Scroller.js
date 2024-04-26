@@ -1,22 +1,15 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Scroller.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Scroller.js
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
-import React, { useEffect, useRef } from "react"
+
+import React, { useCallback, useEffect, useRef } from "react"
+
+import HorizontalSpacing from "../HorizontalSpacing/HorizontalSpacing"
 
 import "./Scroller.css"
 
@@ -34,8 +27,7 @@ const Observer = ({ onIntersection }) => {
     const observer = new IntersectionObserver((entries) => {
       // Keeps track of when the observer element intersects with the parent element.
       if (entries[0].isIntersecting) {
-        // Avoid onIntersection being called multiple times
-        observer.unobserve(observerElement.current)
+        observer.disconnect()
 
         // Handle callback
         onIntersection()
@@ -45,14 +37,22 @@ const Observer = ({ onIntersection }) => {
     observer.observe(observerElement.current)
 
     return () => {
-      if (!observerElement.current) return
-
-      observer.unobserve(observerElement.current)
+      observer.disconnect()
     }
-  }, [onIntersection])
+  }, [onIntersection, observerElement])
 
-  return <div ref={observerElement} className="scroll-view-observer"></div>
+  return (
+    onIntersection && (
+      <div ref={observerElement} className="scroll-view-observer" />
+    )
+  )
 }
+
+const SpinActivityIndicator = () => (
+  <div className="scroll-activity-indicator">
+    <div className="scroll-activity-indicator-spinner"></div>
+  </div>
+)
 
 /**
  * Scroll Component
@@ -65,54 +65,50 @@ const Observer = ({ onIntersection }) => {
  * @param {boolean} [props.overflow.scrollX=false] - Enable horizontal scrolling.
  * @param {boolean} [props.overflow.scrollY=true] - Enable vertical scrolling.
  * @param {boolean} [props.float=false] - Enable floating scroller.
+ * @param {boolean} [props.loading]
  * @param {() => void} [props.onBottom] - Callback function to be executed when the bottom is reached.
  * @param {string} [props.className]
  * @returns {JSX.Element}
  */
-export default function Scroller({
+const Scroller = ({
   children,
-  overflow = {},
-  float = false,
+  overflow,
+  float,
+  loading,
   onBottom,
   className,
-}) {
+}) => {
   /**
    * Reference to the scroll container element.
    */
   const scrollRef = useRef(null)
   const containerRef = useRef(null)
 
-  const { scrollX = false, scrollY = true } = overflow
+  const { scrollX = false, scrollY = true } = overflow || {}
 
-  const handleFloatScroller = () => {
+  const handleFloatScroller = useCallback(() => {
     if (!scrollRef.current) return
 
     containerRef.current.style.marginRight = `${
       scrollRef.current.clientWidth - scrollRef.current.offsetWidth
     }px`
-  }
+  }, [scrollRef, containerRef])
 
-  /**
-   * Adjusts padding to compensate for the scrollbar when the floatScroller is enabled.
-   */
   useEffect(() => {
     if (!float) return
 
-    handleFloatScroller()
-
-    /**
-     * Event listener for handling resizing when the floatScroller is enabled.
-     */
     window.addEventListener("resize", handleFloatScroller)
 
     return () => {
       window.removeEventListener("resize", handleFloatScroller)
     }
-  }, [float])
+  }, [float, handleFloatScroller])
 
   useEffect(() => {
-    if (float) handleFloatScroller()
-  }, [children])
+    if (!float) return
+
+    handleFloatScroller()
+  }, [children, float, handleFloatScroller])
 
   return (
     <div
@@ -121,13 +117,23 @@ export default function Scroller({
       style={{
         overflowX: scrollX ? "auto" : "hidden",
         overflowY: scrollY ? "auto" : "hidden",
-      }}>
+      }}
+    >
       <div
         ref={containerRef}
-        className={`scroll-view-container ${className || ""}`}>
+        className={`scroll-view-container ${className || ""}`}
+      >
         {children}
-        {onBottom && <Observer onIntersection={onBottom} />}
+        {loading && (
+          <>
+            <SpinActivityIndicator />
+            <HorizontalSpacing />
+          </>
+        )}
+        {!loading && <Observer onIntersection={onBottom} />}
       </div>
     </div>
   )
 }
+
+export default Scroller

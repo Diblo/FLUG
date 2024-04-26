@@ -7,8 +7,6 @@ The commands are run from the mockup APIs root folder, where `server.js` and `pa
 ## Setup
 
 ```
-npm install -g nodemon
-npm install -g mocha
 npm install
 ```
 

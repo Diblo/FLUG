@@ -1,0 +1,56 @@
+/**
+ * Form.Fields.css
+ *
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
+ */
+.input-label {
+  text-wrap: nowrap;
+}
+
+.input-required {
+  padding-left: 2px;
+  color: #ff0000;
+}
+
+.input {
+  border: 1px solid #767676;
+  border-radius: 2px;
+  padding: 5px 7px;
+}
+
+.input.active {
+  outline-color: #29abe1;
+}
+
+.input-error {
+  font-size: 13px;
+  color: #ff0000;
+}
+
+.input-row-space {
+  grid-column: 2;
+  margin-bottom: 10px;
+}
+
+.input-image {
+  display: grid;
+  row-gap: 10px;
+}
+.input-image-preview {
+  border: 1px solid #767676;
+  max-width: 100%;
+  max-height: 150px;
+}
+.input-image-buttons {
+  display: grid;
+  column-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.wide-layout {
+  display: grid;
+  grid-column: span 2;
+}

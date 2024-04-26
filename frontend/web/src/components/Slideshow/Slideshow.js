@@ -1,215 +1,286 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Slideshow.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Slideshow.js
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
-import React, { useState, useEffect, useRef } from "react"
+
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  isValidElement,
+  useMemo,
+} from "react"
 
 import "./Slideshow.css"
 
 /**
+ * @typedef {Object} SlideshowSectionProps
+ * @property {React.ReactNode} [children]
+ * @property {string} [bgImage] - The background image for the section (optional).
+ * @property {string} [className] - Additional CSS class for the section or background image (optional).
+ *
+ * @typedef {Object} Carousel
+ * @property {(startSection: number, sectionsCount: number) => void} start
+ * @property {() => void} stop
+ * @property {NodeJS.Timeout?} _intervalId
+ * @property {number} _activeSection
+ *
+ * @typedef {Object} Sections
+ * @property {(sectionNumber: number) => HTMLElement | undefined} get
+ * @property {(element: HTMLElement) => void} add
+ * @property {() => number} size
+ * @property {Array<HTMLElement>} _sections
+ */
+
+/**
+ * Parses the section number from the URL hash.
+ *
+ * @returns {number | undefined} The section number parsed from the URL hash, or undefined if not found or invalid.
+ */
+const getSectionNumberFromUrl = () => {
+  const sectionStr = window.location.hash.slice(9)
+  const sectionNumber = parseInt(sectionStr, 10)
+
+  if (!isNaN(sectionNumber)) {
+    return sectionNumber
+  }
+
+  return undefined
+}
+
+/**
  * Slideshow Section Component
  *
- * This component represents a section within a slideshow.
+ * Represents a section within a slideshow.
  *
  * @param {Object} props
- * @param {React.ReactNode} props.children - The content or components to be displayed within the section.
+ * @param {React.ReactNode} [props.children]
  * @param {string} [props.bgImage] - The background image for the section (optional).
- * @param {string} [props.sectionClass] - Additional CSS class for the section or background image (optional).
- * @returns {React.ReactNode}
+ * @param {string} [props.className] - Additional CSS class for the section or background image (optional).
+ * @returns {JSX.Element}
  */
-export const SlideshowSection = ({ children, bgImage, sectionClass }) => {
-  return children // Return the children as is
-}
+export const SlideshowSection = ({ children, bgImage, className }) => null
 
 /**
  * Slideshow Component
  *
- * This component represents a slideshow with multiple sections.
+ * Represents a slideshow with multiple sections.
  *
  * @param {Object} props
- * @param {React.ReactElement<SlideshowSection>[]} props.children - An array of `SlideshowSection` components representing the slideshow sections.
+ * @param {React.ReactNode} props.children - An array of `SlideshowSection` components representing the slideshow sections.
  * @returns {JSX.Element}
  */
-export default function Slideshow({ children }) {
-  // Determine the number of child sections
-  const sectionCount = React.Children.count(children)
+const Slideshow = ({ children }) => {
+  /**
+   * Store the interval ID for the automatic slideshow section
+   *
+   * @type {Sections}
+   */
+  const sections = useMemo(
+    () => ({
+      get: function (sectionNumber) {
+        return this._sections[sectionNumber]
+      },
+      add: function (element) {
+        return this._sections.push(element)
+      },
+      size: function () {
+        return React.Children.count(children)
+      },
+      _sections: [],
+    }),
+    [children]
+  )
 
-  // State to track the currently active section
+  /**
+   * Store the interval ID for the automatic slideshow section
+   *
+   * @type {[number, React.Dispatch<React.SetStateAction<number>>]}
+   */
   const [activeSection, setActiveSection] = useState(0)
 
-  // Use useRef to store the interval ID for the automatic slideshow section
-  const intervalId = useRef()
-  // Use useRef to store the automatic slideshow currently active section
-  const autoSection = useRef()
+  /**
+   * Store the interval ID for the automatic slideshow section
+   *
+   * @type {React.MutableRefObject<Carousel>}
+   */
+  const carousel = useRef({
+    start: function (startSection, sectionsCount) {
+      if (this._intervalId) {
+        this.stop()
+      }
 
-  // Function to handle section boundary
-  function handleSectionBoundary(sectionNumber) {
-    // Handle cases where the section number exceeds the section count or is not a valid number
-    if (sectionNumber >= sectionCount) {
-      return 0
-    } else if (sectionNumber < 0) {
-      return sectionCount - 1
-    }
-    return sectionNumber
-  }
+      this._activeSection = startSection
 
-  // Function to change the active section
-  function changeSection(sectionNumber) {
-    // Handle cases where the section number is not valid
-    if (sectionNumber >= sectionCount || sectionNumber < 0) {
-      return false
-    }
+      // Change to the start section
+      changeSection(this._activeSection)
 
-    // Get section
-    const element = document.getElementById(`section-${sectionNumber}`)
-    if (!element) {
-      return false
-    }
+      // Create an interval that advances to the next section every 10 seconds
+      this._intervalId = setInterval(() => {
+        this._activeSection = this._activeSection + 1
 
-    // Update the active section in the state
-    setActiveSection(sectionNumber)
+        if (this._activeSection >= sectionsCount) {
+          this._activeSection = 0
+        }
 
-    // Scroll smoothly to the selected section
-    element.scrollIntoView({ behavior: "smooth", block: "start" })
-    return true
-  }
+        changeSection(this._activeSection)
+      }, 10000)
+    },
+    stop: function () {
+      if (this._intervalId !== null) {
+        clearInterval(this._intervalId)
+        this._intervalId = null
+      }
+    },
+    _intervalId: null,
+    _activeSection: 0,
+  })
 
-  // Start the automatic slideshow
-  useEffect(() => {
-    // Create an interval that advances to the next section every 10 seconds
-    // @ts-ignore
-    intervalId.current = setInterval(() => {
-      // Increment the current auto section and handle boundary cases
-      // @ts-ignore
-      autoSection.current = handleSectionBoundary(autoSection.current + 1)
-      // Change to the next section based on the auto section
-      changeSection(autoSection.current)
-    }, 10000)
+  const changeSection = useCallback(
+    /**
+     * Function to change the active section
+     *
+     * @param {number} sectionNumber
+     */
+    (sectionNumber) => {
+      // Update the active section in the state
+      setActiveSection(sectionNumber)
 
-    // Initialize the current auto section with the current active section
-    // @ts-ignore
-    autoSection.current = activeSection
+      // Get section element
+      const element = sections.get(sectionNumber)
 
-    // Clear the interval when the component is unmounted to prevent memory leaks
-    return () => {
-      clearInterval(intervalId.current)
-    }
-  }, [])
+      // Scroll smoothly to the selected section
+      element.scrollIntoView({ behavior: "smooth", block: "start" })
+    },
+    [sections]
+  )
 
-  // Handle pagination click events
-  useEffect(() => {
-    const handlePaginationClick = (event) => {
+  const onPaginationClick = useCallback(
+    /**
+     * Callback function to handle pagination click events.
+     * It stops the carousel and changes the section.
+     *
+     * @param {React.MouseEvent} event
+     * @param {number} section
+     */
+    (event, section) => {
       event.preventDefault()
-      clearInterval(intervalId.current)
-      // Extract the section number from the href attribute and change the section
-      changeSection(
-        parseInt(event.target.getAttribute("href").substring(9), 10)
-      )
-    }
+      carousel.current.stop()
+      changeSection(section)
+    },
+    [changeSection, carousel]
+  )
 
-    // Attach a single event listener to the parent container for event delegation
-    const paginationContainer = document.getElementById("slideshow-pagination")
-    paginationContainer.addEventListener("click", handlePaginationClick)
+  const onWheel = useCallback(
+    /**
+     * Callback function to handle wheel events.
+     * It stops the carousel and changes the section based on the wheel direction.
+     *
+     * @param {WheelEvent} event
+     */
+    (event) => {
+      carousel.current.stop()
 
-    return () => {
-      // Remove the event listener and clear the interval when the component unmounts
-      paginationContainer.removeEventListener("click", handlePaginationClick)
-    }
-  }, [])
+      let sectionNumber = activeSection + (event.deltaY > 0 ? 1 : -1)
 
-  // Handle mouse wheel navigation
+      if (sectionNumber >= sections.size()) {
+        sectionNumber = 0
+      } else if (sectionNumber < 0) {
+        sectionNumber = sections.size() - 1
+      }
+
+      changeSection(sectionNumber)
+    },
+    [sections, activeSection, changeSection, carousel]
+  )
+
+  const loadUrl = useCallback(
+    /**
+     * Loads the section specified in the URL hash, if valid.
+     * Stops the carousel and changes the section if the section number is within the valid range.
+     *
+     * @returns {boolean} - Returns true if the section was changed, otherwise false.
+     */
+    () => {
+      const sectionNumber = getSectionNumberFromUrl()
+      if (sectionNumber >= 0 && sectionNumber < sections.size()) {
+        carousel.current.stop()
+
+        changeSection(sectionNumber)
+        return true
+      }
+
+      return false
+    },
+    [sections, changeSection, carousel]
+  )
+
+  useEffect(
+    () => {
+      if (!loadUrl()) {
+        const carouselRef = carousel.current
+
+        carouselRef.start(activeSection, sections.size())
+
+        return () => carouselRef.stop()
+      }
+    },
+    // eslint-disable-next-line
+    []
+  )
+
   useEffect(() => {
-    const handleWheel = (event) => {
-      clearInterval(intervalId.current)
-      // Change the section based on the direction of the wheel scroll
-      changeSection(
-        handleSectionBoundary(activeSection + (event.deltaY > 0 ? 1 : -1))
-      )
-    }
-
-    document.addEventListener("wheel", handleWheel)
+    document.addEventListener("wheel", onWheel)
+    window.addEventListener("hashchange", loadUrl)
 
     return () => {
-      // Remove the event listener and clear the interval when the component unmounts
-      document.removeEventListener("wheel", handleWheel)
+      document.removeEventListener("wheel", onWheel)
+      window.removeEventListener("hashchange", loadUrl)
     }
-  }, [activeSection])
-
-  // Handle URL hash
-  useEffect(() => {
-    // Change the section based on the initial URL hash
-    if (changeSection(parseInt(window.location.hash.slice(9), 10))) {
-      clearInterval(intervalId.current)
-    }
-
-    const handleHashChange = () => {
-      clearInterval(intervalId.current)
-      // Change the section when the URL hash changes
-      changeSection(parseInt(window.location.hash.slice(9), 10))
-    }
-
-    window.addEventListener("hashchange", handleHashChange)
-
-    return () => {
-      // Remove the event listener when the component unmounts
-      window.removeEventListener("hashchange", handleHashChange)
-    }
-  }, [])
+  }, [onWheel, loadUrl])
 
   return (
     <div id="slideshow">
       <div id="slideshow-sections">
-        {React.Children.map(children, (child, index) => (
-          <section
-            key={index}
-            id={`section-${index}`}
-            className={`slideshow-section ${
-              // @ts-ignore
-              child.props.bgImage ? "slideshow-bg-image" : ""
-            } ${
-              // @ts-ignore
-              child.props.sectionClass ? child.props.sectionClass : ""
-            }`}
-            style={
-              // @ts-ignore
-              child.props.bgImage
-                ? {
-                    // @ts-ignore
-                    backgroundImage: `url(${child.props.bgImage})`,
-                  }
-                : {}
-            }
-          >
-            <div className="slideshow-section-container">{child}</div>
-          </section>
-        ))}
+        {React.Children.map(children, (child, index) => {
+          if (isValidElement(child)) {
+            const { children, bgImage, className } = child.props
+            return (
+              <section
+                key={index}
+                ref={(element) => sections.add(element)}
+                className={`slideshow-section ${
+                  bgImage && "slideshow-bg-image"
+                } ${className}`}
+                style={bgImage && { backgroundImage: `url(${bgImage})` }}
+              >
+                <div className="slideshow-section-container">{children}</div>
+              </section>
+            )
+          }
+        })}
       </div>
       <div id="slideshow-pagination-overlay">
         <nav id="slideshow-pagination">
-          {Array.from({ length: sectionCount }, (_, index) => (
-            // Generate pagination links for each section
+          {Array.from({ length: sections.size() }, (_, index) => (
             <a
+              key={index}
               href={`#section-${index}`}
               className={activeSection === index ? "active" : ""}
-              key={index}
-            ></a>
+              onClick={(event) => onPaginationClick(event, index)}
+            >
+              {""}
+            </a>
           ))}
         </nav>
       </div>
     </div>
   )
 }
+
+export default Slideshow

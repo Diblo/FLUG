@@ -23,7 +23,7 @@ const ENDPOINT_URL = "/" + config.getUsersEndpoint()
 const ITEMS_PER_PAGE = config.getItemsPerPage()
 
 /** GET */
-function testPage(url, nextHref, page) {
+function testPage(url, page) {
   return (done) => {
     new Request(app, done).get(url).call(200, (response) => {
       /* msg */
@@ -38,12 +38,12 @@ function testPage(url, nextHref, page) {
       validateValue(response, "data.results", ITEMS_PER_PAGE)
       validateValue(response, "data.totalResults", 300)
 
-      if (nextHref) {
-        validateValue(response, "data.pagination.next.href", nextHref)
-        validateValue(response, "data.pagination.next.title", "Næste")
-      } else {
-        validateValue(response, "data.pagination.next", null)
-      }
+      validateValue(response, "data.pagination.first", 1)
+      validateValue(response, "data.pagination.prev", Math.max(page - 1, 1))
+      validateValue(response, "data.pagination.current", page)
+      validateValue(response, "data.pagination.next", Math.min(page + 1, 3))
+      validateValue(response, "data.pagination.last", 3)
+
       validateValue(response, "data.page", page)
       validateValue(response, "data.totalPages", 3)
 
@@ -65,30 +65,6 @@ function testResource(url, uid) {
       validateSchema(response, "data", userSchema)
 
       validateValue(response, "data.uid", uid)
-
-      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      validateValue(
-        response,
-        "data._links.self.title",
-        response.data.firstName +
-          (response.data.lastName ? " " + response.data.lastName : "")
-      )
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
@@ -112,39 +88,12 @@ function testPost(url, data) {
       validateValue(response, "data.firstName", data.firstName)
       validateValue(response, "data.lastName", data.lastName)
       validateValue(response, "data.email", data.email)
-
-      validateValue(
-        response,
-        "data._links.self.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(
-        response,
-        "data._links.self.title",
-        data.firstName + (data.lastName ? " " + data.lastName : "")
-      )
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
 
 /** PATCH */
-function testPatch(url, uid, data) {
+function testPatch(url, data) {
   return (done) => {
     new Request(app, done).patch(url, data).call(200, (response) => {
       /* msg */
@@ -168,39 +117,6 @@ function testPatch(url, uid, data) {
       if (data.email) {
         validateValue(response, "data.email", data.email)
       }
-
-      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      if (data.firstName) {
-        validateValue(
-          response,
-          "data._links.self.title",
-          data.firstName +
-            (response.data.lastName ? " " + response.data.lastName : "")
-        )
-      }
-      if (data.lastName) {
-        validateValue(
-          response,
-          "data._links.self.title",
-          response.data.firstName + (data.lastName ? " " + data.lastName : "")
-        )
-      }
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
@@ -234,14 +150,11 @@ function testErrorResponse(method, url, status, message, data = null) {
 
 /** TESTS */
 describe("GET " + ENDPOINT_URL, () => {
-  it(
-    "response with page 1 and 100 users",
-    testPage(ENDPOINT_URL, ENDPOINT_URL + "?page=2", 1)
-  )
+  it("response with page 1 and 100 users", testPage(ENDPOINT_URL, 1))
 
   it(
     "response with page 3 and 100 users",
-    testPage(ENDPOINT_URL + "?page=3", null, 3)
+    testPage(ENDPOINT_URL + "?page=3", 3)
   )
 
   it(
@@ -308,7 +221,7 @@ describe("POST " + ENDPOINT_URL, () => {
 describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
   it(
     "able to update firstName",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       firstName: faker.person.firstName(),
     })
   )
@@ -352,13 +265,13 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update lastName value",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       lastName: faker.person.lastName(),
     })
   )
   it(
     "able to set lastName to empty",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       lastName: "",
     })
   )
@@ -390,7 +303,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update email value",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       email: "test2@foo.bar",
     })
   )

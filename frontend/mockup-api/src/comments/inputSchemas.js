@@ -99,7 +99,7 @@ const alt = Joi.string().min(15).max(50)
 
 const postUserSchema = Joi.object({
   firstName: firstName.required(),
-  lastName: lastName,
+  lastName: lastName.allow(""),
   email: email.required(),
 })
 

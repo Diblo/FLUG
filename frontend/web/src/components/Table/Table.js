@@ -1,113 +1,115 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Table.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Table.js
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
 import React from "react"
 
 import "./Table.css"
 
 /**
- * @typedef {object} Title
- * @property {string} title
- * @property {() => void} [onClick]
- * @property {string} [className]
- * @property {string} [size]
+ * @param {number} number
  */
+const oddOrEven = (number) => (number % 2 === 0 ? "odd" : "even")
 
 /**
- * @typedef {object} Row
- * @property {Array.<Cell>} cells
- * @property {() => void} [onClick]
+ * @param {number} numberOfColumns
+ * @param {Array.<string>} columnSizes
+ * @returns {Array.<string>}
  */
+const createColumnSizesArray = (numberOfColumns, columnSizes) => {
+  const columnSizesArray = []
 
-/**
- * @typedef {object} Cell
- * @property {string} value
- * @property {string} [className]
- */
+  for (let i = 0; i < numberOfColumns; i++) {
+    columnSizesArray[i] = columnSizes[i] || "min-content"
+  }
 
-/**
- * Represents the Table props.
- *
- * @param {object} props
- * @param {Array.<Title>} props.titles
- * @param {Array.<Row>} props.rows
- * @param {string} [props.noRowsMessage]
- * @returns {JSX.Element} The rendered table component.
- */
-export default function Table({ titles, rows, noRowsMessage }) {
-  const gridTemplateColumns = titles.map((item) => item.size ?? "min-content").join(" ")
+  if (columnSizes.length < columnSizesArray.length - 1) {
+    columnSizesArray[numberOfColumns - 1] = "1fr"
+  }
 
-  return (
-    <div className="table" style={{ gridTemplateColumns }}>
-      {titles.map((cell, cellIndex) => (
-        <Title
-          key={`title-${cellIndex}`}
-          cellIndex={cellIndex}
-          onClick={cell.onClick}
-          className={cell.className}>
-          {cell.title}
-        </Title>
-      ))}
-
-      {noRowsMessage && rows.length === 0 && (
-        <div
-          className="table-message"
-          style={{ gridColumn: `span ${titles.length}` }}>
-          {noRowsMessage}
-        </div>
-      )}
-
-      {rows.map((row, rowIndex) => (
-        <Row key={`row-${rowIndex}`} rowIndex={rowIndex} onClick={row.onClick}>
-          {row.cells.map((cell, cellIndex) => (
-            <RowCell
-              key={`rowcell-${rowIndex}-${cellIndex}`}
-              cellIndex={cellIndex}
-              className={cell.className}>
-              {cell.value}
-            </RowCell>
-          ))}
-        </Row>
-      ))}
-    </div>
-  )
+  return columnSizesArray
 }
 
 /**
  *
- * @param {object} props
+ * @param {Object} props
+ * @param {React.ReactNode} props.children
+ * @param {number} props.numberOfColumns - Number of columns
+ * @param {Array.<string>} [props.columnSizes] - An array with column sizes
+ * @param {boolean} [props.highlightRow]
+ */
+const Table = ({
+  children,
+  numberOfColumns,
+  columnSizes = [],
+  highlightRow = false,
+}) => {
+  /**
+   * Array containing the sizes of individual columns.
+   * If a size is not provided for a column, it defaults to "min-content".
+   * @type {Array.<string>}
+   */
+  const columnSizesArray = createColumnSizesArray(numberOfColumns, columnSizes)
+
+  let classNames = "table"
+  if (highlightRow) {
+    classNames += " table-highlight-rows"
+  }
+
+  return (
+    <div
+      className={classNames}
+      style={{ gridTemplateColumns: columnSizesArray.join(" ") }}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default Table
+
+/**
+ * Renders a table header with children.
+ *
+ * @param {Object} props - The props for the Header component.
+ * @param {React.ReactNode} props.children - The content of the table header.
+ */
+export const Header = ({ children }) => (
+  <div className="table-header">
+    {React.Children.map(children, (child, index) => {
+      if (React.isValidElement(child)) {
+        const classNames = `table-header-data table-col-${oddOrEven(
+          index
+        )} table-cell ${child.props.className || ""}`
+
+        return (
+          <div
+            key={index}
+            className={classNames}
+            onClick={child.props.onClick || null}
+          >
+            {child.props.children || "\u00a0"}
+          </div>
+        )
+      }
+
+      return null
+    })}
+  </div>
+)
+
+/**
+ *
+ * @param {Object} props
  * @param {React.ReactNode} [props.children]
- * @param {number} props.cellIndex
  * @param {() => void} [props.onClick]
  * @param {string} [props.className]
- * @returns
  */
-const Title = ({ children, cellIndex, onClick, className }) => {
-  const classNames = `table-title table-title-${oddOrEven(cellIndex)} ${
-    className ?? ""
-  }`
-
-  return (
-    <div className={classNames} onClick={onClick ?? null}>
-      {children ?? "\u00a0"}
-    </div>
-  )
-}
+export const HeaderCell = ({ children, onClick, className }) => null
 
 /**
  *
@@ -115,37 +117,54 @@ const Title = ({ children, cellIndex, onClick, className }) => {
  * @param {React.ReactNode} props.children
  * @param {number} props.rowIndex
  * @param {() => void} [props.onClick]
- * @returns
  */
-const Row = ({ children, rowIndex, onClick }) => {
-  const className = `table-row table-row-${oddOrEven(rowIndex)}`
+export const Row = ({ children, rowIndex, onClick }) => (
+  <div
+    className={`table-row table-row-${oddOrEven(rowIndex)}`}
+    onClick={onClick || null}
+  >
+    {React.Children.map(children, (child, index) => {
+      if (React.isValidElement(child)) {
+        const classNames = `table-row-${
+          // @ts-ignore
+          child.type.name === "RowTitle" ? "title" : "data"
+        } table-col-${oddOrEven(index)} table-cell ${
+          child.props.className || ""
+        }`
 
-  return (
-    <div className={className} onClick={onClick ?? null}>
-      {children}
-    </div>
-  )
-}
+        return (
+          <div key={index} className={classNames}>
+            {child.props.children || "\u00a0"}
+          </div>
+        )
+      }
+
+      return null
+    })}
+  </div>
+)
 
 /**
  *
  * @param {Object} props
  * @param {React.ReactNode} [props.children]
- * @param {number} props.cellIndex
  * @param {string} [props.className]
- * @returns
  */
-const RowCell = ({ children, cellIndex, className }) => {
-  const cellClassName = `table-row-cell table-row-cell-${oddOrEven(
-    cellIndex
-  )} ${className ?? ""}`
-
-  return <div className={cellClassName}>{children ?? "\u00a0"}</div>
-}
+export const RowTitle = ({ children, className }) => null
 
 /**
- * @param {number} number
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} [props.children]
+ * @param {string} [props.className]
  */
-const oddOrEven = (number) => {
-  return number % 2 === 0 ? "odd" : "even"
-}
+export const RowCell = ({ children, className }) => null
+
+/**
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children
+ */
+export const NoData = ({ children }) => (
+  <div className="table-no-data">{children}</div>
+)

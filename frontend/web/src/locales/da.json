@@ -1,0 +1,148 @@
+{
+  "site_title": "Fyns Linux User Group",
+  "short_site_title": "FLUG",
+  "backend": {
+    "title": "FLUG Admin",
+    "admin": "Administration",
+    "frontend_nav_title": "Forside"
+  },
+  "action": {
+    "add": "Tilføj",
+    "edit": "Redigere",
+    "save": "Gem",
+    "delete": "Slet",
+    "change": "Skift",
+    "perform": "Udføre",
+    "create": "Opret",
+    "reset": "Nulstil",
+    "login": "Log ind",
+    "cancel": "Annuller",
+    "yes": "Ja",
+    "no": "Nej"
+  },
+  "user": {
+    "users": "Brugere",
+    "none": "Ingen brugere",
+    "header": {
+      "admin": "Brugeradministration",
+      "create": "Opret en ny bruger",
+      "edit": "Rediger bruger"
+    },
+    "name": "Navn",
+    "first_name": "Fornavn",
+    "last_name": "Efternavn",
+    "email": "E-mail",
+    "created_at": "Oprettet",
+    "updated_at": "Opdateret",
+    "logged_in_at": "Logget ind",
+    "placeholder": {
+      "first_name": "Indtast fornavn",
+      "last_name": "Indtast efternavn",
+      "email": "Indtast e-mail-adresse"
+    },
+    "dialog": {
+      "delete": "Vil du slette brugeren?"
+    },
+    "success": {
+      "created": "Brugeren er blevet oprettet",
+      "deleted": "Brugeren er blevet slettet"
+    },
+    "error": {
+      "not_found": "Brugeren blev ikke fundet",
+      "invalid_email": "E-mailen er ugyldig"
+    }
+  },
+  "blog": {
+    "blogs": "Blog",
+    "none": "Ingen blogindlægget",
+    "header": {
+      "admin": "Blogadministration",
+      "create": "Opret en ny blog",
+      "edit": "Rediger blog"
+    },
+    "title": "Titel",
+    "slug": "SLUG",
+    "short_desc": "Kort beskrivelse",
+    "image": "Billede",
+    "content": "Indhold",
+    "created_at": "Oprettet",
+    "updated_at": "Opdateret",
+    "placeholder": {
+      "title": "Indtast titel",
+      "short_desc": "Indtast kort beskrivelse"
+    },
+    "dialog": {
+      "delete": "Vil du slette blogindlægget?"
+    },
+    "success": {
+      "created": "Blogindlægget er blevet oprettet",
+      "deleted": "Blogindlægget er blevet slettet"
+    }
+  },
+  "event": {
+    "events": "Arrangementer",
+    "none": "Ingen arrangementer",
+    "header": {
+      "admin": "Arrangementadministration",
+      "create": "Opret et nyt arrangement",
+      "edit": "Rediger arrangement"
+    },
+    "title": "Titel",
+    "slug": "SLUG",
+    "short_desc": "Kort beskrivelse",
+    "start": "Start",
+    "end": "Slut",
+    "location": "Sted",
+    "description": "Beskrivelse",
+    "created_at": "Oprettet",
+    "updated_at": "Opdateret",
+    "placeholder": {
+      "title": "Indtast titel",
+      "short_desc": "Indtast kort beskrivelse"
+    },
+    "dialog": {
+      "delete": "Vil du slette arrangementet?"
+    },
+    "success": {
+      "created": "Arrangementet er blevet oprettet",
+      "deleted": "Arrangementet er blevet slettet"
+    }
+  },
+  "pages": {
+    "not_found": {
+      "header": "Blev ikke fundet",
+      "message": "Beklager, siden eksisterer ikke."
+    },
+    "error": {
+      "header": "Beklager ulejligheden",
+      "message": "Vi beklager, men der opstod en fejl. FLUG er blevet underrettet om\nproblemet. Vi takker for din tålmodighed, og vi bestræber os på at få\ndette løst så hurtigt som muligt."
+    }
+  },
+  "modals": {
+    "confirm": {
+      "message": "Er du sikker?"
+    }
+  },
+  "messages": {
+    "loading": "Indlæser..."
+  },
+  "links": {
+    "email": "Åbn e-mailen i dit standard-mailprogram"
+  },
+  "error": {
+    "unknown": "Der opstod en fejl",
+    "field_required": "Feltet er påkrævet",
+    "length_must_be": "Skal være {{number}} tegn",
+    "length_between": "Skal være mellem {{min}} og {{max}} tegn",
+    "length_minimum": "Skal være mindst {{min}} tegn",
+    "length_maximum": "Må højst være {{max}} tegn",
+    "greater_than_date_time": "Skal være en dato eller tid efter {{date}}",
+    "whitespace_not_permitted": "Mellemrum, tabulator, retur, linjeskift, lodret tabulator og formular feed-tegn er ikke tilladt",
+    "only_numbers": "Kun tal fra 0-9 kan bruges",
+    "invalid_slug": "SLUG'en kan kun indeholde bogstaverne a-z, tal fra 0-9 og bindestreg (-), og den må ikke begynde eller slutte med en bindestreg (-)",
+    "invalid_file": "Filtypen understøttes ikke",
+    "invalid_date_format": "Datoformatet er ugyldigt",
+    "missing_uid": "Ingen unik identifikator er angivet",
+    "invalid_email": "E-mailen er ugyldig"
+  }
+}
