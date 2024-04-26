@@ -1,31 +1,23 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * datetime.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: datetime.js
+ * @file Utility functions for working with date and time.
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
 import { format } from "date-fns"
 import * as Locales from "date-fns/locale"
 
 /**
  * Represents a utility class for working with date and time.
+ *
+ * @class
  */
 export class DateTime {
   local =
-    Locales[window.navigator.language] ??
-    Locales[window.navigator.language.substring(0, 2)] ??
+    Locales[window.navigator.language] ||
+    Locales[window.navigator.language.substring(0, 2)] ||
     Locales.enUS
 
   minuteInMilliseconds = 60000
@@ -37,6 +29,7 @@ export class DateTime {
    *
    * @param {string|number} [datetime] - An optional string representation of a date and time supported by JS Date.
    *                                     If the parameter is not defined, the current time will be used.
+   * @constructor
    */
   constructor(datetime) {
     /**
@@ -82,8 +75,10 @@ export class DateTime {
   }
 
   /**
-   * @param {number} minutes
-   * @returns {DateTime}
+   * Adds minutes to the current date and time.
+   *
+   * @param {number} minutes - The number of minutes to add.
+   * @returns {DateTime} - A new DateTime instance representing the updated date and time.
    */
   addMinutes(minutes) {
     return new DateTime(
@@ -92,8 +87,10 @@ export class DateTime {
   }
 
   /**
-   * @param {number} hours
-   * @returns {DateTime}
+   * Adds hours to the current date and time.
+   *
+   * @param {number} hours - The number of hours to add.
+   * @returns {DateTime} - A new DateTime instance representing the updated date and time.
    */
   addHours(hours) {
     return new DateTime(
@@ -102,8 +99,10 @@ export class DateTime {
   }
 
   /**
-   * @param {number} days
-   * @returns {DateTime}
+   * Adds days to the current date and time.
+   *
+   * @param {number} days - The number of days to add.
+   * @returns {DateTime} - A new DateTime instance representing the updated date and time.
    */
   addDays(days) {
     return new DateTime(
@@ -112,24 +111,30 @@ export class DateTime {
   }
 
   /**
-   * @param {DateTime} dateTime
-   * @returns {boolean}
+   * Compares if the current date and time is less than the provided DateTime.
+   *
+   * @param {DateTime} dateTime - The DateTime to compare.
+   * @returns {boolean} - `true` if the current date and time is less than the provided DateTime; otherwise, `false`.
    */
   lessThan(dateTime) {
     return this.parsedDateTime < dateTime.parsedDateTime
   }
 
   /**
-   * @param {DateTime} dateTime
-   * @returns {boolean}
+   * Compares if the current date and time is equal to the provided DateTime.
+   *
+   * @param {DateTime} dateTime - The DateTime to compare.
+   * @returns {boolean} - `true` if the current date and time is equal to the provided DateTime; otherwise, `false`.
    */
   equalTo(dateTime) {
     return this.parsedDateTime === dateTime.parsedDateTime
   }
 
   /**
-   * @param {DateTime} dateTime
-   * @returns {boolean}
+   * Compares if the current date and time is greater than the provided DateTime.
+   *
+   * @param {DateTime} dateTime - The DateTime to compare.
+   * @returns {boolean} - `true` if the current date and time is greater than the provided DateTime; otherwise, `false`.
    */
   greaterThan(dateTime) {
     return this.parsedDateTime > dateTime.parsedDateTime

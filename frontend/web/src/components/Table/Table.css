@@ -1,78 +1,55 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Table.css
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Table.css
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
 .table {
   display: grid;
-  width: 100%;
   overflow: hidden;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-.table-title {
-  padding: 5px;
+.table-cell {
+  padding: 7px;
+  background: #fff;
+  font-size: 17px;
+  white-space: nowrap;
+}
+
+.table-header {
+  display: contents;
+  font-size: 16px;
+  font-weight: bold;
+  color: #232323;
+}
+
+.table-row {
+  display: contents;
+}
+
+.table-row-title {
   font-size: 16px;
   font-weight: bold;
   color: #232323;
   white-space: nowrap;
 }
 
-/*
-.table-title-even {
-}
-
-.table-title-odd {
-}
-*/
-
-.table-row {
-  display: contents;
-}
-
-/*
-.table-row-even .table-row-cell {
-}
-*/
-
-.table-row-odd .table-row-cell {
+.table-row-odd .table-cell {
   background: #ccc;
 }
 
-.table-row:hover .table-row-cell {
+.table-highlight-rows .table-row:hover .table-cell {
   background: #29abe1;
   color: #fff;
 }
 
-.table-row-cell {
-  padding: 7px;
-  font-size: 17px;
-  white-space: nowrap;
-  background: #fff;
-}
-
-/*
-.table-row-cell-even {
-}
-
-.table-row-cell-odd {
-}
-*/
-
-.table-message {
+.table-no-data {
   padding: 5px;
   font-size: 17px;
   white-space: nowrap;
+  grid-column: span 20
 }

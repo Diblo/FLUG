@@ -1,6 +1,5 @@
 const sharp = require("sharp")
 const ImageDataUriHandler = require("./ImageDataUriHandler")
-const util = require("util")
 
 /**
  * A class that extends ImageProcessor to handle image operations using Sharp library.

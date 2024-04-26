@@ -1,20 +1,10 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Button.css
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Button.css
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
 .button {
   fill: #fff;
@@ -28,31 +18,28 @@
   filter: drop-shadow(2px 2px 1px #00000075);
 }
 
-.button[disabled] {
-  cursor: not-allowed;
-  border: 1px #b3b3b370 solid;
-}
-
 .button.default {
   background-color: #29abe1;
-}
-
-.button.default[disabled] {
-  background-color: #29abe170;
 }
 
 .button.green {
   background-color: #0bd26e;
 }
 
-.button.green[disabled] {
-  background-color: #0bd26e70;
-}
-
 .button.red {
   background-color: #ff0000;
 }
 
-.button.red[disabled] {
-  background-color: #ff000070;
+.button[disabled] {
+  cursor: not-allowed;
+  border: 1px #b3b3b3 solid;
+  background-color: #b3b3b3;
+}
+
+.button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 10px;
+  margin-bottom: 20px;
 }

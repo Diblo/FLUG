@@ -21,8 +21,16 @@ const Image = require("./comments/images/Image")
 // Initialize router
 const router = express.Router()
 
+function sleepFor(sleepDuration) {
+  var now = new Date().getTime()
+  while (new Date().getTime() < now + sleepDuration) {
+    /* Do nothing */
+  }
+}
+
 // Define endpoints for handling user data
-router.get("/" + config.getUsersEndpoint(), (req, res) => {
+router.get(`/${config.getUsersEndpoint()}`, (req, res) => {
+  sleepFor(2000)
   const totalItems = users.countRows()
   const totalPages = Math.ceil(totalItems / config.getItemsPerPage())
   const currentPage = req.getPage()
@@ -40,7 +48,8 @@ router.get("/" + config.getUsersEndpoint(), (req, res) => {
   res.jPage(items, totalItems, currentPage, totalPages)
 })
 
-router.get("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
+router.get(`/${config.getUsersEndpoint()}/:uid`, (req, res) => {
+  //sleepFor(2000)
   const uid = req.getUid()
 
   if (uid === null || !users.exists(uid)) {
@@ -50,12 +59,14 @@ router.get("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
   res.jUser(users.get(uid))
 })
 
-router.post("/" + config.getUsersEndpoint(), (req, res) => {
+router.post(`/${config.getUsersEndpoint()}`, (req, res) => {
+  //sleepFor(2000)
   // Respond with the created user
   res.status(201).jUser(users.add(req.getJson(postUserSchema)))
 })
 
-router.patch("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
+router.patch(`/${config.getUsersEndpoint()}/:uid`, (req, res) => {
+  //sleepFor(2000)
   const uid = req.getUid()
 
   if (uid === null || !users.exists(uid)) {
@@ -66,7 +77,8 @@ router.patch("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
   res.jUser(users.update(uid, req.getJson(patchUserSchema)))
 })
 
-router.delete("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
+router.delete(`/${config.getUsersEndpoint()}/:uid`, (req, res) => {
+  //sleepFor(2000)
   const uid = req.getUid()
 
   if (uid === null || !users.exists(uid)) {
@@ -80,7 +92,7 @@ router.delete("/" + config.getUsersEndpoint() + "/:uid", (req, res) => {
 })
 
 // Define endpoints for handling blog data
-router.get("/" + config.getBlogsEndpoint(), (req, res) => {
+router.get(`/${config.getBlogsEndpoint()}`, (req, res) => {
   const totalItems = blogs.countRows()
   const totalPages = Math.ceil(totalItems / config.getItemsPerPage())
   const currentPage = req.getPage()
@@ -98,7 +110,7 @@ router.get("/" + config.getBlogsEndpoint(), (req, res) => {
   res.jPage(items, totalItems, currentPage, totalPages)
 })
 
-router.get("/" + config.getBlogsEndpoint() + "/:id", (req, res) => {
+router.get(`/${config.getBlogsEndpoint()}/:id`, (req, res) => {
   let uid = req.getUid()
   if (uid === null || !blogs.exists(uid)) {
     uid = blogs.getIdBySlug(req.getSlug())
@@ -113,7 +125,7 @@ router.get("/" + config.getBlogsEndpoint() + "/:id", (req, res) => {
   res.jBlog(blogs.get(uid))
 })
 
-router.post("/" + config.getBlogsEndpoint(), (req, res) => {
+router.post(`/${config.getBlogsEndpoint()}`, (req, res) => {
   const body = req.getJson(postBlogSchema)
   if (body.image) {
     body.image.src = new Image(body.image.src).store()
@@ -123,7 +135,7 @@ router.post("/" + config.getBlogsEndpoint(), (req, res) => {
   res.status(201).jBlog(blogs.add(body))
 })
 
-router.patch("/" + config.getBlogsEndpoint() + "/:uid", (req, res) => {
+router.patch(`/${config.getBlogsEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !blogs.exists(uid)) {
@@ -139,7 +151,7 @@ router.patch("/" + config.getBlogsEndpoint() + "/:uid", (req, res) => {
   res.jBlog(blogs.update(uid, body))
 })
 
-router.delete("/" + config.getBlogsEndpoint() + "/:uid", (req, res) => {
+router.delete(`/${config.getBlogsEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null) {
@@ -153,7 +165,7 @@ router.delete("/" + config.getBlogsEndpoint() + "/:uid", (req, res) => {
 })
 
 // Define endpoints for handling event data
-router.get("/" + config.getEventsEndpoint(), (req, res) => {
+router.get(`/${config.getEventsEndpoint()}`, (req, res) => {
   const totalItems = events.countRows()
   const totalPages = Math.ceil(totalItems / config.getItemsPerPage())
   const currentPage = req.getPage()
@@ -171,7 +183,7 @@ router.get("/" + config.getEventsEndpoint(), (req, res) => {
   res.jPage(items, totalItems, currentPage, totalPages)
 })
 
-router.get("/" + config.getEventsEndpoint() + "/:id", (req, res) => {
+router.get(`/${config.getEventsEndpoint()}/:id`, (req, res) => {
   let uid = req.getUid()
   if (uid === null || !events.exists(uid)) {
     uid = events.getIdBySlug(req.getSlug())
@@ -184,12 +196,12 @@ router.get("/" + config.getEventsEndpoint() + "/:id", (req, res) => {
   res.jEvent(events.get(uid))
 })
 
-router.post("/" + config.getEventsEndpoint(), (req, res) => {
+router.post(`/${config.getEventsEndpoint()}`, (req, res) => {
   // Respond with the created event
   res.status(201).jEvent(events.add(req.getJson(postEventSchema)))
 })
 
-router.patch("/" + config.getEventsEndpoint() + "/:uid", (req, res) => {
+router.patch(`/${config.getEventsEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !events.exists(uid)) {
@@ -200,7 +212,7 @@ router.patch("/" + config.getEventsEndpoint() + "/:uid", (req, res) => {
   res.jEvent(events.update(uid, req.getJson(patchEventSchema)))
 })
 
-router.delete("/" + config.getEventsEndpoint() + "/:uid", (req, res) => {
+router.delete(`/${config.getEventsEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !events.exists(uid)) {
@@ -214,7 +226,7 @@ router.delete("/" + config.getEventsEndpoint() + "/:uid", (req, res) => {
 })
 
 // Define endpoints for handling image data
-router.get("/" + config.getImagesEndpoint(), (req, res) => {
+router.get(`/${config.getImagesEndpoint()}`, (req, res) => {
   const totalItems = images.countRows()
   const totalPages = Math.ceil(totalItems / config.getItemsPerPage())
   const currentPage = req.getPage()
@@ -232,7 +244,7 @@ router.get("/" + config.getImagesEndpoint(), (req, res) => {
   res.jPage(items, totalItems, currentPage, totalPages)
 })
 
-router.get("/" + config.getImagesEndpoint() + "/:uid", (req, res) => {
+router.get(`/${config.getImagesEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !images.exists(uid)) {
@@ -242,7 +254,7 @@ router.get("/" + config.getImagesEndpoint() + "/:uid", (req, res) => {
   res.jImage(images.get(uid))
 })
 
-router.post("/" + config.getImagesEndpoint(), (req, res) => {
+router.post(`/${config.getImagesEndpoint()}`, (req, res) => {
   const body = req.getJson(postImageSchema)
   body.src = new Image(body.src).store()
 
@@ -250,7 +262,7 @@ router.post("/" + config.getImagesEndpoint(), (req, res) => {
   res.status(201).jImage(images.add(body))
 })
 
-router.patch("/" + config.getImagesEndpoint() + "/:uid", (req, res) => {
+router.patch(`/${config.getImagesEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !images.exists(uid)) {
@@ -261,7 +273,7 @@ router.patch("/" + config.getImagesEndpoint() + "/:uid", (req, res) => {
   res.jImage(images.update(uid, req.getJson(patchImageSchema)))
 })
 
-router.delete("/" + config.getImagesEndpoint() + "/:uid", (req, res) => {
+router.delete(`/${config.getImagesEndpoint()}/:uid`, (req, res) => {
   const uid = req.getUid()
 
   if (uid === null || !images.exists(uid)) {

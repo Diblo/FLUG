@@ -1,20 +1,10 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Button.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Button.js
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
 import React from "react"
 
@@ -24,6 +14,9 @@ import "./Button.css"
  * @typedef {object} Props
  * @property {React.ReactNode} children - The content or components rendered within the button.
  * @property {() => void} [onPress] - The function to be called when the button is clicked.
+ * @property {("button" | "submit" | "reset")} [type]
+ * @property {boolean} [disabled]
+ * @property {string} [className]
  */
 
 /**
@@ -33,7 +26,7 @@ import "./Button.css"
  * @param {('default'|'green'|'red')} [partialProps.buttonStyle] - The style of the button, e.g., "add", "delete", or "default".
  * @returns {React.ComponentType<Props>} A wrapped element component.
  */
-const ButtonHOC = (partialProps) => {
+const ButtonHoc = (partialProps) => {
   const { buttonStyle = "default" } = partialProps || {}
 
   /**
@@ -42,13 +35,13 @@ const ButtonHOC = (partialProps) => {
    * @param {Props} props - The remaining props to be applied.
    * @returns {JSX.Element} The rendered React component.
    */
-  return ({ children, onPress }) => {
+  return ({ children, onPress, type, disabled, className }) => {
     return (
       <button
-        type="button"
-        className={`button ${buttonStyle}`}
+        type={type || "button"}
+        className={`button ${buttonStyle} ${className || ""}`}
         onClick={onPress}
-      >
+        disabled={disabled}>
         {children}
       </button>
     )
@@ -58,16 +51,26 @@ const ButtonHOC = (partialProps) => {
 /**
  * @type {React.ComponentType<Props>}
  */
-export const Button = ButtonHOC()
+export const Button = ButtonHoc()
 
 /**
  * @type {React.ComponentType<Props>}
  */
-export const GreenButton = ButtonHOC({ buttonStyle: "green" })
+export const GreenButton = ButtonHoc({ buttonStyle: "green" })
 
 /**
  * @type {React.ComponentType<Props>}
  */
-export const RedButton = ButtonHOC({
+export const RedButton = ButtonHoc({
   buttonStyle: "red",
 })
+
+/**
+ * @param {Object} probs
+ * @param {React.ReactNode} probs.children
+ * @param {string} [probs.className]
+ * @returns {JSX.Element}
+ */
+export const ButtonBar = ({ children, className }) => (
+  <div className={`button-bar ${className || ""}`}>{children}</div>
+)

@@ -1,24 +1,15 @@
 /**
- * Copyright (c) 2024 Fyns Linux User Group
+ * Date.js
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * File: Date.js
+ * @file <description>
+ * @license GNU Affero General Public License v3.0
+ * @see {@link https://www.gnu.org/licenses/}
+ * @author Fyns Linux User Group
  */
-import React from "react";
 
-import { DateTime } from "../../utils/datetime";
+import React from "react"
+
+import { DateTime } from "../../utils/datetime"
 
 /**
  * Local Date Component
@@ -28,9 +19,9 @@ import { DateTime } from "../../utils/datetime";
  * @param {Object} props
  * @param {string} props.children
  */
-export function LocalDate({ children }) {
-  const dateTime = new DateTime(children);
-  return <span title={dateTime.localDateTime()}>{dateTime.localDate()}</span>;
+export const LocalDate = ({ children }) => {
+  const dateTime = new DateTime(children)
+  return <span title={dateTime.localDateTime()}>{dateTime.localDate()}</span>
 }
 
 /**
@@ -41,7 +32,7 @@ export function LocalDate({ children }) {
  * @param {Object} props
  * @param {string} props.children
  */
-export function LocalDateTime({ children }) {
-  const dateTime = new DateTime(children);
-  return dateTime.localDateTime();
+export const LocalDateTime = ({ children }) => {
+  const dateTime = new DateTime(children)
+  return dateTime.localDateTime()
 }

@@ -1,0 +1,14 @@
+{
+  "useTabs": false,
+  "useEditorConfig": false,
+  "semi": false,
+  "bracketSameLine": false,
+  "overrides": [
+    {
+      "files": ["frontend/web/src/App.js"],
+      "options": {
+        "printWidth": 120
+      }
+    }
+  ]
+}

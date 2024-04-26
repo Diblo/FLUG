@@ -24,7 +24,7 @@ const ENDPOINT_URL = "/" + config.getEventsEndpoint()
 const ITEMS_PER_PAGE = config.getItemsPerPage()
 
 /** GET */
-function testPage(url, nextHref, page) {
+function testPage(url, page) {
   return (done) => {
     new Request(app, done).get(url).call(200, (response) => {
       /* msg */
@@ -39,12 +39,12 @@ function testPage(url, nextHref, page) {
       validateValue(response, "data.results", ITEMS_PER_PAGE)
       validateValue(response, "data.totalResults", 300)
 
-      if (nextHref) {
-        validateValue(response, "data.pagination.next.href", nextHref)
-        validateValue(response, "data.pagination.next.title", "Næste")
-      } else {
-        validateValue(response, "data.pagination.next", null)
-      }
+      validateValue(response, "data.pagination.first", 1)
+      validateValue(response, "data.pagination.prev", Math.max(page - 1, 1))
+      validateValue(response, "data.pagination.current", page)
+      validateValue(response, "data.pagination.next", Math.min(page + 1, 3))
+      validateValue(response, "data.pagination.last", 3)
+
       validateValue(response, "data.page", page)
       validateValue(response, "data.totalPages", 3)
 
@@ -66,32 +66,6 @@ function testResource(url, uid) {
       validateSchema(response, "data", eventSchema)
 
       validateValue(response, "data.uid", uid)
-
-      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      validateValue(response, "data._links.self.title", response.data.title)
-
-      validateValue(
-        response,
-        "data._links.slug.href",
-        ENDPOINT_URL + "/" + response.data.slug
-      )
-      validateValue(response, "data._links.slug.title", response.data.title)
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
@@ -119,35 +93,12 @@ function testPost(url, data) {
       validateValue(response, "data.endDateTime", data.endDateTime)
       validateValue(response, "data.location", data.location)
       validateValue(response, "data.content", data.content)
-
-      validateValue(
-        response,
-        "data._links.self.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(response, "data._links.self.title", data.title)
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + response.data.uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
 
 /** PATCH */
-function testPatch(url, uid, data) {
+function testPatch(url, data) {
   return (done) => {
     new Request(app, done).patch(url, data).call(200, (response) => {
       /* msg */
@@ -177,27 +128,6 @@ function testPatch(url, uid, data) {
       if (data.content) {
         validateValue(response, "data.content", data.content)
       }
-
-      validateValue(response, "data._links.self.href", ENDPOINT_URL + "/" + uid)
-      if (data.title) {
-        validateValue(response, "data._links.self.title", data.title)
-      }
-
-      validateValue(
-        response,
-        "data._links.update.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.update.title", "Gem")
-      validateValue(response, "data._links.update.method", "PATCH")
-
-      validateValue(
-        response,
-        "data._links.delete.href",
-        ENDPOINT_URL + "/" + uid
-      )
-      validateValue(response, "data._links.delete.title", "Slet")
-      validateValue(response, "data._links.delete.method", "DELETE")
     })
   }
 }
@@ -231,13 +161,10 @@ function testErrorResponse(method, url, status, message, data = null) {
 
 /** TESTS */
 describe("GET " + ENDPOINT_URL, () => {
-  it(
-    "response with page 1 and 100 events",
-    testPage(ENDPOINT_URL, ENDPOINT_URL + "?page=2", 1)
-  )
+  it("response with page 1 and 100 events", testPage(ENDPOINT_URL, 1))
   it(
     "response with page 3 and 100 events",
-    testPage(ENDPOINT_URL + "?page=3", null, 3)
+    testPage(ENDPOINT_URL + "?page=3", 3)
   )
 
   it(
@@ -330,7 +257,7 @@ describe("POST " + ENDPOINT_URL, () => {
 describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
   it(
     "able to update title",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       title: "abcdefghijklmnopqrstu",
     })
   )
@@ -370,7 +297,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update slug",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       slug: "abcdefghijklmnopqrstu",
     })
   )
@@ -409,7 +336,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update shortDesc",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       shortDesc:
         "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmno",
     })
@@ -457,13 +384,13 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update location",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       location: "abcdefghijklmnopqrstu",
     })
   )
   it(
     "able to set location to empty",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       location: "",
     })
   )
@@ -495,7 +422,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
 
   it(
     "able to update content",
-    testPatch(ENDPOINT_URL + "/63", 63, {
+    testPatch(ENDPOINT_URL + "/63", {
       content: "abcdefghijklmnopqrstuvwxyz",
     })
   )

@@ -3,8 +3,6 @@
 set "batchFilePath=%~dp0"
 
 echo Install Mockup API Dependencies
-npm install -g nodemon
-npm install -g mocha
 call npm install "%batchFilePath%\mockup-api" && (
     echo Finished installing Mockup API Dependencies
 ) || (
