@@ -26,7 +26,7 @@ class Config {
     this.imagePath = path.resolve(
       __dirname,
       "../../",
-      process.env.IMAGES_PATH || IMAGES_PATH
+      process.env.IMAGES_PATH || IMAGES_PATH,
     )
     if (!fs.existsSync(this.imagePath)) {
       throw new Error(`Image path : does not exist`)

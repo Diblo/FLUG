@@ -40,7 +40,7 @@ Create the following files in the folder: `<path/to/the/flug-project/folder>/fro
 `test-runner.html` is used to initialize the React Native Web environment. Although it is not an example, it can be modified.
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -115,7 +115,7 @@ export default function TestComponent() {
                   <div>{user.lastName}</div>
                   <div>{user.email}</div>
                 </React.Fragment>
-              ))
+              )),
             )}
           </div>
           {usersState.pagination.self !== usersState.pagination.last && (

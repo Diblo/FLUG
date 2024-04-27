@@ -81,7 +81,7 @@ function testPost(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been created successfully."
+        "The resource has been created successfully.",
       )
 
       /* resource */
@@ -105,7 +105,7 @@ function testPatch(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been updated successfully."
+        "The resource has been updated successfully.",
       )
 
       /* resource */
@@ -159,7 +159,7 @@ describe("GET " + ENDPOINT_URL, () => {
   it("response with page 1 and 100 blogs", testPage(ENDPOINT_URL, 1))
   it(
     "response with page 3 and 100 blogs",
-    testPage(ENDPOINT_URL + "?page=3", 3)
+    testPage(ENDPOINT_URL + "?page=3", 3),
   )
 
   it(
@@ -168,8 +168,8 @@ describe("GET " + ENDPOINT_URL, () => {
       "GET",
       ENDPOINT_URL + "?page=4",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -181,15 +181,15 @@ describe("GET " + ENDPOINT_URL + "/:uid", () => {
       "GET",
       ENDPOINT_URL + "/500",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
 describe("GET " + ENDPOINT_URL + "/:slug", () => {
   it(
     "response with a blog",
-    testResource(ENDPOINT_URL + "/custom-blog-title", 30)
+    testResource(ENDPOINT_URL + "/custom-blog-title", 30),
   )
   it(
     "response in case of blog not found",
@@ -197,8 +197,8 @@ describe("GET " + ENDPOINT_URL + "/:slug", () => {
       "GET",
       ENDPOINT_URL + "/custom-blog-title2",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -231,8 +231,8 @@ describe("POST " + ENDPOINT_URL, () => {
         slug: "",
         shortDesc: "",
         content: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response in case of missing data objects",
@@ -240,8 +240,8 @@ describe("POST " + ENDPOINT_URL, () => {
       "POST",
       ENDPOINT_URL,
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 })
 
@@ -250,7 +250,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
     "able to update title",
     testPatch(ENDPOINT_URL + "/63", {
       title: "abcdefghijklmnopqrstu",
-    })
+    }),
   )
   it(
     "response with a error when title missing value",
@@ -259,8 +259,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { title: "" }
-    )
+      { title: "" },
+    ),
   )
   it(
     "response with a error when title value is too short",
@@ -269,8 +269,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { title: "abcd" }
-    )
+      { title: "abcd" },
+    ),
   )
   it(
     "response with a error when title value is too long",
@@ -282,15 +282,15 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         title:
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvw",
-      }
-    )
+      },
+    ),
   )
 
   it(
     "able to update slug",
     testPatch(ENDPOINT_URL + "/63", {
       slug: "abcdefghijklmnopqrstu",
-    })
+    }),
   )
   it(
     "response with a error when slug missing value",
@@ -299,8 +299,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { slug: "" }
-    )
+      { slug: "" },
+    ),
   )
   it(
     "response with a error when slug value is too short",
@@ -309,8 +309,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { slug: "abcd" }
-    )
+      { slug: "abcd" },
+    ),
   )
   it(
     "response with a error when slug value is too long",
@@ -321,8 +321,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         slug: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstu",
-      }
-    )
+      },
+    ),
   )
 
   it(
@@ -330,7 +330,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
     testPatch(ENDPOINT_URL + "/63", {
       shortDesc:
         "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmno",
-    })
+    }),
   )
   it(
     "response with a error when shortDesc missing value",
@@ -339,8 +339,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { shortDesc: "" }
-    )
+      { shortDesc: "" },
+    ),
   )
   it(
     "response with a error when shortDesc value is too short",
@@ -352,8 +352,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         shortDesc:
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefgh",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when shortDesc value is too long",
@@ -365,8 +365,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         shortDesc:
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
-      }
-    )
+      },
+    ),
   )
 
   it(
@@ -376,13 +376,13 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
         src: getImageAsDataUri("./images/example1.jpg"),
         alt: "abcdefghijklmno",
       },
-    })
+    }),
   )
   it(
     "able to unset image",
     testPatch(ENDPOINT_URL + "/63", {
       image: null,
-    })
+    }),
   )
   it(
     "response with a error when shortDesc missing value",
@@ -391,15 +391,15 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { image: {} }
-    )
+      { image: {} },
+    ),
   )
 
   it(
     "able to update content",
     testPatch(ENDPOINT_URL + "/63", {
       content: "abcdefghijklmnopqrstuvwxyz",
-    })
+    }),
   )
   it(
     "response with a error when content missing value",
@@ -408,8 +408,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { content: "" }
-    )
+      { content: "" },
+    ),
   )
   it(
     "response with a error when content value is too short",
@@ -418,8 +418,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       ENDPOINT_URL + "/63",
       400,
       "The request cannot be fulfilled due to bad syntax.",
-      { content: "abcdefghijklmnopqrs" }
-    )
+      { content: "abcdefghijklmnopqrs" },
+    ),
   )
 
   it(
@@ -428,8 +428,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 
   it(
@@ -444,7 +444,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
         slug: "test",
         shortDesc: "Test",
         content: "Test",
-      }
-    )
+      },
+    ),
   )
 })

@@ -79,7 +79,7 @@ function testPost(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been created successfully."
+        "The resource has been created successfully.",
       )
 
       /* resource */
@@ -100,7 +100,7 @@ function testPatch(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been updated successfully."
+        "The resource has been updated successfully.",
       )
 
       /* resource */
@@ -144,7 +144,7 @@ describe("GET " + ENDPOINT_URL, () => {
 
   it(
     "response with page 3 and 100 images",
-    testPage(ENDPOINT_URL + "?page=3", 3)
+    testPage(ENDPOINT_URL + "?page=3", 3),
   )
 
   it(
@@ -153,8 +153,8 @@ describe("GET " + ENDPOINT_URL, () => {
       "GET",
       ENDPOINT_URL + "?page=4",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -166,8 +166,8 @@ describe("GET " + ENDPOINT_URL + "/:uid", () => {
       "GET",
       ENDPOINT_URL + "/500",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -188,8 +188,8 @@ describe("POST " + ENDPOINT_URL, () => {
       {
         src: "",
         alt: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response in case of missing data objects",
@@ -197,8 +197,8 @@ describe("POST " + ENDPOINT_URL, () => {
       "POST",
       ENDPOINT_URL,
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 })
 
@@ -207,7 +207,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
     "able to update alt",
     testPatch(ENDPOINT_URL + "/63", {
       alt: "abcdefghijklmno",
-    })
+    }),
   )
   it(
     "response with a error when alt missing value",
@@ -218,8 +218,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         alt: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when alt value is too short",
@@ -230,8 +230,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         alt: "abcdefghijklmn",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when alt value is too long",
@@ -242,8 +242,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         alt: "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy",
-      }
-    )
+      },
+    ),
   )
 
   it(
@@ -252,8 +252,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 
   it(
@@ -265,7 +265,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The requested resource was not found.",
       {
         alt: "Test",
-      }
-    )
+      },
+    ),
   )
 })

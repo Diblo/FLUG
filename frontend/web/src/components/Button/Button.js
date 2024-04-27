@@ -41,7 +41,8 @@ const ButtonHoc = (partialProps) => {
         type={type || "button"}
         className={`button ${buttonStyle} ${className || ""}`}
         onClick={onPress}
-        disabled={disabled}>
+        disabled={disabled}
+      >
         {children}
       </button>
     )

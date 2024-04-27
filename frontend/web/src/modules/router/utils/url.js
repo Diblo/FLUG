@@ -77,7 +77,7 @@ const parseTarget = (target) => {
 
   const path = target.substring(
     0,
-    searchIndex !== -1 ? searchIndex : hashIndex !== -1 ? hashIndex : undefined
+    searchIndex !== -1 ? searchIndex : hashIndex !== -1 ? hashIndex : undefined,
   )
   const search =
     searchIndex !== -1
@@ -99,7 +99,7 @@ export const getTargetFromUrl = (url) => {
   return createTargetObject(
     parsedUrl.pathname,
     createSearchString(searchParams),
-    parsedUrl.hash
+    parsedUrl.hash,
   )
 }
 
@@ -128,7 +128,7 @@ export const resolveTarget = (target, baseTarget) => {
   return createTargetObject(
     removeTrailingSlash(url.pathname),
     url.search,
-    url.hash
+    url.hash,
   )
 }
 

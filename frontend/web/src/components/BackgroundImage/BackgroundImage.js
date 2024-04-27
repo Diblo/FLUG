@@ -26,7 +26,8 @@ const BackgroundImage = ({ children, url }) => (
     className="bg-image"
     style={{
       backgroundImage: `url(${url})`,
-    }}>
+    }}
+  >
     {children}
   </div>
 )

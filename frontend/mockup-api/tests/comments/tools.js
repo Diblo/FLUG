@@ -80,7 +80,7 @@ function validateBySchema(json, schema, path) {
   for (const key in schema) {
     if (!json.hasOwnProperty(key)) {
       throw new Error(
-        `The '${path !== "" ? path + "." : ""}${key}' is missing.`
+        `The '${path !== "" ? path + "." : ""}${key}' is missing.`,
       )
     }
 
@@ -111,7 +111,7 @@ function validateBySchema(json, schema, path) {
         throw new Error(
           `The '${curPath}' should be ${
             types.length > 1 ? "one of: " : ""
-          }${types.join(", ")}.`
+          }${types.join(", ")}.`,
         )
       }
     } else if (isType(schemaType, ValueTypes.OBJECT)) {
@@ -130,7 +130,7 @@ function validateByJson(json, schema, path, maxDepth, depth = 0) {
   for (const key in json) {
     if (!schema.hasOwnProperty(key)) {
       throw new Error(
-        `Illegal object '${path !== "" ? path + "." : ""}${key}'.`
+        `Illegal object '${path !== "" ? path + "." : ""}${key}'.`,
       )
     }
 
@@ -188,7 +188,7 @@ function validateValue(json, path, compareTo) {
 
   if (obj !== compareTo) {
     throw new Error(
-      `The '${path}' should be '${compareTo}' instead of '${obj}'.`
+      `The '${path}' should be '${compareTo}' instead of '${obj}'.`,
     )
   }
 }
@@ -198,7 +198,7 @@ function validateSize(json, path, size) {
 
   if (obj.lenght === size) {
     throw new Error(
-      `The '${path}' should have ${size} items instead of ${obj.lenght}.`
+      `The '${path}' should have ${size} items instead of ${obj.lenght}.`,
     )
   }
 }
@@ -208,7 +208,7 @@ function getNestedObject(obj, path) {
     for (const key of path.split(".")) {
       if (obj === undefined || obj === null) {
         throw new Error(
-          `Invalid path: '${path}'. The object '${key}' does not exist.`
+          `Invalid path: '${path}'. The object '${key}' does not exist.`,
         )
       }
 
@@ -235,7 +235,7 @@ function generateLoremWithinRange(minLength, maxLength) {
 function getImageAsDataUri(filepath) {
   return imageDataURI.encode(
     Buffer.from(fs.readFileSync(path.resolve(__dirname, "../", filepath))),
-    path.extname(filepath).slice(1)
+    path.extname(filepath).slice(1),
   )
 }
 
@@ -286,8 +286,8 @@ class Request {
               new Error(
                 `${err.message}. Server Response: ${
                   JSON.parse(res.text).error.message
-                }. ${JSON.parse(res.text).error.description}.`
-              )
+                }. ${JSON.parse(res.text).error.description}.`,
+              ),
             )
           } catch {}
           return this.done(err)

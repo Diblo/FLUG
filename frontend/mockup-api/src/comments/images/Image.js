@@ -13,7 +13,7 @@ class Image {
     const hash = crypto
       .createHash("sha224")
       .update(
-        new ImageProcessor(this.imageDataUriHandler).optimize().getBuffer()
+        new ImageProcessor(this.imageDataUriHandler).optimize().getBuffer(),
       )
       .digest("hex")
 

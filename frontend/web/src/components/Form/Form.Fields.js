@@ -295,7 +295,7 @@ const TextAreaField = FieldHoc(
         meta.active ? "active" : ""
       }`}
     />
-  )
+  ),
 )
 
 /**

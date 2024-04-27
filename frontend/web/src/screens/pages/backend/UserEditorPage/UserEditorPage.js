@@ -59,7 +59,7 @@ const UserEditorPage = () => {
         dispatch(updateUser(location.params.uid, values))
       }
     },
-    [newUser, dispatch, location]
+    [newUser, dispatch, location],
   )
 
   useEffect(
@@ -67,7 +67,7 @@ const UserEditorPage = () => {
       !newUser && dispatch(getUser(location.params.uid))
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   useEffect(
@@ -92,7 +92,7 @@ const UserEditorPage = () => {
       setFormData(serviceState.data)
     },
     // eslint-disable-next-line
-    [serviceState]
+    [serviceState],
   )
 
   return (

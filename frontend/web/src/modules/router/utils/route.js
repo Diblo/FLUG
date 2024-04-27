@@ -268,7 +268,7 @@ class RouteTree {
     const preformRecursiveSearch = (
       node,
       remainingSegments,
-      wildcardNode = null
+      wildcardNode = null,
     ) => {
       if (!node || remainingSegments.length === 0) {
         return node && node.isRoute() ? node : wildcardNode
@@ -279,7 +279,7 @@ class RouteTree {
       return preformRecursiveSearch(
         childNode,
         remainingSegments,
-        node.children["*"] || wildcardNode
+        node.children["*"] || wildcardNode,
       )
     }
 
@@ -430,7 +430,7 @@ const extractInputRouteProps = (element) => {
   const hasComponent = component || layout || error
   if (!hasComponent) {
     throw new Error(
-      'Either "component", "layout" or "error" prop must be specified.'
+      'Either "component", "layout" or "error" prop must be specified.',
     )
   }
 

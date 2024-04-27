@@ -16,7 +16,7 @@ export default function AdminBlogsScreen() {
   //const dispatch = useDispatch()
   const usersState = useSelector(
     (/** @type {import('../../../../rtk/store').RootState} */ state) =>
-      state.users
+      state.users,
   )
 
   const [blogs, setBlogs] = useState([])
@@ -57,7 +57,7 @@ export default function AdminBlogsScreen() {
         ...prevBlogs,
         ...response.items.filter((newBlog) => {
           return !prevBlogs.some(
-            (existingBlog) => existingBlog.uid === newBlog.uid
+            (existingBlog) => existingBlog.uid === newBlog.uid,
           )
         }),
       ])
@@ -93,9 +93,9 @@ export default function AdminBlogsScreen() {
         { value: row.lname, className: "lname" },
       ],
       onClick: () => {
-        () => navToEditor(row.uid)
+        ;() => navToEditor(row.uid)
       },
-    }))
+    })),
   )
 
   return (

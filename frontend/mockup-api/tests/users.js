@@ -79,7 +79,7 @@ function testPost(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been created successfully."
+        "The resource has been created successfully.",
       )
 
       /* resource */
@@ -102,7 +102,7 @@ function testPatch(url, data) {
       validateValue(
         response,
         "message",
-        "The resource has been updated successfully."
+        "The resource has been updated successfully.",
       )
 
       /* resource */
@@ -154,7 +154,7 @@ describe("GET " + ENDPOINT_URL, () => {
 
   it(
     "response with page 3 and 100 users",
-    testPage(ENDPOINT_URL + "?page=3", 3)
+    testPage(ENDPOINT_URL + "?page=3", 3),
   )
 
   it(
@@ -163,8 +163,8 @@ describe("GET " + ENDPOINT_URL, () => {
       "GET",
       ENDPOINT_URL + "?page=4",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -176,8 +176,8 @@ describe("GET " + ENDPOINT_URL + "/:uid", () => {
       "GET",
       ENDPOINT_URL + "/500",
       404,
-      "The requested resource was not found."
-    )
+      "The requested resource was not found.",
+    ),
   )
 })
 
@@ -204,8 +204,8 @@ describe("POST " + ENDPOINT_URL, () => {
         firstName: "",
         lastName: "",
         email: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response in case of missing data objects",
@@ -213,8 +213,8 @@ describe("POST " + ENDPOINT_URL, () => {
       "POST",
       ENDPOINT_URL,
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 })
 
@@ -223,7 +223,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
     "able to update firstName",
     testPatch(ENDPOINT_URL + "/63", {
       firstName: faker.person.firstName(),
-    })
+    }),
   )
   it(
     "response with a error when firstName missing value",
@@ -234,8 +234,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         firstName: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when firstName value is too short",
@@ -246,8 +246,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         firstName: "a",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when firstName value is too long",
@@ -259,21 +259,21 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         firstName:
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
-      }
-    )
+      },
+    ),
   )
 
   it(
     "able to update lastName value",
     testPatch(ENDPOINT_URL + "/63", {
       lastName: faker.person.lastName(),
-    })
+    }),
   )
   it(
     "able to set lastName to empty",
     testPatch(ENDPOINT_URL + "/63", {
       lastName: "",
-    })
+    }),
   )
   it(
     "response with a error when lastName value is too short",
@@ -284,8 +284,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         lastName: "a",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when lastName value is too long",
@@ -297,15 +297,15 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         lastName:
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn",
-      }
-    )
+      },
+    ),
   )
 
   it(
     "able to update email value",
     testPatch(ENDPOINT_URL + "/63", {
       email: "test2@foo.bar",
-    })
+    }),
   )
   it(
     "response with a error when email missing value",
@@ -316,8 +316,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         email: "",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when email is not valid",
@@ -328,8 +328,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "The request cannot be fulfilled due to bad syntax.",
       {
         email: "test.foo.bar",
-      }
-    )
+      },
+    ),
   )
   it(
     "response with a error when email is too long",
@@ -341,8 +341,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       {
         email:
           "abcdefghijklmnopqrstuvwxyz_abcdefghijklmnopqrstuvwxyz_abcdefghij@abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd.bar",
-      }
-    )
+      },
+    ),
   )
 
   it(
@@ -351,8 +351,8 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
       "PATCH",
       ENDPOINT_URL + "/63",
       400,
-      "The request cannot be fulfilled due to bad syntax."
-    )
+      "The request cannot be fulfilled due to bad syntax.",
+    ),
   )
 
   it(
@@ -366,7 +366,7 @@ describe("PATCH " + ENDPOINT_URL + "/:uid", () => {
         firstName: "test",
         lastName: "test",
         email: "test@foo.bar",
-      }
-    )
+      },
+    ),
   )
 })

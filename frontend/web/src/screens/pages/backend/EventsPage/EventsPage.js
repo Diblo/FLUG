@@ -97,7 +97,7 @@ const EventsPage = () => {
 
   const nextPage = useCallback(
     () => dispatch(listEvents({ page: pagination.next })),
-    [dispatch, pagination.next]
+    [dispatch, pagination.next],
   )
 
   useEffect(
@@ -105,7 +105,7 @@ const EventsPage = () => {
       dispatch(listEvents())
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   useEffect(
@@ -129,7 +129,7 @@ const EventsPage = () => {
       setEventData(newEventData)
     },
     // eslint-disable-next-line
-    [serviceState]
+    [serviceState],
   )
 
   return (
