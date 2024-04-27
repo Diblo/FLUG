@@ -25,7 +25,7 @@ const Footer = React.forwardRef(
     <footer id="footer" ref={ref}>
       {children ? <ContentAlignment>{children}</ContentAlignment> : "\u00a0"}
     </footer>
-  )
+  ),
 )
 
 export default Footer

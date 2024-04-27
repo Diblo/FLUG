@@ -85,7 +85,7 @@ export const useNavigation = () => {
       setLocation(target)
       setRoute(route)
     },
-    [setRoute, setLocation]
+    [setRoute, setLocation],
   )
 
   /**
@@ -113,7 +113,7 @@ export const useNavigation = () => {
         nav(`${route.path}${search || ""}${hash || ""}`, route, options)
       },
     }),
-    [routes, location, nav]
+    [routes, location, nav],
   )
 
   return { location, navigate }
@@ -167,7 +167,7 @@ export const useRouter = () => {
         header,
       })
     },
-    [route, setRoute]
+    [route, setRoute],
   )
 
   const showError = useCallback(
@@ -182,7 +182,7 @@ export const useRouter = () => {
         header,
       })
     },
-    [route, setRoute]
+    [route, setRoute],
   )
 
   const getPathByAlias = useCallback(
@@ -196,7 +196,7 @@ export const useRouter = () => {
 
       return null
     },
-    [routes]
+    [routes],
   )
 
   return { showNotFound, showError, getPathByAlias }

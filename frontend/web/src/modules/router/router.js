@@ -48,7 +48,7 @@ const handleComponent = (component, props = {}, children = undefined) => {
       component
     ),
     props,
-    children
+    children,
   )
 }
 
@@ -106,7 +106,7 @@ class Router extends React.Component {
   setRoute = (route, contentComponent = null, props = {}) => {
     let content = handleComponent(
       contentComponent || route.defaultComponent,
-      props
+      props,
     )
     if (route.layoutComponent) {
       content = handleComponent(route.layoutComponent, {}, content)
@@ -144,7 +144,7 @@ class Router extends React.Component {
 
     const url = resolveURL(
       event.target.getAttribute("href"),
-      window.location.href
+      window.location.href,
     )
 
     if (url && url.origin === window.location.origin) {

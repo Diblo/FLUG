@@ -83,7 +83,7 @@ export const Header = ({ children }) => (
     {React.Children.map(children, (child, index) => {
       if (React.isValidElement(child)) {
         const classNames = `table-header-data table-col-${oddOrEven(
-          index
+          index,
         )} table-cell ${child.props.className || ""}`
 
         return (

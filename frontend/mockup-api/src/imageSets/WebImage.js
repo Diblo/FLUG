@@ -8,7 +8,7 @@ class WebImage extends AbstractImageSet {
    */
   async save() {
     const filepath = this.getImagePath(
-      `optimized/${this.getHash()}.${this.getExt()}`
+      `optimized/${this.getHash()}.${this.getExt()}`,
     )
 
     return this.getImageProcessor().fit(1920, 1280).optimize().save(filepath)

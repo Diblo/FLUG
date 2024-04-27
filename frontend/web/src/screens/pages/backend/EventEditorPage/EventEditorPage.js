@@ -139,7 +139,7 @@ export default function AdminEventEditorScreen() {
     (link, changes) => {
       handleRequest(link.href, link.method, changes)
     },
-    []
+    [],
   )
 
   const onDeletePressed = useCallback(
@@ -149,7 +149,7 @@ export default function AdminEventEditorScreen() {
     (link) => {
       handleRequest(link.href, link.method)
     },
-    []
+    [],
   )
 
   useEffect(() => {
@@ -176,7 +176,8 @@ export default function AdminEventEditorScreen() {
           ? getText("createEventHeader")
           : getText("editEventHeader")
       }
-      fixedTitlePos={true}>
+      fixedTitlePos={true}
+    >
       <Form fields={fields} data={data} buttons={buttons} />
     </ContentLayout>
   )

@@ -32,7 +32,8 @@ const CardList = ({ cards }) => (
           className={`card-title ${card.bgImage && "card-bgImage"}`}
           style={{
             backgroundImage: card.bgImage ? `url(${card.bgImage})` : null,
-          }}>
+          }}
+        >
           {card.title}
         </div>
         <div className="card-desc">{card.desc}</div>

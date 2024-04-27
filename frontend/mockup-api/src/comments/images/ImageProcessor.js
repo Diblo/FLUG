@@ -72,7 +72,7 @@ class ImageProcessor {
       const newDimensions = calculateNewDimensions(
         width,
         height,
-        this.aspectRatio
+        this.aspectRatio,
       )
       const offset = [
         Math.floor((width - newDimensions[0]) / 2),

@@ -53,7 +53,7 @@ const useUi = () => {
       }
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   return context
@@ -105,7 +105,7 @@ const UiProvider = ({ children }) => {
      * @param {("normal"|"success"|"warning"|"danger")} type
      */
     (message, type) => toast.show(message, { type }),
-    [toast]
+    [toast],
   )
 
   /**
@@ -139,7 +139,7 @@ const UiProvider = ({ children }) => {
       setActivityIndicatorState,
       setConfirmDialogProps,
       showToast,
-    ]
+    ],
   )
 
   return (

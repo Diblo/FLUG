@@ -37,8 +37,8 @@ const toQueryString = (params) => {
   for (const paramName of Object.keys(params)) {
     encodePairs.push(
       `${encodeURIComponent(paramName)}=${encodeURIComponent(
-        params[paramName]
-      )}`
+        params[paramName],
+      )}`,
     )
   }
   return encodePairs.join("&")
@@ -136,7 +136,7 @@ const handleJsonData = (json) => {
     throw new JsonResponseError(
       json.error.code,
       json.error.message,
-      json.error.description
+      json.error.description,
     )
   }
 

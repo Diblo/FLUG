@@ -33,7 +33,7 @@ const Header = React.forwardRef(
         <nav className="header-nav">{children}</nav>
       </ContentAlignment>
     </header>
-  )
+  ),
 )
 
 export default Header

@@ -8,7 +8,7 @@ class XImage extends AbstractImageSet {
    */
   async save() {
     const filepath = this.getImagePath(
-      `optimized/${this.getHash()}-x.${this.getExt()}`
+      `optimized/${this.getHash()}-x.${this.getExt()}`,
     )
 
     return this.getImageProcessor()

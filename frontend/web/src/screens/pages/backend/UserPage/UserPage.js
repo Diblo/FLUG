@@ -46,7 +46,7 @@ const UserPage = () => {
       navigate.alias("admin.user.edit", {
         pathParams: location.target.pathParams,
       }),
-    [navigate, location]
+    [navigate, location],
   )
 
   const confirmDiaglog = useCallback(() => {
@@ -61,7 +61,7 @@ const UserPage = () => {
       dispatch(getUser(location.params.uid))
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   useEffect(
@@ -88,7 +88,7 @@ const UserPage = () => {
       }
     },
     // eslint-disable-next-line
-    [serviceState]
+    [serviceState],
   )
 
   const { data } = serviceState

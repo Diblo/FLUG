@@ -95,7 +95,7 @@ const UsersPage = () => {
 
   const nextPage = useCallback(
     () => dispatch(listUsers({ page: pagination.next })),
-    [dispatch, pagination.next]
+    [dispatch, pagination.next],
   )
 
   useEffect(
@@ -103,7 +103,7 @@ const UsersPage = () => {
       dispatch(listUsers())
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   useEffect(
@@ -127,7 +127,7 @@ const UsersPage = () => {
       setUserData(newUserData)
     },
     // eslint-disable-next-line
-    [serviceState]
+    [serviceState],
   )
 
   return (

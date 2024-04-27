@@ -94,7 +94,7 @@ const Slideshow = ({ children }) => {
       },
       _sections: [],
     }),
-    [children]
+    [children],
   )
 
   /**
@@ -157,7 +157,7 @@ const Slideshow = ({ children }) => {
       // Scroll smoothly to the selected section
       element.scrollIntoView({ behavior: "smooth", block: "start" })
     },
-    [sections]
+    [sections],
   )
 
   const onPaginationClick = useCallback(
@@ -173,7 +173,7 @@ const Slideshow = ({ children }) => {
       carousel.current.stop()
       changeSection(section)
     },
-    [changeSection, carousel]
+    [changeSection, carousel],
   )
 
   const onWheel = useCallback(
@@ -196,7 +196,7 @@ const Slideshow = ({ children }) => {
 
       changeSection(sectionNumber)
     },
-    [sections, activeSection, changeSection, carousel]
+    [sections, activeSection, changeSection, carousel],
   )
 
   const loadUrl = useCallback(
@@ -217,7 +217,7 @@ const Slideshow = ({ children }) => {
 
       return false
     },
-    [sections, changeSection, carousel]
+    [sections, changeSection, carousel],
   )
 
   useEffect(
@@ -231,7 +231,7 @@ const Slideshow = ({ children }) => {
       }
     },
     // eslint-disable-next-line
-    []
+    [],
   )
 
   useEffect(() => {

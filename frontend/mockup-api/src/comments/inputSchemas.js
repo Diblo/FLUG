@@ -156,7 +156,7 @@ const patchEventSchema = Joi.object({
   "startDateTime",
   "endDateTime",
   "location",
-  "content"
+  "content",
 )
 
 const postImageSchema = Joi.object({

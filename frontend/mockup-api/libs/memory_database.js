@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 
-const DATABASE_DATA = {};
+const DATABASE_DATA = {}
 
 /**
  * Represents the available data types.
@@ -15,19 +15,19 @@ const Types = {
   STRING: "string",
   INTEGER: "integer",
   OBJECT: "object",
-};
+}
 
 const _table = {
   string: (param) => {
-    return typeof param === "string";
+    return typeof param === "string"
   },
   integer: (param) => {
-    return Number.isInteger(param);
+    return Number.isInteger(param)
   },
   object: (param) => {
-    return Object.prototype.toString.call(param) === "[object Object]";
+    return Object.prototype.toString.call(param) === "[object Object]"
   },
-};
+}
 
 /**
  * Check if a parameter has one of the specified types.
@@ -38,18 +38,20 @@ const _table = {
  * @throws Will throw an error if the parameter type is not supported or if the parameter does not match the expected type(s).
  */
 function isParamType(param, paramName, types) {
-  const allowedTypes = Array.isArray(types) ? types : [types];
+  const allowedTypes = Array.isArray(types) ? types : [types]
 
-  const isValidType = allowedTypes.some(type => {
+  const isValidType = allowedTypes.some((type) => {
     if (!_table.hasOwnProperty(type)) {
-      throw new Error("Unknown or unsupported data type: " + type);
+      throw new Error("Unknown or unsupported data type: " + type)
     }
 
-    return _table[type](param);
-  });
+    return _table[type](param)
+  })
 
   if (!isValidType) {
-    throw new Error(`Invalid input for ${paramName}. Expected ${allowedTypes.join(' or ')}.`);
+    throw new Error(
+      `Invalid input for ${paramName}. Expected ${allowedTypes.join(" or ")}.`,
+    )
   }
 }
 
@@ -59,8 +61,8 @@ function isParamType(param, paramName, types) {
  * @param {string} table - Table name (e.g., "users", "blogs").
  */
 function createTable(table) {
-  isParamType(table, "table", Types.STRING);
-  DATABASE_DATA[table] = { increment: 0 };
+  isParamType(table, "table", Types.STRING)
+  DATABASE_DATA[table] = { increment: 0 }
 }
 
 /**
@@ -112,12 +114,12 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   add(table, data) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(data, "data", Types.OBJECT);
+    isParamType(table, "table", Types.STRING)
+    isParamType(data, "data", Types.OBJECT)
 
-    data.uid = DATABASE_DATA[table].increment++;
-    DATABASE_DATA[table][data.uid] = data;
-    return parseInt(data.uid);
+    data.uid = DATABASE_DATA[table].increment++
+    DATABASE_DATA[table][data.uid] = data
+    return parseInt(data.uid)
   }
 
   /**
@@ -129,13 +131,13 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   get(table, uid) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(uid, "uid", Types.INTEGER);
+    isParamType(table, "table", Types.STRING)
+    isParamType(uid, "uid", Types.INTEGER)
 
     if (DATABASE_DATA[table][uid]) {
-      return DATABASE_DATA[table][uid];
+      return DATABASE_DATA[table][uid]
     }
-    return null;
+    return null
   }
 
   /**
@@ -148,25 +150,25 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   gets(table, begin, max) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(begin, "begin", Types.INTEGER);
-    isParamType(max, "max", Types.INTEGER);
+    isParamType(table, "table", Types.STRING)
+    isParamType(begin, "begin", Types.INTEGER)
+    isParamType(max, "max", Types.INTEGER)
 
     const keys = Object.keys(DATABASE_DATA[table]).filter(
-      (key) => key !== "increment"
-    );
-    const startIndex = begin;
-    const endIndex = Math.min(startIndex + max, keys.length); // Ensure we don't go out of bounds.
+      (key) => key !== "increment",
+    )
+    const startIndex = begin
+    const endIndex = Math.min(startIndex + max, keys.length) // Ensure we don't go out of bounds.
 
     if (startIndex >= keys.length) {
-      return []; // If "begin" is out of bounds, return an empty array.
+      return [] // If "begin" is out of bounds, return an empty array.
     }
 
-    const data = [];
+    const data = []
     for (let i = startIndex; i < endIndex; i++) {
-      data.push(DATABASE_DATA[table][keys[i]]);
+      data.push(DATABASE_DATA[table][keys[i]])
     }
-    return data;
+    return data
   }
 
   /**
@@ -179,13 +181,13 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   getsByValue(table, column, value) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(column, "column", Types.STRING);
-    isParamType(value, "value", [Types.STRING, Types.NUMBER]);
+    isParamType(table, "table", Types.STRING)
+    isParamType(column, "column", Types.STRING)
+    isParamType(value, "value", [Types.STRING, Types.NUMBER])
 
     const keys = Object.keys(DATABASE_DATA[table]).filter(
-      (key) => key !== "increment"
-    );
+      (key) => key !== "increment",
+    )
 
     /**
      * Array to store data matching the specified criteria.
@@ -195,11 +197,11 @@ class Database {
 
     for (const uid of keys) {
       if (DATABASE_DATA[table][uid][column] === value) {
-        data.push(DATABASE_DATA[table][uid]);
+        data.push(DATABASE_DATA[table][uid])
       }
     }
 
-    return data;
+    return data
   }
 
   /**
@@ -211,14 +213,14 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   update(table, uid, data) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(uid, "uid", Types.INTEGER);
-    isParamType(data, "data", Types.OBJECT);
+    isParamType(table, "table", Types.STRING)
+    isParamType(uid, "uid", Types.INTEGER)
+    isParamType(data, "data", Types.OBJECT)
 
     if (DATABASE_DATA[table][uid]) {
-      data.uid = uid;
+      data.uid = uid
       for (const key in data) {
-        DATABASE_DATA[table][uid][key] = data[key];
+        DATABASE_DATA[table][uid][key] = data[key]
       }
     }
   }
@@ -232,10 +234,10 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   exists(table, uid) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(uid, "uid", Types.INTEGER);
+    isParamType(table, "table", Types.STRING)
+    isParamType(uid, "uid", Types.INTEGER)
 
-    return DATABASE_DATA[table].hasOwnProperty(uid);
+    return DATABASE_DATA[table].hasOwnProperty(uid)
   }
 
   /**
@@ -246,11 +248,11 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   delete(table, uid) {
-    isParamType(table, "table", Types.STRING);
-    isParamType(uid, "uid", Types.INTEGER);
+    isParamType(table, "table", Types.STRING)
+    isParamType(uid, "uid", Types.INTEGER)
 
     if (DATABASE_DATA[table][uid]) {
-      delete DATABASE_DATA[table][uid];
+      delete DATABASE_DATA[table][uid]
     }
   }
 
@@ -262,16 +264,16 @@ class Database {
    * @throws Will throw an error if the input parameters do not match the expected types.
    */
   countRows(table) {
-    isParamType(table, "table", Types.STRING);
+    isParamType(table, "table", Types.STRING)
 
-    return Object.keys(DATABASE_DATA[table]).length - 1;
+    return Object.keys(DATABASE_DATA[table]).length - 1
   }
 }
 
-const database = new Database();
+const database = new Database()
 
 module.exports = {
   createTable,
   exportData,
   database,
-};
+}

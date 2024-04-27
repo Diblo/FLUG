@@ -1,7 +1,7 @@
 /**
- * 
- * @param {HTMLElement} element 
- * @returns 
+ *
+ * @param {HTMLElement} element
+ * @returns
  */
 export const calcElementHeight = (element) => {
   const { marginTop, marginBottom } = window.getComputedStyle(element)

@@ -118,7 +118,7 @@ router.get(`/${config.getBlogsEndpoint()}/:id`, (req, res) => {
 
   if (uid === null) {
     throw new NotFound(
-      `The blog post with uid or slug '${uid}' does not exist.`
+      `The blog post with uid or slug '${uid}' does not exist.`,
     )
   }
 

@@ -76,7 +76,6 @@ import { createContext } from "react"
  * @returns {string | null} The matched path or null if not found.
  */
 
-
 /**
  * @callback AliasExists
  * @param {string} alias - The alias to check.

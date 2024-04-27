@@ -131,7 +131,7 @@ export default function AdminBlogEditorScreen() {
     (link, changes) => {
       handleRequest(link.href, link.method, changes)
     },
-    []
+    [],
   )
 
   const onDeletePressed = useCallback(
@@ -141,7 +141,7 @@ export default function AdminBlogEditorScreen() {
     (link) => {
       handleRequest(link.href, link.method)
     },
-    []
+    [],
   )
 
   useEffect(() => {

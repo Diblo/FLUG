@@ -38,7 +38,7 @@ app.use(cors())
 app.use(
   express.json({
     limit: "9mb",
-  })
+  }),
 )
 
 // Extend the request and response object
@@ -98,8 +98,8 @@ app.use((req, res, next) => {
       jMain(
         true,
         jPage(items, totalResults, curPage, totalPages),
-        "Successfully retrieved the resource."
-      )
+        "Successfully retrieved the resource.",
+      ),
     )
   }
 
@@ -118,12 +118,12 @@ app.use((req, res, next) => {
 
   res.jSuccess = function () {
     return this.json(
-      jMain(true, null, "The resource has been deleted successfully.")
+      jMain(true, null, "The resource has been deleted successfully."),
     )
   }
   res.jError = function (err) {
     return this.status(err.code).json(
-      jMain(false, jError(err.code, err.message, err.description))
+      jMain(false, jError(err.code, err.message, err.description)),
     )
   }
 
@@ -134,7 +134,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (req.path.slice(-1) === "/" && req.path.length > 1) {
     throw new NotFound(
-      `Leading slashes are not allowed. URL: '${req.originalUrl}'`
+      `Leading slashes are not allowed. URL: '${req.originalUrl}'`,
     )
   } else {
     next()

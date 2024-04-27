@@ -24,7 +24,7 @@ const Content = React.forwardRef(
     <main id="content" ref={ref}>
       {children}
     </main>
-  )
+  ),
 )
 
 export default Content

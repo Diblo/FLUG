@@ -2,8 +2,8 @@
 
 ## Terminology
 
-| Term | Description                                                                 |
-| ---- | --------------------------------------------------------------------------- |
+| Term | Description                                                               |
+| ---- | ------------------------------------------------------------------------- |
 | SLUG | SLUG refers to the end of a URL after `/`, identifying the specific post. |
 
 ## Endpoints
@@ -81,19 +81,19 @@
 
 The main object serves as the parent container in a response. The table below shows an overview of the fields present in the main object under different response scenarios.
 
-| Field Name  | Type                         | Content (200, 201) | No Content (204) | Error (4xx) | Description                                |
-| ----------- | ---------------------------- | ------------------ | ---------------- | ----------- | ------------------------------------------ |
-| `success` | Boolean                      | Yes                | Yes              | Yes         | Indicates whether there was an error.      |
-| `data`    | Page Object, Resource Object | Yes                | No               | No          | Contains either a page or resource object. |
-| `error`   | Error Object                 | No                 | No               | Yes         | Error object.                              |
-| `message` | String                       | Yes                | Yes              | No          | Success message.                           |
+| Field Name | Type                         | Content (200, 201) | No Content (204) | Error (4xx) | Description                                |
+| ---------- | ---------------------------- | ------------------ | ---------------- | ----------- | ------------------------------------------ |
+| `success`  | Boolean                      | Yes                | Yes              | Yes         | Indicates whether there was an error.      |
+| `data`     | Page Object, Resource Object | Yes                | No               | No          | Contains either a page or resource object. |
+| `error`    | Error Object                 | No                 | No               | Yes         | Error object.                              |
+| `message`  | String                       | Yes                | Yes              | No          | Success message.                           |
 
 Note: "Content" refers to situations where the response includes content, "No Content" refers to situations where the response do not includes content, and "Error" relates to 4xx error responses.
 
 **Success Message:**
 
-| Method     | Status Code | Message                                     |
-| ---------- | ----------- | ------------------------------------------- |
+| Method   | Status Code | Message                                     |
+| -------- | ----------- | ------------------------------------------- |
 | `GET`    | 200         | Successfully retrieved the resource.        |
 | `POST`   | 201         | The resource has been created successfully. |
 | `PATCH`  | 200         | The resource has been updated successfully. |
@@ -166,14 +166,14 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 ### Page
 
-| Field Name       | Type                   | Nullable | Description                                                  |
-| ---------------- | ---------------------- | -------- | ------------------------------------------------------------ |
+| Field Name     | Type                   | Nullable | Description                                                |
+| -------------- | ---------------------- | -------- | ---------------------------------------------------------- |
 | `items`        | List with Item Objects | No       | A list containing user, blog, event or image item objects. |
-| `pagination`   | Pagination Object      | No       |                                                              |
-| `results`      | Number                 | No       | Number of results                                            |
-| `totalResults` | Number                 | No       | Total number of results                                      |
-| `page`         | Number                 | No       | Current page                                                 |
-| `totalPages`   | Number                 | No       | Total number of pages                                        |
+| `pagination`   | Pagination Object      | No       |                                                            |
+| `results`      | Number                 | No       | Number of results                                          |
+| `totalResults` | Number                 | No       | Total number of results                                    |
+| `page`         | Number                 | No       | Current page                                               |
+| `totalPages`   | Number                 | No       | Total number of pages                                      |
 
 **Example:**
 
@@ -207,27 +207,27 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 **Query Parameters:**
 
-| Parameter | Type   | Description                                      | Example    |
-| --------- | ------ | ------------------------------------------------ | ---------- |
-| `page`  | Number | Specifies the page number for paginated results. | `page=2` |
-| `max`   | Number | Specifies the maximum number of items per page.  | `max=20` |
+| Parameter | Type   | Description                                      | Example  |
+| --------- | ------ | ------------------------------------------------ | -------- |
+| `page`    | Number | Specifies the page number for paginated results. | `page=2` |
+| `max`     | Number | Specifies the maximum number of items per page.  | `max=20` |
 
 #### Pagination
 
-| Field Name  | Type   | Nullable | Description |
-| ----------- | ------ | -------- | ----------- |
-| `first`   | Number | No       |             |
-| `prev`    | Number | No       |             |
-| `current` | Number | No       |             |
-| `next`    | Number | No       |             |
-| `last`    | Number | No       |             |
+| Field Name | Type   | Nullable | Description |
+| ---------- | ------ | -------- | ----------- |
+| `first`    | Number | No       |             |
+| `prev`     | Number | No       |             |
+| `current`  | Number | No       |             |
+| `next`     | Number | No       |             |
+| `last`     | Number | No       |             |
 
 #### Items
 
 ##### User
 
-| Field Name     | Type   | Nullable | Description                                             |
-| -------------- | ------ | -------- | ------------------------------------------------------- |
+| Field Name   | Type   | Nullable | Description                                             |
+| ------------ | ------ | -------- | ------------------------------------------------------- |
 | `uid`        | Number | No       | Unique identifier for the user.                         |
 | `firstName`  | String | No       | User's first name.                                      |
 | `lastName`   | String | Yes      | User's last name.                                       |
@@ -252,15 +252,15 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 **Query Parameters:**
 
-| Parameter          | Type   | Values                                                                               | Description                                                  | Example                                                      |
-| ------------------ | ------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `initial_letter` | String | `a-z, 0-9, other`                                                                  | Filters the users by the initial letter of their first name. | `initial_letter=a` (Includes only items starting with 'a') |
-| `order`          | String | `firstname`, `lastname`, `email`, `createdat`, `updatedat`, `loggedinat` | Specifies the field to sort the user results.                | `order=firstname` (Sorts by the `firstname` field)       |
+| Parameter        | Type   | Values                                                                   | Description                                                  | Example                                                    |
+| ---------------- | ------ | ------------------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------- |
+| `initial_letter` | String | `a-z, 0-9, other`                                                        | Filters the users by the initial letter of their first name. | `initial_letter=a` (Includes only items starting with 'a') |
+| `order`          | String | `firstname`, `lastname`, `email`, `createdat`, `updatedat`, `loggedinat` | Specifies the field to sort the user results.                | `order=firstname` (Sorts by the `firstname` field)         |
 
 ##### Blog
 
-| Field Name    | Type             | Nullable | Description                                             |
-| ------------- | ---------------- | -------- | ------------------------------------------------------- |
+| Field Name  | Type             | Nullable | Description                                             |
+| ----------- | ---------------- | -------- | ------------------------------------------------------- |
 | `uid`       | Number           | No       | Unique identifier for the blog.                         |
 | `title`     | String           | No       | Title of the blog post.                                 |
 | `shortDesc` | String           | No       | A brief description of the blog post.                   |
@@ -286,15 +286,15 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 **Query Parameters:**
 
-| Parameter          | Type   | Values                                  | Description                                          | Example                                                      |
-| ------------------ | ------ | --------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
-| `initial_letter` | String | `a-z, 0-9, other`                     | Filters the blog by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
-| `order`          | String | `title`, `createdat`, `updatedat` | Specifies the field to sort the blog results.        | `order=title` (Sorts by the `title` field)               |
+| Parameter        | Type   | Values                            | Description                                          | Example                                                    |
+| ---------------- | ------ | --------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `initial_letter` | String | `a-z, 0-9, other`                 | Filters the blog by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
+| `order`          | String | `title`, `createdat`, `updatedat` | Specifies the field to sort the blog results.        | `order=title` (Sorts by the `title` field)                 |
 
 ##### Event
 
-| Field Name        | Type   | Nullable | Description                                                   |
-| ----------------- | ------ | -------- | ------------------------------------------------------------- |
+| Field Name      | Type   | Nullable | Description                                                   |
+| --------------- | ------ | -------- | ------------------------------------------------------------- |
 | `uid`           | Number | No       | Unique identifier for the event.                              |
 | `title`         | String | No       | Title of the event.                                           |
 | `shortDesc`     | String | No       | A brief description of the event.                             |
@@ -320,15 +320,15 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 **Query Parameters:**
 
-| Parameter          | Type   | Values                                                     | Description                                           | Example                                                      |
-| ------------------ | ------ | ---------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
-| `initial_letter` | String | `a-z, 0-9, other`                                        | Filters the event by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
-| `order`          | String | `title`, `startdatetime`, `createdat`, `updatedat` | Specifies the field to sort the event results.        | `order=title` (Sorts by the `title` field)               |
+| Parameter        | Type   | Values                                             | Description                                           | Example                                                    |
+| ---------------- | ------ | -------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| `initial_letter` | String | `a-z, 0-9, other`                                  | Filters the event by the initial letter of the title. | `initial_letter=a` (Includes only items starting with 'a') |
+| `order`          | String | `title`, `startdatetime`, `createdat`, `updatedat` | Specifies the field to sort the event results.        | `order=title` (Sorts by the `title` field)                 |
 
 ##### Image
 
-| Field Name    | Type   | Nullable | Description                                              |
-| ------------- | ------ | -------- | -------------------------------------------------------- |
+| Field Name  | Type   | Nullable | Description                                              |
+| ----------- | ------ | -------- | -------------------------------------------------------- |
 | `uid`       | Number | No       | Unique identifier for the image.                         |
 | `src`       | String | No       | Image name with extension.                               |
 | `alt`       | String | No       | Alternate text for the image.                            |
@@ -349,9 +349,9 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 **Query Parameters:**
 
-| Parameter | Type   | Values                                | Description                                    | Example                                    |
-| --------- | ------ | ------------------------------------- | ---------------------------------------------- | ------------------------------------------ |
-| `order` | String | `src`, `createdat`, `updatedat` | Specifies the field to sort the image results. | `order=src` (Sorts by the `src` field) |
+| Parameter | Type   | Values                          | Description                                    | Example                                |
+| --------- | ------ | ------------------------------- | ---------------------------------------------- | -------------------------------------- |
+| `order`   | String | `src`, `createdat`, `updatedat` | Specifies the field to sort the image results. | `order=src` (Sorts by the `src` field) |
 
 ##### Location
 
@@ -363,8 +363,8 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 #### User
 
-| Data Type | Field          | Null | Description                                             |
-| --------- | -------------- | ---- | ------------------------------------------------------- |
+| Data Type | Field        | Null | Description                                             |
+| --------- | ------------ | ---- | ------------------------------------------------------- |
 | Number    | `uid`        | No   | Unique identifier for the user.                         |
 | String    | `firstName`  | No   | User's first name.                                      |
 | String    | `lastName`   | Yes  | User's last name.                                       |
@@ -389,14 +389,14 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 #### Blog
 
-| Data Type | Field         | Null | Description                                             |
-| --------- | ------------- | ---- | ------------------------------------------------------- |
+| Data Type | Field       | Null | Description                                             |
+| --------- | ----------- | ---- | ------------------------------------------------------- |
 | Number    | `uid`       | No   | Unique identifier for the blog.                         |
 | String    | `title`     | No   | Title of the blog post.                                 |
 | String    | `slug`      | No   | Unique SLUG to identifier the blog.                     |
 | String    | `shortDesc` | No   | A brief description of the blog post.                   |
 | Object    | `image`     | Yes  | Image refers object.                                    |
-| Text      | `content`   | No   | Content of the blog post in Makedown format.           |
+| Text      | `content`   | No   | Content of the blog post in Makedown format.            |
 | String    | `createdAt` | No   | ISO 8601 representation when the blog was created.      |
 | String    | `updatedAt` | Yes  | ISO 8601 representation when the blog was last updated. |
 
@@ -420,8 +420,8 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 #### Event
 
-| Data Type | Field             | Null | Description                                                   |
-| --------- | ----------------- | ---- | ------------------------------------------------------------- |
+| Data Type | Field           | Null | Description                                                   |
+| --------- | --------------- | ---- | ------------------------------------------------------------- |
 | Number    | `uid`           | No   | Unique identifier for the event.                              |
 | String    | `title`         | No   | Title of the event.                                           |
 | String    | `slug`          | No   | Unique SLUG to identifying the event.                         |
@@ -452,8 +452,8 @@ Note: "Content" refers to situations where the response includes content, "No Co
 
 #### Image
 
-| Data Type | Field         | Null | Description                                              |
-| --------- | ------------- | ---- | -------------------------------------------------------- |
+| Data Type | Field       | Null | Description                                              |
+| --------- | ----------- | ---- | -------------------------------------------------------- |
 | Number    | `uid`       | No   | Unique identifier for the image.                         |
 | String    | `src`       | No   | Image name with extension.                               |
 | String    | `alt`       | No   | Alternate text for the image.                            |
@@ -492,8 +492,8 @@ Reset Password
 
 ### Error
 
-| Field Name      | Type   | Description        |
-| --------------- | ------ | ------------------ |
+| Field Name    | Type   | Description        |
+| ------------- | ------ | ------------------ |
 | `code`        | String | Status code.       |
 | `message`     | String | Status message.    |
 | `description` | String | Error description. |
@@ -540,8 +540,8 @@ Reset Password
 
 #### User
 
-| Data Type | Field         | Min | Max | Required | Description             |
-| --------- | ------------- | --- | --- | -------- | ----------------------- |
+| Data Type | Field       | Min | Max | Required | Description             |
+| --------- | ----------- | --- | --- | -------- | ----------------------- |
 | String    | `firstName` | 2   | 50  | Yes      | First name of the user. |
 | String    | `lastName`  | 2   | 50  | No       | Last name of the user.  |
 | String    | `email`     | 7   | 100 | Yes      | Unique email address.   |
@@ -558,8 +558,8 @@ Reset Password
 
 #### Blog
 
-| Data Type | Field         | Min | Max    | Required | Description                                  |
-| --------- | ------------- | --- | ------ | -------- | -------------------------------------------- |
+| Data Type | Field       | Min | Max    | Required | Description                                  |
+| --------- | ----------- | --- | ------ | -------- | -------------------------------------------- |
 | String    | `title`     | 5   | 100    | Yes      | Title of the blog post.                      |
 | String    | `slug`      | 5   | 150    | Yes      | Unique SLUG to identifying the blogs.        |
 | String    | `shortDesc` | 145 | 155    | Yes      | Short description of the blog post.          |
@@ -583,15 +583,15 @@ Reset Password
 
 #### Event
 
-| Data Type | Field             | Min | Max    | Required | Description                                                                                            |
-| --------- | ----------------- | --- | ------ | -------- | ------------------------------------------------------------------------------------------------------ |
-| String    | `title`         | 5   | 100    | Yes      | Title of the event.                                                                                    |
-| String    | `slug`          | 5   | 150    | Yes      | Unique SLUG to identifying the events.                                                                 |
-| String    | `shortDesc`     | 145 | 155    | Yes      | Short description of the event.                                                                        |
-| String    | `startDateTime` | 24  | 24     | Yes      | ISO 8601 representation of the start date and time of the event.                                       |
+| Data Type | Field           | Min | Max    | Required | Description                                                                                          |
+| --------- | --------------- | --- | ------ | -------- | ---------------------------------------------------------------------------------------------------- |
+| String    | `title`         | 5   | 100    | Yes      | Title of the event.                                                                                  |
+| String    | `slug`          | 5   | 150    | Yes      | Unique SLUG to identifying the events.                                                               |
+| String    | `shortDesc`     | 145 | 155    | Yes      | Short description of the event.                                                                      |
+| String    | `startDateTime` | 24  | 24     | Yes      | ISO 8601 representation of the start date and time of the event.                                     |
 | String    | `endDateTime`   | 24  | 24     | Yes      | ISO 8601 representation of the end date and time of the event. Should be later than `startDateTime`. |
-| String    | `location`      | 15  | 255    | Yes      | Location of the event.                                                                                 |
-| Text      | `content`       | 300 | 65,535 | Yes      | Content describing the event in Makedown format.                                                       |
+| String    | `location`      | 15  | 255    | Yes      | Location of the event.                                                                               |
+| Text      | `content`       | 300 | 65,535 | Yes      | Content describing the event in Makedown format.                                                     |
 
 **Example:**
 
@@ -609,8 +609,8 @@ Reset Password
 
 #### Image
 
-| Data Type | Field   | Min | Max | Required | Description                                                   |
-| --------- | ------- | --- | --- | -------- | ------------------------------------------------------------- |
+| Data Type | Field | Min | Max | Required | Description                                                   |
+| --------- | ----- | --- | --- | -------- | ------------------------------------------------------------- |
 | String    | `src` | -   | 8MB | Yes      | Image data specified as a data URI scheme, encoded in base64. |
 | String    | `alt` | 15  | 50  | Yes      | Alternative text for the image.                               |
 
@@ -627,29 +627,29 @@ Reset Password
 
 | Data Type | Field                    | Required               | Description |
 | --------- | ------------------------ | ---------------------- | ----------- |
-| String    | `email`                |                        |             |
-| String    | `password`             |                        |             |
+| String    | `email`                  |                        |             |
+| String    | `password`               |                        |             |
 | Unknown   | \<bot validation fields> | Not currently defined. |             |
 
 #### Request Password Reset
 
 | Data Type | Field                    | Required               | Description |
 | --------- | ------------------------ | ---------------------- | ----------- |
-| String    | `email`                |                        |             |
+| String    | `email`                  |                        |             |
 | Unknown   | \<bot validation fields> | Not currently defined. |             |
 
 #### Reset Password
 
-| Data Type | Field        | Required | Description |
-| --------- | ------------ | -------- | ----------- |
+| Data Type | Field      | Required | Description |
+| --------- | ---------- | -------- | ----------- |
 | String    | `password` |          |             |
 
 ### PATCH Body
 
 #### User
 
-| Data Type | Field         | Min | Max | Nullable or Empty | Description                                    |
-| --------- | ------------- | --- | --- | ----------------- | ---------------------------------------------- |
+| Data Type | Field       | Min | Max | Nullable or Empty | Description                                    |
+| --------- | ----------- | --- | --- | ----------------- | ---------------------------------------------- |
 | String    | `firstName` | 2   | 50  | No                | First name of the user.                        |
 | String    | `lastName`  | 2   | 50  | Yes               | Last name of the user.                         |
 | String    | `email`     | -   | 100 | No                | Unique email address associated with the user. |
@@ -667,8 +667,8 @@ Let's say you want to update the firstName and email fields of a user.
 
 #### Blog
 
-| Data Type | Field         | Min | Max    | Nullable or Empty | Description                             |
-| --------- | ------------- | --- | ------ | ----------------- | --------------------------------------- |
+| Data Type | Field       | Min | Max    | Nullable or Empty | Description                             |
+| --------- | ----------- | --- | ------ | ----------------- | --------------------------------------- |
 | String    | `title`     | 5   | 100    | No                | Title of the blog.                      |
 | String    | `slug`      | 5   | 150    | No                | Unique SLUG to identifying the blog.    |
 | String    | `shortDesc` | 145 | 155    | No                | Short description of the blog content.  |
@@ -688,15 +688,15 @@ If you wish to update the title and shortDesc fields of a blog.
 
 #### Event
 
-| Data Type | Field             | Min | Max    | Null or Empty | Description                                                                                     |
-| --------- | ----------------- | --- | ------ | ------------- | ----------------------------------------------------------------------------------------------- |
-| String    | `title`         | 5   | 100    | No            | Title of the event.                                                                             |
-| String    | `slug`          | 5   | 150    | No            | Unique SLUG to identifying the event.                                                           |
-| String    | `shortDesc`     | 145 | 155    | No            | Short description of the event.                                                                 |
-| String    | `startDateTime` | 24  | 24     | No            | ISO 8601 representation of the event's start date and time.                                     |
+| Data Type | Field           | Min | Max    | Null or Empty | Description                                                                                   |
+| --------- | --------------- | --- | ------ | ------------- | --------------------------------------------------------------------------------------------- |
+| String    | `title`         | 5   | 100    | No            | Title of the event.                                                                           |
+| String    | `slug`          | 5   | 150    | No            | Unique SLUG to identifying the event.                                                         |
+| String    | `shortDesc`     | 145 | 155    | No            | Short description of the event.                                                               |
+| String    | `startDateTime` | 24  | 24     | No            | ISO 8601 representation of the event's start date and time.                                   |
 | String    | `endDateTime`   | 24  | 24     | No            | ISO 8601 representation of the event's end date and time. Must be later than `startDateTime`. |
-| String    | `location`      | 15  | 255    | No            | Location where the event will take place.                                                       |
-| Text      | `content`       | 300 | 65,535 | No            | Content describing the event in Makedown format.                                                |
+| String    | `location`      | 15  | 255    | No            | Location where the event will take place.                                                     |
+| Text      | `content`       | 300 | 65,535 | No            | Content describing the event in Makedown format.                                              |
 
 **Example:**
 
@@ -712,8 +712,8 @@ For modifying the title, startDateTime, and endDateTime fields of an event.
 
 #### Image
 
-| Data Type | Field   | Min | Max | Null or Empty | Description                                 |
-| --------- | ------- | --- | --- | ------------- | ------------------------------------------- |
+| Data Type | Field | Min | Max | Null or Empty | Description                                 |
+| --------- | ----- | --- | --- | ------------- | ------------------------------------------- |
 | String    | `alt` | 15  | 50  | No            | Alternative text description for the image. |
 
 **Example:**
@@ -732,8 +732,8 @@ Reference objects is used to include other resources in a resource.
 
 #### Image
 
-| Data Type | Field   | Null | Response | Body | Description                                                                     |
-| --------- | ------- | ---- | -------- | ---- | ------------------------------------------------------------------------------- |
+| Data Type | Field | Null | Response | Body | Description                                                                     |
+| --------- | ----- | ---- | -------- | ---- | ------------------------------------------------------------------------------- |
 | Number    | `uid` | No   | Yes      | No   | Unique identifier for the image.                                                |
 | String    | `src` | No   | Yes      | Yes  | Image name with extension or specified as a data URI scheme, encoded in base64. |
 | String    | `alt` | No   | Yes      | Yes  | Alternate text for the image.                                                   |
@@ -930,8 +930,8 @@ Is specified as filename with ext, or when uploading as a data URI scheme, encod
 
 ### Sets
 
-| Set                 | Purpose                                                                                         | Minimum        | Maximum          | Image Format   | Example                                 |
-| ------------------- | ----------------------------------------------------------------------------------------------- | -------------- | ---------------- | -------------- | --------------------------------------- |
+| Set                 | Purpose                                                                                         | Minimum        | Maximum          | Image Format   | Example                               |
+| ------------------- | ----------------------------------------------------------------------------------------------- | -------------- | ---------------- | -------------- | ------------------------------------- |
 | Original Image      | The original uploaded image, functioning as a backup and reference, e.g., for Google Image Bot. | 380x200 pixels | -                | -              | `/images/<SHA2-224>.ext`              |
 | Web Content Image   | Images optimized for use on the website.                                                        | 380x200 pixels | 1920x1280 pixels | -              | `/images/optimized/<SHA2-224>.ext`    |
 | Open Graph Image    | Images optimized for use on Facebook marked with the "-og" suffix.                              | 380x200 pixels | 1920x1010 pixels | 1.9:1 (+-0.09) | `/images/optimized/<SHA2-224>-og.ext` |
@@ -958,9 +958,11 @@ Is specified as filename with ext, or when uploading as a data URI scheme, encod
 
   - Optimized images should be without metadata and undergo TinyPNG optimization.
   - Optimized images should have a DPI of 95.
+
 - **Adjustment of Image Format:**
 
   - Adjustment occurs by cropping with a focus on the center of the image to achieve the desired format.
+
 - **Enlargement:**
 
   - Images should not be enlarged to achieve a size.
